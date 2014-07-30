@@ -1,6 +1,6 @@
 Microsoft (R) Incremental Linker Version 9.00.30729.01
-08/27/2012 11:53
-built from akawin32_mt.lib
+08/27/2012 11:54
+built from akawin64_mt.lib
 LIBRARY    AKADLL
 EXPORTS
 	AKAAfterTax
