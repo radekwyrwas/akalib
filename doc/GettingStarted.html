@@ -1,0 +1,406 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-15">
+<style type='text/css'>
+body {
+    padding: 1em 2em;
+}
+
+span.title {
+    font-size: 150%;
+    text-align: center;
+    font-weight: bold;
+    font-variant: small-caps;
+}
+
+h1 {
+    font-size: 150%;
+    margin-top: 0em;
+    padding-top: 1em;
+    border-style: none;
+    padding-top: 1em;
+}
+
+h2 {
+    font-size: 130%;
+}
+
+h3 {
+    font-size: 105%;
+}
+
+code {
+    font-family: courier;
+    color: navy;
+    font-size: 115%;
+}
+
+pre { 
+    margin-left: 2em; 
+    font-family: courier;
+    color: navy;
+    font-size: 115%;
+}
+
+a {
+    color: blue;
+    text-decoration: none;
+}
+
+a:visited {
+    color: blue;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+div#contents {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    border: thin solid;
+    background: lightgray;
+    padding: .25em;
+    opacity: 0.85;
+}
+
+div#contents ul {
+    padding-left: 1.5em;
+}
+
+div#contents span {
+    text-align: center;
+    text-decoration: underline;
+    display: block;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+div.code {
+    font-family: courier;
+    font-size: 110%;
+    white-space: pre;
+}
+
+p.code {
+    font-family: courier; 
+    font-size: 110%; 
+    margin-left: 4em;
+    text-indent: -2em;
+}
+
+span.code {
+    font-family: courier; 
+    font-size: 105%; 
+}</style>
+<script type='text/javascript'>
+// -----------------------------------------------------------------
+// Purpose: stop an event from bubbling -- cross-browser code
+// Returns: 
+// -----------------------------------------------------------------
+function xBrowserStopPropagation(ev) {
+    if (!ev) { ev = window.event; } // for ie
+    if (ev.stopPropagation) {
+	ev.stopPropagation();
+    }
+    else {
+	ev.cancelBubble = true;	
+    }
+}
+
+// -----------------------------------------------------------------
+// Purpose: cross browser way to add an event
+//	note: is always to the bubble phase
+// Returns: 
+// -----------------------------------------------------------------
+function addEvent(obj, type, fn) {
+    if (obj.addEventListener) {
+	obj.addEventListener(type, fn, false);
+    }
+    else if (obj.attachEvent) {	// IE
+	obj.attachEvent("on" + type, fn);
+    }
+}
+
+function close_contents() {
+    var div = document.getElementById('inner_contents');
+    div.style.display = 'none';
+}
+
+function toggle_contents(ev) {
+    xBrowserStopPropagation(ev);
+    var div = document.getElementById('inner_contents');
+    div.style.display = (div.style.display == 'none') ? '' : 'none';
+}
+</script>
+<title>BondOAS&trade; Library Getting Started</title>
+</head>
+<body>
+<table class=title><tr>
+<td style='text-align: right; 
+border: solid thin;
+background-color: rgb(221, 232, 234);
+padding: .25em;
+font-family: Helvetica;
+font-size: 180%;
+color: lightslategray;
+cursor: pointer;'
+ onclick='window.open("http://kalotay.com");'>
+<span style='color: teal;'>Kalotay</span><br>
+<span>Analytics</span><br>
+<span style='font-size: 25%; text-transform: uppercase;'>A Division of Andrew Kalotay Associates, Inc.</span>
+</td>
+<td style='padding-left: 4em;'><span class='title'>BondOAS&trade; Library Getting Started</span></td></tr></table>
+<!-- $Id: getting_started.html,v 1.2 2013-08-15 16:21:54 oliver Exp $ -->
+<a name='contents0'></a><h1>Requirements</h1>
+<p>
+Building an application using the BondOAS&trade; library requires only two
+BondOAS&trade; files: the bondoas library file and the API definition file,
+<a href='bondoas.api.html'>akaapi.hpp</a>.
+</p>
+
+<p>
+BondOAS&trade; has releases for a wide group of operating systems and
+architectures.  There is no minimum hardware requirement.
+</p>
+
+<a name='contents1'></a><h1>A Very Simple Example</h1>
+<p>
+BondOAS&trade; is as simple or as sophisticated as you need it to be.  The C++
+API (or the Java and C# APIs which closely follow the C++ API) provide
+constructors and methods which default to reasonable and common values.
+<p>
+
+<p>
+The following is a simple program fragment:
+</p>
+
+<div class="code">
+#include "<a href='bondoas.api.html'>akaapi.hpp</a>"
+using namespace AndrewKalotayAssociates;
+
+	...
+
+   // The Initialization object must be successfully created and authorized
+   Initialization init;
+   if (init.Authorize("./akalib.key") > 0) { // read key from a file
+       cerr << "Error: " << init.ErrorString() << endl;
+       return init.Error();
+   }
+   // Create both an interest rate model and a bond object
+   Bond bond("simple", Date(2010, 1, 1), Date(2020, 1, 1), 3.5); // 10yr, 3.5%
+   InterestRateModel model;
+   model.SetRate(1, 2.0);	// set a flat 2% rate
+   model.Solve();
+   if (model.Error() > 0) {
+       cerr << "Error: " << model.ErrorString() << endl;
+       return model.Error();
+   }
+   // Now value the bond
+   Value value(bond, model, Date(2013, 7, 1));
+   if (value.Error() > 0) {
+       cerr << "Error: " << value.ErrorString() << endl;
+       return value.Error();
+   }
+   double oas = value.OAS(price); // oas at a given price
+</div>
+
+<p>
+Only one include file, <span class='code'>akaapi.hpp</span>, is required to
+program with the library.  All symbols in <span class='code'>akaapi.hpp</span>
+are under the namespace AndrewKalotayAssociates.
+<p>
+
+<p>
+The first step in building a Bondoas&trade; application is initializing the
+library.  This needs to be done exactly once.  The status of the
+initialization can be checked with the <span class='code'>Error()</span>
+method.  All BondOAS&trade objects inherit from the Status object which
+provides the Error() method.
+</p>
+
+<p>
+Once the library is initialized a bond can be created.  In this case a thirty
+year, 2% bullet.  Many additional characteristics of the bond can be
+specified.  Please see the detailed <a href='bondoas.api.html'>API
+documentation</a>.
+</p>
+
+<p>
+Next, an interest rate environment must be instantiated.  The above example
+sets only one rate, the 1 year, to 2%.  This will result in a flat yield
+curve.  Additional points could be set, of course.  The interest rate model
+can also be configured for volatility and the type of input (par or discount).
+The interest rate model can also be queried for yields and discounts at any
+period.  Please see the detailed <a href='bondoas.api.html'>API
+documentation</a>.
+</p>
+
+<p>
+Now we are ready to value the bond using the interest rate environment.  A
+Value object is instantiated to do this.  It requires the bond and environment
+as well as the valuation date.  Note, we check the Error() status as with all
+objects.  Finally we get the OAS at a price.  There are many more values
+available through the Value object.  Please see the
+detailed <a href='bondoas.api.html'>API documentation</a>.
+</p>
+
+<a name='contents2'></a><h1>Getting A Little More Sophisticated</h1>
+<p>
+The bond in the simple example is a bullet bond and the yield curve is an
+unrealistic flat.  Below we add a call option to the bond and use actual
+treasury rates from 2013.  In addition to getting the OAS we compute
+the option value given the computed OAS.
+</p>
+
+<div class="code">
+   bond.SetCallAmerican(true);  // not necessary as this is the default
+   bond.SetNoticePeriod(15); // 15 days
+       // add a declining call schedule
+   bond.SetCall(Date(2014,01,01), 102);
+   bond.SetCall(Date(2015,01,01), 101.5);
+   bond.SetCall(Date(2016,01,01), 101);
+       // set a realistic rate curve
+   double terms[] = {.25, .5, 1., 2, 3, 4, 5, 7, 10, 20, 30 };
+   double rates[] = { 0.061, 0.111, 0.17, 0.43, 0.74, 1.115, 1.49,
+		      2.03, 2.6, 3.31, 3.6 };
+   for (unsigned int i = 0; i < sizeof(terms) / sizeof(terms[0]); i++)
+       model.SetRate(terms[i], rates[i]);
+   model.SetVolatility(7.5);
+   model.Solve();
+   if (model.Error() > 0) {
+       cerr << "Error: " << model.ErrorString() << endl;
+       return model.Error();
+   }
+   value.Reset(bond, model, Date(2013, 7, 1));
+   if (value.Error() > 0) {
+       cerr << "Error: " << value.ErrorString() << endl;
+       return value.Error();
+   }
+   oas = value.OAS(price); // oas at price
+   double optval = value.OptionValue(oas);
+</div>
+
+<a name='contents3'></a><h1>Compiling</h1>
+<p>
+The C++ API is defined in a single include file, <a href='bondoas.api.html'
+style='font-family: courier; font-size: 105%;'>akaapi.hpp</a>.  It is in
+the <span class='code'>include/</span> directory of the release.
+</p>
+
+<p>
+The Bondoas&trade; library is released as both a dynamic and a static library.
+The library is called <span class='code'>bondoas</span>.  The dynamic library
+is located in the <span class='code'>akalib/<i>{os-arch}</i>/lib</span>
+directory.  For example, <span class='code'>akalib/win32/lib</span>.  The
+static library is located in the library
+sub-directory <span class='code'>static/</span>.
+</p>
+
+<p>
+The library is named in an operating system appropriate way.  The Unix
+libraries are named <span class='code'>libbondoas.so</span>
+and <span class='code'>static/libbondoas.lib</span>. The Windows libraries are
+named <span class='code'>bondoas.dll</span>
+and <span class='code'>static/bondoas.lib</span>.
+</p>
+
+<p>
+The above code fragment, slightly expanded, is
+in <span class='code'>example/verysimple.cpp</span>.  The following
+sample compilation commands assume the source file being compiled is
+in a directory parallel to the <span class='code'>lib/</span> and
+<span class='code'>include/</span> directories.  This is the case with
+the provided <span class='code'>example/</span> directory.  For a more
+general installation approach please see the
+<a href='bondoas.installation.html'>BondOAS&trade; Installation</a> document.
+
+The simplified compilation commands are:
+</p>
+
+<p style='text-decoration: underline'>For 32 bit Windows:</p>
+
+<p class='code'>
+cl -Ox -W3 -MT -D_CONSOLE -D_CRT_SECURE_NO_DEPRECATE -nologo -I../include -I. verysimple.cpp /link -libpath:../win32/lib bondoas.lib
+</p>
+
+<p style='text-decoration: underline'>For 32 bit Linux:</p>
+
+<p class='code'>
+g++ -O3 -Wall -I../include -I. verysimple.cpp -o verysimple -L../linux/lib -lbondoas -lm
+</p>
+
+<p>
+Other operating systems, architectures, and compilers can be extrapolated from
+those examples..
+</p>
+
+<a name='contents4'></a><h2>Library Name Complexities Under Windows</h2>
+<p>
+The Windows library names are slightly complicated.  The Microsoft C++
+compiler is unable to link directly to the .dll.  A stub link library is
+required.  The stub link library is also
+called <span class='code'>bondoas.lib</span>.  This library is in the top
+level <span class='code'>lib/</span> directory and is distinct from the
+statically compiled library with the same name in
+the <span class='code'>static/</span> sub-directory.
+</p>
+
+<p>
+In addition the Windows release is packaged with a second static library,
+<span class='code'>lib/static/bondoas_md.lib</span>.  The Microsoft compiler
+requires the C run-time library linkage to be specified at compile time by
+using either the /MD or /MT compilation switch.  These switches determine
+which MSC library is expected to be linked with the object (or library
+containing the object) when creating an executable or dll.  The Microsoft
+documentation specifies: "All modules passed to a given invocation of the
+linker must have been compiled with the same run-time library compiler
+option."  The default bondoas static library is compiled with /MT.  The
+static/ sub-directory also contains <span class="code">bondoas_md.lib</span>
+in which the objects were compiled with /MD.  For more information about these
+compile switches please refer to the Microsoft compiler documentation.
+</p>
+
+<p>
+The additional Windows complexities are unfortunate, unavoidable, and
+universal.
+</p>
+
+<a name='contents5'></a><h1>More Examples</h1>
+<p>
+The BondOAS&trade; package comes with an <span class='code'>example/</span>
+directory.  The directory contains sample source files for C, C++, and Java.
+The C and C++ sources come with sample Makefiles.  There is a GNU make
+Makefile, called <span class='code'>Makefile.gmake</span> which can be used to
+compile on any system, include Windows.  There is also a Windows nmake
+Makefile, <span class='code'>Makefile.nmake</span>.
+</p>
+
+<a name='contents6'></a><h1>Conclusions</h1>
+<p>
+The BondOAS&trade; C++ API has a drill down approach to describing the
+complexities of the bond and interest rate environment.  The simplest
+specifications require only a few lines of code.  Additional features can be
+specified through the object method interface described in the API.  Compiling
+and linking to the library is never complicated.  Only one include file and
+one library are required.
+</p>
+<div id='contents'><span>Contents</span>
+<div style='display: none;' id='inner_contents'><ul>
+<li><a href='#contents0'>Requirements</a></li>
+<li style='margin-top: .25em;'><a href='#contents1'>A Very Simple Example</a></li>
+<li style='margin-top: .25em;'><a href='#contents2'>Getting A Little More Sophisticated</a></li>
+<li style='margin-top: .25em;'><a href='#contents3'>Compiling</a></li>
+<li><ul>
+<li><a href='#contents4'>Library Name Complexities Under Windows</a></li>
+</ul></li>
+<li style='margin-top: .25em;'><a href='#contents5'>More Examples</a></li>
+<li style='margin-top: .25em;'><a href='#contents6'>Conclusions</a></li>
+</ul></div></div>
+<script type='text/javascript'>
+addEvent(document.getElementById("contents").firstChild, "click", toggle_contents);
+addEvent(document.body, 'click', close_contents);
+</script>
+</body></html>

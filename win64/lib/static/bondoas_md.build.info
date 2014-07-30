@@ -1,0 +1,4 @@
+Microsoft (R) C/C++ Optimizing Compiler Version 16.00.30319.01 for x64
+-Ox   -I../include -W3 -DWIN32 -DWINDOWS -DWIN64    -I../../src/win32unix -FIwin32unix.h  -FIcvstag.h  -D_CRT_SECURE_NO_DEPRECATE -nologo  -Za  -MD  -GS-   
+Microsoft Windows [Version 6.1.7601]
+12/02/2013 09:23

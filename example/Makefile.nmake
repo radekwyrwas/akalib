@@ -8,22 +8,23 @@ TARGETS=aka_example.exe
 ARCH=win32
 !endif
 
-AKALIB=../$(ARCH)/lib/aka$(ARCH)_mt.lib
-LFLAGS=-defaultlib:$(AKALIB)
-CFLAGS=-Ox -W3 -MT -I../include -I. -D_CONSOLE -nologo
-CC=cl
+LIBDIR=../$(ARCH)/lib
+
+CFLAGS=-Ox -W3 -MT -D_CONSOLE -D_CRT_SECURE_NO_DEPRECATE -nologo
+INC=-I../include -I.
+
+TARGETS=aka_example.exe aka_example2.exe verysimple.exe
+AKALIB=bondoas.lib
 
 .SUFFIXES: .exe
 
 .c.exe:
-	$(CC) $(CFLAGS) $< /link $(LFLAGS)
-	-@cmd /C "del $*.obj"
+	cl $(CFLAGS) $(INC) $< /link -libpath:$(LIBDIR) $(AKALIB)
+
+.cpp.exe:
+	cl $(CFLAGS) $(INC) $< /link -libpath:$(LIBDIR) $(AKALIB)
 
 all : $(TARGETS)
 
-$(TARGETS) : $(AKALIB)
-
 clean :
 	cmd /C "del /f $(TARGETS)"
-
-aka_example.exe : aka_example.c

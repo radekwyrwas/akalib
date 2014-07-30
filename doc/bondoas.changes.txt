@@ -1,7 +1,122 @@
-$Id: changes.txt,v 1.100 2012-08-27 15:50:15 oliver Exp $
+$Id: changes.txt,v 1.111 2013-11-19 16:05:28 oliver Exp $
 
 Changes
 -------
+2.12 (November, 2013)
+---------------------
+Additions:
+Simple fixed rate mortgages are now supported as a bond type.
+Valuation methods accept as input Quote object which can be any of price, OAS
+	or a yield.
+Added YieldToWorst() and PriceToWorst().
+Added methods for AssetSwapSpread() and ISpread().
+Added method to define an Interest Rate Model using zero curve rates.
+C API supports notification settings (C++ API already did).
+Added methods to set/get InterestRateModel long volatility.
+Added methods and documentation to C to C++ compatibility layer
+	(see akaapi_compatibility.hpp). 
+Added Initialization::ShutdownAutomatically() to configure shutdown behavior.
+
+Behavior Changes:
+The interest of interest at maturity instruments is based on the number of
+	days from dated date to maturity; the yield is semiannually compounded
+	unless specified otherwise.
+Notification days default behavior no longer skips over weekends.
+Warning issued when sinking schedule and face amount indicate that
+	bond is retired prior to maturity.
+Warning rather than error when outstanding amount is below 0.1% of face,
+	schedule is trusted instead.
+Warning rather than error if specified last coupon date (lcdate) is not
+	cyclical with specified first coupon. Ignores last coupon date.
+Default tax rates changed to 40, 40, 20 (income, short-term capital gains,
+	long-term capital gains) from 35, 15, 15
+
+Enhancements:
+Improved handling of odd first and last coupons.
+Simplified solved interest rate model Compatibility mode and deprecated
+	InterestRateModel::EnableCompatibility();
+
+Fixes:
+Accrued on flow was in percent of par rather than pennies.
+Date class year fraction calculations ignored Day Count.
+InterestRateModel copy constructor did not work correctly when
+	used to create a forward rate curve.
+Multi-thread support in the copy constructor of a solved InterestRateModel
+	was not working correctly.
+
+After Tax Additions:
+Added DeminimisPrice() and IssueYield() methods.
+
+
+2.11 (August, 2013)
+------------------
+Additions:
+Support for after-tax valuation and municipal bond valuation in C++ API.
+
+Enhancements:
+Notification delay handles weekends, holidays, and business day counting.
+Improved handling of interest at maturity bonds.
+Improved interface for end-of-month rule.
+Valuation of near options computes time interval to option to match accrued.
+
+Fixes:
+Correctly compute accrued for actual/actual bonds in irregular coupon periods.
+Conform to Bloomberg end-of February behavior for 30/360 bonds.
+
+Distribution:
+The library file names are now all consistently bondoas followed by the
+	library type.  The names no longer contain the operating system
+	 and architecture as these are in the directory name.  Symlinks
+	(or under Windows direct copies) are used to maintain backward
+	 compatibility.
+Sun Sparc release is renamed from solaris to sunsparc.  Symlinks are used to
+	maintain backward compatibility.
+Improve and expand documentation.
+Improve java example application.
+
+2.10 (June, 2013)
+------------------
+Release C++ Api.
+
+C Api Changes:
+Complete rewrite of library error handling -- see akaapi.h/hpp
+Support after-tax key-rate durations
+Add new scenario analysis api interface; deprecate older interfaces
+Support for more extensive after-tax scenario analysis
+
+Fixes:
+Fix bug in after-tax computation of holder's basis when stated purchase
+	price is above the call option strike -- gigo
+Fix bug in muni yield calculation when bond is monthly, irregular, and pvdate
+	is significantly prior to bond initial date
+Fix reporting of yields when there are no daycount days remaining; now report zero
+
+Distribution:
+Add java and csharp wrapper apis
+Change win32/64 distribution structure so dll is in lib directory
+Version control strings compiled in for verification of version
+Add sun32 and sun64 distributions -- compiled with Solaris Studio on Solaris-x86
+
+2.09 (April, 2013)
+------------------
+Fix crash in AKABondFlow() when discounting flows more than forty years out
+Expanded Example code
+
+2.08 (February, 2013)
+---------------------
+Add functions:
+	AKADiscount()
+	AKAYears()
+	AKADateAdd()
+	AKADatePack()
+Add support for specifying a settlement date and a trade date
+Fix bug with zero coupon bonds with off-cycle sinks
+Improve performance of after-tax principal functions
+Fix bug in modDur calculation for bonds with off-cycle calls
+Clean up library namespace -- all exported symbols are AKA_ or aka_
+
+2.07  - internal release
+
 2.06 (August, 2012)
 -------------------
 Rewrite of forward par rates computation to handle odd maturities and

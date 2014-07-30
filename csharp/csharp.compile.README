@@ -1,0 +1,15 @@
+CSharp API Overview
+
+These instructions apply to using the Andrew Kalotay Associates C# API
+under Windows for a .NET application.
+
+The .cs files in the akalib/csharp directory need to be compiled.
+They can either be imported directly into your project or they can be
+separately compiled into a .NET dll.  In the latter case, that
+compiled dll can then be referenced in a project.
+
+Note, It is not necessary (and does not work) to directly reference
+the akalib library dlls in a .NET project.  The code in
+AkaApiPINVOKE.cs dynamically loads the appropriate Andrew Kalotay
+Associates bondoas dlls.  The path to the Andrew Kalotay Associates
+bondoas dlls, (e.g., akalib/lib/win64) must be in your path at runtime.

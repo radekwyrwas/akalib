@@ -1,0 +1,37 @@
+Library Names
+
+The Bondoas(tm) libraries are released in both static and dynamic
+versions.  Both versions are named bondoas.  The dynamic version is in
+this lib directory.  The static version is in the static/ sub-directory.
+
+Historical Library Names Backward Compatibility
+
+Prior to release 2.11 AKA API libraries were named aka followed by the
+operating system and architecture.  The library name was then suffixed
+by its linkage, e.g., _dynamic.  All libraries were in the lib
+directory.  For backward compatibility the old names are preserved.
+However, these names are deprecated and may not be supported in future
+releases.  Under unix the historical name is symlinked to the current
+name.  Under Windows the current file is copied to the historical
+name.  The following list gives the historical names and the
+corresponding current names:
+
+akawin64_mt.lib -> static/bondoas.lib
+akawin64_md.lib -> static/bondoas_md.lib
+akadll.dll -> bondoas.dll
+akadll.lib -> bondoas.lib
+
+Microsoft C/C++ /MD and /MT Compilation
+
+The Microsoft compiler requires the C run-time library linkage to be
+specified at compile time by using either the /MD or /MT compilation
+switch.  These switches determine which MSC library is expected to be
+linked with the object (or library containing the object) when
+creating an executable or dll.  The Microsoft documentation specifies:
+"All modules passed to a given invocation of the linker must have been
+compiled with the same run-time library compiler option."  The default
+bondoas static library is compiled with /MT.  The static/
+sub-directory also contains bondoas_md.lib in which the objects were
+compiled with /MD.  For more information about these compile switches
+please refer to the Microsoft compiler documentation.
+

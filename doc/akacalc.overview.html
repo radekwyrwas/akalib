@@ -1,0 +1,452 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on December 2, 2013 by texi2html 1.82
+texi2html was written by: 
+            Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+-->
+<head>
+<title>AKACalc Command Line Utilities</title>
+
+<meta name="description" content="AKACalc Command Line Utilities">
+<meta name="keywords" content="AKACalc Command Line Utilities">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.82">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.smallquotation {font-size: smaller}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+body {
+    padding: 1em 2em;
+}
+
+span.title {
+    font-size: 150%;
+    text-align: center;
+    font-weight: bold;
+    font-variant: small-caps;
+}
+
+h1 {
+    font-size: 150%;
+    margin-top: 0em;
+    padding-top: 1em;
+    border-style: none;
+    padding-top: 1em;
+}
+
+h2 {
+    font-size: 130%;
+}
+
+h3 {
+    font-size: 105%;
+}
+
+code {
+    font-family: courier;
+    color: navy;
+    font-size: 115%;
+}
+
+pre { 
+    margin-left: 2em; 
+    font-family: courier;
+    color: navy;
+    font-size: 115%;
+}
+
+a {
+    color: blue;
+    text-decoration: none;
+}
+
+a:visited {
+    color: blue;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+div#contents {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    border: thin solid;
+    background: lightgray;
+    padding: .25em;
+    opacity: 0.85;
+}
+
+div#contents ul {
+    padding-left: 1.5em;
+}
+
+div#contents span {
+    text-align: center;
+    text-decoration: underline;
+    display: block;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+div.code {
+    font-family: courier;
+    font-size: 110%;
+    white-space: pre;
+}
+
+p.code {
+    font-family: courier; 
+    font-size: 110%; 
+    margin-left: 4em;
+    text-indent: -2em;
+}
+
+span.code {
+    font-family: courier; 
+    font-size: 105%; 
+}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<table class=title><tr>
+<td style='text-align: right; 
+border: solid thin;
+background-color: rgb(221, 232, 234);
+padding: .25em;
+font-family: Helvetica;
+font-size: 180%;
+color: lightslategray;
+cursor: pointer;'
+ onclick='window.open("http://kalotay.com");'>
+<span style='color: teal;'>Kalotay</span><br>
+<span>Analytics</span><br>
+<span style='font-size: 25%; text-transform: uppercase;'>A Division of Andrew Kalotay Associates, Inc.</span>
+</td>
+<td style='padding-left: 4em;'><span class='title'>AKACalc Command Line Utilities</span></td></tr></table>
+<a name="Overview"></a>
+<h1 class="chapter">Overview</h1>
+<p>AKACalc is a suite of programs based on Andrew Kalotay Associates&rsquo; fixed
+coupon bond valuation library BondOAS&trade;.  They provide a
+ready interface to BondOAS&trade; and may be used in production
+or as a benchmark to test implementations.
+</p>
+<p>All AKACalc programs are command line programs.  They read from plain
+text input files and write to plain text output files as well as to
+stdout and stderr.
+</p>
+<p>All AKACalc programs accept the command line switch <code>-h</code> which
+provides full documentation of the command line arguments, input, and
+outputs.
+</p>
+<p>The AKACalc programs require data files which define the instruments and
+interest rate environment.  The remainder of this document describes the data
+format for text files used by the AKACalc programs.  These files are
+essentially a flat record database.  All files have one record per line and
+each record has fields separated by white space.
+</p>
+<p>There are three types of data files described here:
+</p><ol>
+<li> Bond Specifications
+</li><li> Bond Price
+</li><li> Yield Curve Data
+</li></ol>
+
+
+<a name="General-Data-Rules"></a>
+<h1 class="chapter">General Data Rules</h1>
+<p>All dates are of the form yyyymmdd, e.g., 19901231.  All other numbers
+may be integers or floats and will be read appropriately.  All fields
+must be separated by a space.  Commas between fields are optional and
+will be ignored.  String fields that contain spaces, tabs, or commas
+must be enclosed in double quotes (e.g.: &quot;a string in quotes&quot;).  A
+string may not contain a double quote.
+</p>
+<p>All data files must be sorted as specified.  All sorts are ascending.
+</p>
+
+<a name="Bond-Specifications"></a>
+<h1 class="chapter">Bond Specifications</h1>
+<p>bond specifications are typically represented in the following four
+files.  An optional fifth file provides step-up/down coupon details.
+</p><ul>
+<li> Bond Data Input File
+</li><li> Call Data Input File
+</li><li> Put Data Input File
+</li><li> Sink Data Input File
+</li></ul>
+
+
+<a name="Bond-Data-Input-File"></a>
+<h2 class="section">Bond Data Input File</h2>
+
+<p><code>
+&lt;issue key&gt; &lt;initial date&gt; &lt;maturity date&gt;[:&lt;fcdate&gt;:&lt;lcdate&gt;:&lt;payday&gt;]
+&lt;coupon&gt;[:yield-method][:x-cpn-days] &lt;issue size&gt;[:&lt;amortization&gt;] &lt;frequency&gt; &lt;daycount&gt;
+[redemption value] [issue price] [sinking-fund-designation]
+</code>
+</p>
+
+<p>The above is the format of a bond record.  There is one bond record per
+line.  The file must be sorted by <code>&lt;issue key&gt;</code>.  The fields are:
+</p>
+<ul>
+<li> issue key - unique issue id string
+</li><li> initial date - date as yyyymmdd
+</li><li> maturity date - date as yyyymmdd
+</li><li> fcdate - optional irregular first coupon payment date
+</li><li> lcdate - optional last regular coupon payment date (other than maturity)
+</li><li> payday - optional day of the month on which the coupon is paid.
+It should be set when the payday is at the end of the month.  For
+example, if a bond matures on 6/30, does it pay interest on 12/30 or
+12/31?  Set payday to 31 to obtain the latter behavior.  Payday of -1
+will translate to a payday of 31 only for bonds where end-of-month
+treatment is relevant.
+</li><li> coupon - coupon value as percent (i.e., 8.635% represented as 8.635)
+</li><li> yield method is an optional field indicating the method for
+computing the yield.
+<ul>
+<li> bey - discount flows using bond equivalent yield method, default if no yield method is specified
+</li><li> period - use simple interest calculations in the final coupon
+period
+</li><li> year - use simple interest calculations in the final year of the
+instrument
+</li><li> muni - use municipal bond yield convention
+</li></ul>
+</li><li> x-cpn-days - default is zero.
+</li><li> issue size - dollar amount of total issue
+</li><li> amortization - optional amortization years for a mortgage
+</li><li> frequency - frequency of coupon payment, as fraction of a year.  E.g.:
+<ul>
+<li> 0.083 - monthly (accepted value is &gt;= .08 and &lt;= .085)
+</li><li> 0.25 - quarterly
+</li><li> 0.5  - semi-annual
+</li><li> 1.0  - annual
+</li><li> 0    - interest at maturity (semi-annual bey is used for yields)
+</li></ul>
+</li><li> daycount - an integer indicating the daycount convention:
+<ul>
+<li> 0 - 30/360
+</li><li> 1 - 30/360 European
+</li><li> 2 - Actual/360
+</li><li> 3 - Actual/365
+</li><li> 4 - Actual/Actual
+</li></ul>
+</li><li> redemption value - optional argument for bond redemption (see akaapi.h), value is 100 (par) if omitted.
+</li><li> issue price - optional argument for bond issue price, value is 100 (par) if omitted.
+</li><li> designation - optional description of method of allocating any
+bought-ahead sinking-fund amounts to the remaining cash flows.  Only
+applicable to sinking fund bonds.  Valid values
+are:
+<ul>
+<li> p - prorata, allocate evenly to remaining flows
+</li><li> b - back, allocate as much as possible to flows starting from
+the last
+</li><li> f - front, like back but start from the first flow after the
+pvdate
+</li></ul>
+</li></ul>
+
+<p>For historical compatibility there are a number of optional fields in
+the bond input file format.  The optional fields may always be
+omitted.  To use the optional fcdate, lcdate, or payday fields a colon
+(:) is used to subdivide the maturity date field.  Each of the fields
+may be left blank but the colons must be present if a subsequent field
+needs to be specified.  For example, to specify only a payday but no
+fcdate or lcdate use:
+<code>20100630:::31</code>
+</p>
+
+<a name="Call_002fPut-Data-Input-File"></a>
+<h2 class="section">Call/Put Data Input File</h2>
+
+<p><code>
+&lt;issue key&gt; &lt;date&gt; &lt;option type&gt; &lt;price&gt; &lt;delay&gt;
+</code>
+</p>
+<p>The above is the format of both a put and a call record.  There is one
+record per line.  The file must be sorted by <code>&lt;issue key&gt;</code> and
+then by <code>&lt;date&gt;</code>.  The fields are:
+</p>
+<ul>
+<li> issue key - unique issue id string
+</li><li> date - date as yyyymmdd
+</li><li> option type - flag for option type
+1=continuous (American), 0=discrete (European), 2=Bermudan
+</li><li> price - exercise price
+</li><li> delay - number of notice days for call/put
+</li></ul>
+
+<p>Note: for a given issue key all options should be of the same type.
+Note: for a given issue key all options should have the same delay.
+</p>
+
+
+<a name="Sink-Data-Input-File"></a>
+<h2 class="section">Sink Data Input File</h2>
+<p><code>
+&lt;issue key&gt; &lt;date&gt; &lt;acceleration&gt; &lt;price&gt; &lt;amount&gt; &lt;delivery&gt;
+</code>
+</p>
+<p>The above is the format of a sink record.  There is one record per
+line.  The file must be sorted by <code>&lt;issue key&gt;</code> and then by
+<code>&lt;date&gt;</code>.  The fields are:
+</p>
+<ul>
+<li> issue key - unique issue id string
+</li><li> date - date as yyyymmdd
+</li><li> acceleration - rate of permitted acceleration: 0=none,
+1=double-up, 2=triple-up, etc.
+</li><li> price - sink price as percent of par; usually 100, but can be below par for zero coupon bonds
+</li><li> amount - sink amount in dollars
+</li><li> delivery - delivery option flag; 1 allow delivery option, 0 no delivery
+</li></ul>
+
+<p>Note: for a given issue key the acceleration and delivery settings
+of the first sink record is what is used.  For clarity it is suggested
+that all sink schedules for a bond be consistent but only the first is
+significant for these settings.
+</p>
+
+<a name="Coupon-Data-Input-File"></a>
+<h2 class="section">Coupon Data Input File</h2>
+<p><code>
+&lt;issue key&gt; &lt;date&gt; &lt;coupon&gt;
+</code>
+</p>
+<p>The above is the format of step up/down coupons.  There is one record
+per line.  The file must be sorted by <code>&lt;issue key&gt;</code> and then by
+<code>&lt;date&gt;</code>.  The fields are:
+</p>
+<ul>
+<li> issue key - unique issue id string
+</li><li> date - date as yyyymmdd - date the coupon comes into effect
+</li><li> coupon - coupon value as percent (i.e., 8.635% represented as 8.635)
+</li></ul>
+
+
+<a name="Price-Data"></a>
+<h1 class="chapter">Price Data</h1>
+
+<p>Price data provides price and position information for issues as of a
+specified date.  There is only one price data file.
+</p>
+<p>The file format is described below.
+</p>
+
+<a name="Price-Data-Input-File"></a>
+<h2 class="section">Price Data Input File</h2>
+<p><code>
+&lt;date&gt;[:&lt;tradedate&gt;] &lt;issue key&gt; &lt;price&gt; [&lt;outstanding amount&gt;] [&lt;position&gt;]
+</code>
+</p>
+<p>The above is the format of a price record.  There is one record per
+line.  The file must be sorted by <code>&lt;date&gt;</code> and <code>&lt;issue
+key&gt;</code>.  Please note, the price file is sorted by <code>&lt;date&gt;</code> first,
+then by <code>&lt;issue key&gt;</code>.  The fields are:
+</p>
+<ul>
+<li> date - present value date for the data
+</li><li> tradedate - optional trade date, the primary date is the settlement date
+</li><li> issue key - unique issue id string
+</li><li> price - current price
+</li><li> outstanding amount - optional field for integer current amount outstanding, this is only required for securities with sinking funds
+</li><li> position - optional integer size of issue position (only used for portfolio calculations)
+</li></ul>
+
+
+<a name="Yield-Curve-Data"></a>
+<h1 class="chapter">Yield Curve Data</h1>
+
+<p>A yield data input file file describes one or more yield curves with a
+set of terms and rates.
+</p>
+<p>Yield data provides yield and information for a specified date.  There
+is only one yield data file.
+</p>
+
+<a name="Yield-Data-Input-File"></a>
+<h2 class="section">Yield Data Input File</h2>
+
+<table><tr><td>&nbsp;</td><td><pre class="example">&lt;1st term years&gt; ... &lt;nth term years&gt;
+&lt;date&gt; &lt;volatility&gt; &lt;mean reversion&gt; &lt;1st term rate&gt; ... &lt;nth term rate&gt;
+...
+&lt;date&gt; &lt;volatility&gt; &lt;mean reversion&gt; &lt;1st term rate&gt; ... &lt;nth term rate&gt;
+</pre></td></tr></table>
+
+<p>Please <b>note</b> that the first line of the yield file the contains the terms.
+The remaining lines contain the rates.  The file is be sorted by the yield
+record dates.  The term definition line is not part of the sort.
+The yield file must have at least two lines.
+</p>
+<p>The number of fields per line depends on the term structure specified in the
+term record.
+</p>
+
+<a name="Term-Record-Line"></a>
+<h2 class="section">Term Record Line</h2>
+
+<p>The term record line of the file describes the term structure.  The
+fields specify the years of the term.  For example, 0.25 is three
+months, 30 is thirty years.  The term years must be in ascending order.
+The fields for the first line are:
+</p>
+<ul>
+<li> term years - years (or fractions of) for the term
+</li></ul>
+
+
+<a name="Rates-Lines"></a>
+<h2 class="section">Rates Lines</h2>
+
+<p>The remaining lines are specify yield curve rates for the terms specified on
+the first line.
+</p>
+<p>The first field of a rates line is the valuation or settlement date.
+</p>
+<p>The second field of a rates line is the short interest rate volatility.
+Example: 10% volatility must be shown as 10.0.
+</p>
+<p>The third field of a rates line is the mean reversion factor.  Mean
+reversion speed is a percent, for example 2% is represented as
+2.0.  Note: most uses will have mean reversion of zero.
+</p>
+<p>The remaining fields specify the rates for the terms specified on 
+the first line.  The number of rate value fields must equal the number 
+of terms specified on the first line.  Rates are in percentage
+points.  A 5.25% rate is represented as 5.25.
+</p>
+<p>The rate lines fields are:
+</p><ul>
+<li> date - present value date (valuation or settlement date)
+</li><li> volatility
+</li><li> mean reversion
+</li><li> rate - rate corresponding to terms specified
+</li></ul>
+
+</body>
+</html>

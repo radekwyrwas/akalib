@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
 <html>
-<!-- Created on August 27, 2012 by texi2html 1.82
+<!-- Created on December 2, 2013 by texi2html 1.82
 texi2html was written by: 
             Lionel Cons <Lionel.Cons@cern.ch> (original author)
             Karl Berry  <karl@freefriends.org>
@@ -10,10 +10,10 @@ Maintained by: Many creative people.
 Send bugs and suggestions to <texi2html-bug@nongnu.org>
 -->
 <head>
-<title>BondOAS&reg; Software Library</title>
+<title>BondOAS Library Overview</title>
 
-<meta name="description" content="BondOAS&reg; Software Library">
-<meta name="keywords" content="BondOAS&reg; Software Library">
+<meta name="description" content="BondOAS Library Overview">
+<meta name="keywords" content="BondOAS Library Overview">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="texi2html 1.82">
@@ -33,6 +33,98 @@ pre.smalllisp {font-size: smaller}
 span.roman {font-family:serif; font-weight:normal;}
 span.sansserif {font-family:sans-serif; font-weight:normal;}
 ul.toc {list-style: none}
+body {
+    padding: 1em 2em;
+}
+
+span.title {
+    font-size: 150%;
+    text-align: center;
+    font-weight: bold;
+    font-variant: small-caps;
+}
+
+h1 {
+    font-size: 150%;
+    margin-top: 0em;
+    padding-top: 1em;
+    border-style: none;
+    padding-top: 1em;
+}
+
+h2 {
+    font-size: 130%;
+}
+
+h3 {
+    font-size: 105%;
+}
+
+code {
+    font-family: courier;
+    color: navy;
+    font-size: 115%;
+}
+
+pre { 
+    margin-left: 2em; 
+    font-family: courier;
+    color: navy;
+    font-size: 115%;
+}
+
+a {
+    color: blue;
+    text-decoration: none;
+}
+
+a:visited {
+    color: blue;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+div#contents {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    border: thin solid;
+    background: lightgray;
+    padding: .25em;
+    opacity: 0.85;
+}
+
+div#contents ul {
+    padding-left: 1.5em;
+}
+
+div#contents span {
+    text-align: center;
+    text-decoration: underline;
+    display: block;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+div.code {
+    font-family: courier;
+    font-size: 110%;
+    white-space: pre;
+}
+
+p.code {
+    font-family: courier; 
+    font-size: 110%; 
+    margin-left: 4em;
+    text-indent: -2em;
+}
+
+span.code {
+    font-family: courier; 
+    font-size: 105%; 
+}
 -->
 </style>
 
@@ -41,310 +133,191 @@ ul.toc {list-style: none}
 
 <body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
 
-<a name="Overview"></a>
-<table cellpadding="1" cellspacing="1" border="0">
-<tr><td valign="middle" align="left">[ &lt; ]</td>
-<td valign="middle" align="left">[<a href="#BondOAS_00ae-Functionality" title="Next section in reading order"> &gt; </a>]</td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left">[ &lt;&lt; ]</td>
-<td valign="middle" align="left">[ Up ]</td>
-<td valign="middle" align="left">[<a href="#BondOAS_00ae-Functionality" title="Next chapter"> &gt;&gt; </a>]</td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left">[<a href="#Overview" title="Cover (top) of document">Top</a>]</td>
-<td valign="middle" align="left">[Contents]</td>
-<td valign="middle" align="left">[Index]</td>
-<td valign="middle" align="left">[<a href="#SEC_About" title="About (help)"> ? </a>]</td>
-</tr></table>
-<h2 class="section">1. Overview</h2>
-<p>BondOAS&reg; provides a self-consistent lattice-based recursive
-valuation kernel for fixed coupon bonds.  The underlying interest
-rate model is the industry standard Black-Karasinski process
-implemented using AKA&rsquo;s proprietary tetranomial lattice (or interest
-rate tree).
+<table class=title><tr>
+<td style='text-align: right; 
+border: solid thin;
+background-color: rgb(221, 232, 234);
+padding: .25em;
+font-family: Helvetica;
+font-size: 180%;
+color: lightslategray;
+cursor: pointer;'
+ onclick='window.open("http://kalotay.com");'>
+<span style='color: teal;'>Kalotay</span><br>
+<span>Analytics</span><br>
+<span style='font-size: 25%; text-transform: uppercase;'>A Division of Andrew Kalotay Associates, Inc.</span>
+</td>
+<td style='padding-left: 4em;'><span class='title'>BondOAS&trade; Library Overview</span></td></tr></table>
+<p>BondOAS&trade; is a rigorously developed, continuously enhanced, thoroughly
+tested valuation engine for the universe of fixed coupon bonds. These can be
+step coupon, callable, putable, amortizing, and pre-refunded securities as
+well as simple mortgages.  Option types covered include American, Bermudan,
+European, and Canary (like Bermudan but can stop being callable before
+maturity). The structures can be sinking fund bonds with acceleration options
+(double-up, etc.) and delivery options (the ability of the issuer to buy below
+par and deliver in lieu of sinking at par).
 </p>
-<p>BondOAS&reg; values all fixed coupon bonds, in terms of coupon
-structure (including zeros and step-ups), principal prepayment
-structure (bullets and amortizing), and optionality (calls, puts,
-sinking funds).  These capabilities are applicable to all relevant
-market sectors (Corporates, Agencies, Treasuries, Municipals, domestic
-or foreign).  All functions accept standard daycount conventions.
+<p>The library contains a suite of internally consistent analytical routines, the
+primary ones being arbitrage-free valuation, conventional price/yield
+calculations, and scenario analysis. Its speed and accuracy makes it ideal for
+interactive applications or high volume processing.
 </p>
-<hr size="6">
-<a name="BondOAS_00ae-Functionality"></a>
-<table cellpadding="1" cellspacing="1" border="0">
-<tr><td valign="middle" align="left">[<a href="#Overview" title="Previous section in reading order"> &lt; </a>]</td>
-<td valign="middle" align="left">[<a href="#Valuation" title="Next section in reading order"> &gt; </a>]</td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left">[<a href="#Overview" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
-<td valign="middle" align="left">[<a href="#Overview" title="Up section"> Up </a>]</td>
-<td valign="middle" align="left">[<a href="#Programming-Information" title="Next chapter"> &gt;&gt; </a>]</td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left">[<a href="#Overview" title="Cover (top) of document">Top</a>]</td>
-<td valign="middle" align="left">[Contents]</td>
-<td valign="middle" align="left">[Index]</td>
-<td valign="middle" align="left">[<a href="#SEC_About" title="About (help)"> ? </a>]</td>
-</tr></table>
-<h2 class="section">2. BondOAS&reg; Functionality</h2>
+<p>BondOAS&trade; is widely used in trading, risk management, and pricing systems
+(including intra-day pricing of bond ETFs). Clients include major investment
+banks, exchanges, pricing services, risk management vendors, global financial
+information services, traders and portfolio managers, back office process
+vendors, and rating agencies.
+</p>
+<p>BondOAS&trade; is released as both static and dynamic libraries for multiple
+architectures.  In addition, Java and C# wrappers are available for each of
+these platforms.
+</p>
+<a name="Lattice-calibration"></a>
+<h2 class="section">Lattice calibration</h2>
 
-<hr size="6">
+<p>BondOAS&trade; uses a proprietary tetranomial lattice model employing the
+Black-Karasinski interest rate process. The user can specify either a) the
+volatility of the short-term rate and a mean reversion factor (which together
+determine the long-rate volatility) or b) the volatilities of the short and
+long rates (which together determine the mean reversion factor).
+</p>
+
 <a name="Valuation"></a>
-<table cellpadding="1" cellspacing="1" border="0">
-<tr><td valign="middle" align="left">[<a href="#BondOAS_00ae-Functionality" title="Previous section in reading order"> &lt; </a>]</td>
-<td valign="middle" align="left">[<a href="#Conventional-Bond-Calculations" title="Next section in reading order"> &gt; </a>]</td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left">[<a href="#BondOAS_00ae-Functionality" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
-<td valign="middle" align="left">[<a href="#BondOAS_00ae-Functionality" title="Up section"> Up </a>]</td>
-<td valign="middle" align="left">[<a href="#Programming-Information" title="Next chapter"> &gt;&gt; </a>]</td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left">[<a href="#Overview" title="Cover (top) of document">Top</a>]</td>
-<td valign="middle" align="left">[Contents]</td>
-<td valign="middle" align="left">[Index]</td>
-<td valign="middle" align="left">[<a href="#SEC_About" title="About (help)"> ? </a>]</td>
-</tr></table>
-<h3 class="subsection">2.1 Valuation</h3>
+<h2 class="section">Valuation</h2>
+
+<p>Bonds and embedded options are valued recursively on the calibrated interest
+rate lattice. Given an option-adjusted spread (OAS), BondOAS&trade; will shift
+the discount rate at each node on the lattice accordingly, apply it to the
+cash flow, check for option exercise if relevant, and report a price. Option
+values are extracted by taking the difference between the value of the
+underlying bullet bond and the value of the bond with embedded option(s).
+</p>
+<p>Given a price, BondOAS&trade; uses an iterative process to calculate the OAS. A
+trial OAS is added to the discount rate at every node on the lattice. If the
+resulting price using recursive valuation on the lattice is too low, the next
+try is a lower OAS; if the resulting price is too high, a higher OAS is
+attempted. The process is highly optimized for rapid convergence.
+</p>
+
+<a name="Coverage"></a>
+<h2 class="section">Coverage</h2>
+
+<p>All fixed rate bonds (single coupon and step-coupon bonds), including:
+</p>
 <ul>
-<li> Option Adjusted Spread (OAS) corresponding to a price
-</li><li> Fair Value given OAS
-</li><li> Effective duration, convexity, DV01
+<li> Fixed coupon, including step-coupon
+</li><li> US agency bonds
+</li><li> US corporate bonds
+</li><li> US municipal bonds
+</li><li> US Treasury notes and bonds
+</li><li> Foreign sovereigns
+</li><li> Foreign corporates
+</li><li> Simple fixed-rate mortgages
+</li></ul>
+
+
+<a name="Lattice_002dbased-Calculations"></a>
+<h2 class="section">Lattice-based Calculations</h2>
+
+<ul>
+<li> Option Adjusted Spread (OAS) given price
+</li><li> Fair value given OAS
+</li><li> I-spread, G-spread and Z-spread
+</li><li> Effective duration convexity, DV01
 </li><li> Key-rate durations
 </li></ul>
 
 
-<hr size="6">
 <a name="Conventional-Bond-Calculations"></a>
-<table cellpadding="1" cellspacing="1" border="0">
-<tr><td valign="middle" align="left">[<a href="#Valuation" title="Previous section in reading order"> &lt; </a>]</td>
-<td valign="middle" align="left">[<a href="#Scenario-Analysis-and-Stress-Testing" title="Next section in reading order"> &gt; </a>]</td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left">[<a href="#BondOAS_00ae-Functionality" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
-<td valign="middle" align="left">[<a href="#BondOAS_00ae-Functionality" title="Up section"> Up </a>]</td>
-<td valign="middle" align="left">[<a href="#Programming-Information" title="Next chapter"> &gt;&gt; </a>]</td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left">[<a href="#Overview" title="Cover (top) of document">Top</a>]</td>
-<td valign="middle" align="left">[Contents]</td>
-<td valign="middle" align="left">[Index]</td>
-<td valign="middle" align="left">[<a href="#SEC_About" title="About (help)"> ? </a>]</td>
-</tr></table>
-<h3 class="subsection">2.2 Conventional Bond Calculations</h3>
+<h2 class="section">Conventional Bond Calculations</h2>
+
 <ul>
-<li> Price/yield conversions for standard daycounts (Yields: YTM, YTC, YTP, YTW, CFY)
-</li><li> Accrued interest for standard daycounts
+<li> Price/yield conversions for the standard daycounts (Yields: YTM, YTC, YTP, YTW, CFY)
+</li><li> Accrued interest for the standard daycounts
 </li><li> Modified duration, convexity, DV01
+</li><li> Modified duration and convexity to worst
 </li><li> Cashflows
 </li></ul>
 
-<hr size="6">
+
 <a name="Scenario-Analysis-and-Stress-Testing"></a>
-<table cellpadding="1" cellspacing="1" border="0">
-<tr><td valign="middle" align="left">[<a href="#Conventional-Bond-Calculations" title="Previous section in reading order"> &lt; </a>]</td>
-<td valign="middle" align="left">[<a href="#Yield-Curve-Analysis" title="Next section in reading order"> &gt; </a>]</td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left">[<a href="#BondOAS_00ae-Functionality" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
-<td valign="middle" align="left">[<a href="#BondOAS_00ae-Functionality" title="Up section"> Up </a>]</td>
-<td valign="middle" align="left">[<a href="#Programming-Information" title="Next chapter"> &gt;&gt; </a>]</td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left">[<a href="#Overview" title="Cover (top) of document">Top</a>]</td>
-<td valign="middle" align="left">[Contents]</td>
-<td valign="middle" align="left">[Index]</td>
-<td valign="middle" align="left">[<a href="#SEC_About" title="About (help)"> ? </a>]</td>
-</tr></table>
-<h3 class="subsection">2.3 Scenario Analysis and Stress Testing</h3>
+<h2 class="section">Scenario Analysis and Stress Testing</h2>
 <ul>
-<li> Total return over specified holding period and interest rate scenario
-</li><li> Scenario-dependent calls and puts
+<li> Total return given holding period and interest rate scenario
+</li><li> Scenario-dependent calls and puts exercised optimally during the holding period (not available from other vendors)
 </li></ul>
 
-<hr size="6">
+
 <a name="Yield-Curve-Analysis"></a>
-<table cellpadding="1" cellspacing="1" border="0">
-<tr><td valign="middle" align="left">[<a href="#Scenario-Analysis-and-Stress-Testing" title="Previous section in reading order"> &lt; </a>]</td>
-<td valign="middle" align="left">[<a href="#Programming-Information" title="Next section in reading order"> &gt; </a>]</td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left">[<a href="#BondOAS_00ae-Functionality" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
-<td valign="middle" align="left">[<a href="#BondOAS_00ae-Functionality" title="Up section"> Up </a>]</td>
-<td valign="middle" align="left">[<a href="#Programming-Information" title="Next chapter"> &gt;&gt; </a>]</td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left">[<a href="#Overview" title="Cover (top) of document">Top</a>]</td>
-<td valign="middle" align="left">[Contents]</td>
-<td valign="middle" align="left">[Index]</td>
-<td valign="middle" align="left">[<a href="#SEC_About" title="About (help)"> ? </a>]</td>
-</tr></table>
-<h3 class="subsection">2.4 Yield Curve Analysis</h3>
+<h2 class="section">Yield Curve Analysis</h2>
 <ul>
-<li> Volatility term structure
-</li><li> Discount factors, zero-coupon rates and forward rates corresponding to a par yield curve
+<li> Volatility term structure (implied by short rate volatility and mean reversion, or short rate volatility and long rate volatility)
+</li><li> Discount factors, zero coupon rates and forward rates corresponding to a par yield curve
 </li></ul>
 
-<hr size="6">
-<a name="Programming-Information"></a>
-<table cellpadding="1" cellspacing="1" border="0">
-<tr><td valign="middle" align="left">[<a href="#Yield-Curve-Analysis" title="Previous section in reading order"> &lt; </a>]</td>
-<td valign="middle" align="left">[ &gt; ]</td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left">[<a href="#BondOAS_00ae-Functionality" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
-<td valign="middle" align="left">[<a href="#Overview" title="Up section"> Up </a>]</td>
-<td valign="middle" align="left">[ &gt;&gt; ]</td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left"> &nbsp; </td>
-<td valign="middle" align="left">[<a href="#Overview" title="Cover (top) of document">Top</a>]</td>
-<td valign="middle" align="left">[Contents]</td>
-<td valign="middle" align="left">[Index]</td>
-<td valign="middle" align="left">[<a href="#SEC_About" title="About (help)"> ? </a>]</td>
-</tr></table>
-<h2 class="section">3. Programming Information</h2>
-<p>BondOAS&reg; is written in C and is compiled for Win32, Solaris and
-Linux platforms.  It is delivered as both static (<code>akawin32.lib</code>,
-<code>libakasolaris.a</code>, <code>libakalinux.a</code>) and dynamic
-(<code>akadll.dll</code>, <code>akasolaris.so</code>, <code>akalinux.so</code>)
-libraries.  Information on how the library was compiled is in the file
-<code>build.info</code> in the architecture specific library directory.
-</p>
-<p>BondOAS&reg; is thread safe.
-</p>
-<p>BondOAS&reg; has a rich
-&lt;a href=akaapi.html&gt;application programming interface&lt;/a&gt;
-which allows detailed control over valuation functionality.
-</p>
-<p>An example directory is provided with the source in
-<code>src/example</code>.  The directory contains a Makefile to compile the
-sample programs for the appropriate architecture.
-</p>
-<hr size="6">
-<a name="SEC_About"></a>
-<table cellpadding="1" cellspacing="1" border="0">
-<tr><td valign="middle" align="left">[<a href="#Overview" title="Cover (top) of document">Top</a>]</td>
-<td valign="middle" align="left">[Contents]</td>
-<td valign="middle" align="left">[Index]</td>
-<td valign="middle" align="left">[<a href="#SEC_About" title="About (help)"> ? </a>]</td>
-</tr></table>
-<h1>About This Document</h1>
-<p>
-  This document was generated by <em>Oliver Karlin</em> on <em>August 27, 2012</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
-</p>
-<p>
-  The buttons in the navigation panels have the following meaning:
-</p>
-<table border="1">
-  <tr>
-    <th> Button </th>
-    <th> Name </th>
-    <th> Go to </th>
-    <th> From 1.2.3 go to</th>
-  </tr>
-  <tr>
-    <td align="center"> [ &lt; ] </td>
-    <td align="center">Back</td>
-    <td>Previous section in reading order</td>
-    <td>1.2.2</td>
-  </tr>
-  <tr>
-    <td align="center"> [ &gt; ] </td>
-    <td align="center">Forward</td>
-    <td>Next section in reading order</td>
-    <td>1.2.4</td>
-  </tr>
-  <tr>
-    <td align="center"> [ &lt;&lt; ] </td>
-    <td align="center">FastBack</td>
-    <td>Beginning of this chapter or previous chapter</td>
-    <td>1</td>
-  </tr>
-  <tr>
-    <td align="center"> [ Up ] </td>
-    <td align="center">Up</td>
-    <td>Up section</td>
-    <td>1.2</td>
-  </tr>
-  <tr>
-    <td align="center"> [ &gt;&gt; ] </td>
-    <td align="center">FastForward</td>
-    <td>Next chapter</td>
-    <td>2</td>
-  </tr>
-  <tr>
-    <td align="center"> [Top] </td>
-    <td align="center">Top</td>
-    <td>Cover (top) of document</td>
-    <td> &nbsp; </td>
-  </tr>
-  <tr>
-    <td align="center"> [Contents] </td>
-    <td align="center">Contents</td>
-    <td>Table of contents</td>
-    <td> &nbsp; </td>
-  </tr>
-  <tr>
-    <td align="center"> [Index] </td>
-    <td align="center">Index</td>
-    <td>Index</td>
-    <td> &nbsp; </td>
-  </tr>
-  <tr>
-    <td align="center"> [ ? ] </td>
-    <td align="center">About</td>
-    <td>About (help)</td>
-    <td> &nbsp; </td>
-  </tr>
-</table>
 
-<p>
-  where the <strong> Example </strong> assumes that the current position is at <strong> Subsubsection One-Two-Three </strong> of a document of the following structure:
-</p>
+<a name="Applications"></a>
+<h2 class="section">Applications</h2>
 
 <ul>
-  <li> 1. Section One
-    <ul>
-      <li>1.1 Subsection One-One
-        <ul>
-          <li>...</li>
-        </ul>
-      </li>
-      <li>1.2 Subsection One-Two
-        <ul>
-          <li>1.2.1 Subsubsection One-Two-One</li>
-          <li>1.2.2 Subsubsection One-Two-Two</li>
-          <li>1.2.3 Subsubsection One-Two-Three &nbsp; &nbsp;
-            <strong>&lt;== Current Position </strong></li>
-          <li>1.2.4 Subsubsection One-Two-Four</li>
-        </ul>
-      </li>
-      <li>1.3 Subsection One-Three
-        <ul>
-          <li>...</li>
-        </ul>
-      </li>
-      <li>1.4 Subsection One-Four</li>
-    </ul>
-  </li>
-</ul>
+<li> Real-time pricing
+</li><li> End-of-day-marking to market
+</li><li> Risk management
+</li><li> Index calculation
+</li><li> Trading
+</li><li> Client reporting
+</li><li> Back office post-trade processing
+</li><li> Model validation
+</li></ul>
 
-<hr size="1">
-<p>
- <font size="-1">
-  This document was generated by <em>Oliver Karlin</em> on <em>August 27, 2012</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
- </font>
- <br>
 
+<a name="Performance"></a>
+<h2 class="section">Performance</h2>
+<p>The following tables describe the performance of the principal BondOAS&trade;
+Library operations.  The timings were conducted on our baseline machine which
+has a 2.6gHz CPU and is running Linux.
 </p>
-</body>
+<p>The benchmark program, distributed in the lib sub-directory of the release,
+reports the benchmark of the machine it runs on relative to our baseline
+machine.  The performance on any machine will be the value reported below
+multiplied by the average of the values reported by the benchmark program.
+</p>
+<p>Lattice calibrations per second from real world curves by source:
+</p><table><tr><td>&nbsp;</td><td><pre class="smallexample">    ust 2005-2011   132
+  swaps 2005-2011   132
+</pre></td></tr></table>
+<p>Lattice calibrations per second by curve type and volatilty:
+</p><table><tr><td>&nbsp;</td><td><pre class="smallexample">                     0%   10%   30%
+             flat   182   140   125
+      gentle rise   176   143   130
+       sharp rise   176   136   130
+     negative/low   176   143   140
+</pre></td></tr></table>
+<p>Price computations per second by bond type and years to maturity:
+</p><table><tr><td>&nbsp;</td><td><pre class="smallexample">                    1yr   2yr   5yr  10yr
+           bullet 75000 65217 51724 40000
+         callable 38462 30000 20000 13274
+    call and sink 22727 15957  7576  3538
+</pre></td></tr></table>
+<p>OAS computations per second by bond type and years to maturity:
+</p><table><tr><td>&nbsp;</td><td><pre class="smallexample">                    1yr   2yr   5yr  10yr
+           bullet 26316 20833 12500  8850
+         callable  4545  3333  2315  2092
+    call and sink  2463  1712  1250   650
+</pre></td></tr></table>
+
+
+<a name="Programming-Information"></a>
+<h2 class="section">Programming Information</h2>
+
+<p>BondOAS&trade; is a thread-safe library written in C/C++.  We provide both a C
+and C++ API.  The API is documented in
+<a href="bondoas.api.html">BondOAS API.</a>&nbsp;The library is released as both static and dynamic libraries for multiple
+architectures including 32 and 64 bit Linux, Windows, and SunOS Solaris for
+x86 as well as Solaris for Sparc.
+</p>
+<p>In addition to the libraries the release includes Java and C# APIs and wrapper
+libraries.  The release also includes example code as well as compilation
+instructions for each architecture.
+</p></body>
 </html>
