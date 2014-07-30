@@ -1,0 +1,3334 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-15">
+<style type='text/css'>
+body {
+    padding: 1em 2em;
+}
+
+span.title {
+    font-size: 150%;
+    text-align: center;
+    font-weight: bold;
+    font-variant: small-caps;
+}
+
+h1 {
+    font-size: 150%;
+    margin-top: 0em;
+    padding-top: 1em;
+    border-style: none;
+    padding-top: 1em;
+}
+
+h2 {
+    font-size: 130%;
+}
+
+h3 {
+    font-size: 105%;
+}
+
+code {
+    font-family: courier;
+    color: navy;
+    font-size: 115%;
+}
+
+pre { 
+    margin-left: 2em; 
+    font-family: courier;
+    color: navy;
+    font-size: 115%;
+}
+
+a {
+    color: blue;
+    text-decoration: none;
+}
+
+a:visited {
+    color: blue;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+div#contents {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    border: thin solid;
+    background: lightgray;
+    padding: .25em;
+    opacity: 0.85;
+}
+
+div#contents ul {
+    padding-left: 1.5em;
+}
+
+div#contents span {
+    text-align: center;
+    text-decoration: underline;
+    display: block;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+div.code {
+    font-family: courier;
+    font-size: 110%;
+    white-space: pre;
+}
+
+p.code {
+    font-family: courier; 
+    font-size: 110%; 
+    margin-left: 4em;
+    text-indent: -2em;
+}
+
+span.code {
+    font-family: courier; 
+    font-size: 105%; 
+}</style>
+<style type='text/css'>
+h1 {
+    border-style: double;
+    border-width: 8px 0px 0px 0px;
+    margin-top: 3em;
+    padding-top: 1em;
+}
+
+div.blockcomment {
+    border: thin solid;
+    padding: 1em 2em;
+}
+
+span.comment {
+    font-style: italic;
+    color: maroon;
+}
+span.classdef {
+    font-size: 120%;
+    font-weight: bold;
+    color: royalblue;
+}
+
+a.classdef :hover {
+    text-decoration: none;
+}
+
+span.enumdef {
+    font-size: 95%;
+    font-weight: bold;
+    color: royalblue;
+}
+</style>
+<script type='text/javascript'>
+// -----------------------------------------------------------------
+// Purpose: stop an event from bubbling -- cross-browser code
+// Returns: 
+// -----------------------------------------------------------------
+function xBrowserStopPropagation(ev) {
+    if (!ev) { ev = window.event; } // for ie
+    if (ev.stopPropagation) {
+	ev.stopPropagation();
+    }
+    else {
+	ev.cancelBubble = true;	
+    }
+}
+
+// -----------------------------------------------------------------
+// Purpose: cross browser way to add an event
+//	note: is always to the bubble phase
+// Returns: 
+// -----------------------------------------------------------------
+function addEvent(obj, type, fn) {
+    if (obj.addEventListener) {
+	obj.addEventListener(type, fn, false);
+    }
+    else if (obj.attachEvent) {	// IE
+	obj.attachEvent("on" + type, fn);
+    }
+}
+
+function close_contents() {
+    var div = document.getElementById('inner_contents');
+    div.style.display = 'none';
+}
+
+function toggle_contents(ev) {
+    xBrowserStopPropagation(ev);
+    var div = document.getElementById('inner_contents');
+    div.style.display = (div.style.display == 'none') ? '' : 'none';
+}
+</script>
+<title>BondOAS&trade; Library API Documentation</title>
+</head>
+<body>
+<table class=title><tr>
+<td style='text-align: right; 
+border: solid thin;
+background-color: rgb(221, 232, 234);
+padding: .25em;
+font-family: Helvetica;
+font-size: 180%;
+color: lightslategray;
+cursor: pointer;'
+ onclick='window.open("http://kalotay.com");'>
+<span style='color: teal;'>Kalotay</span><br>
+<span>Analytics</span><br>
+<span style='font-size: 25%; text-transform: uppercase;'>A Division of Andrew Kalotay Associates, Inc.</span>
+</td>
+<td style='padding-left: 4em;'><span class='title'>BondOAS&trade; Library API Documentation</span></td></tr></table>
+<a name='contents0'></a><h1 class='initheader'>Description</h1>
+<p>
+BondOAS&trade; is a rigorously developed, continuously enhanced, thoroughly
+tested valuation engine for the universe of fixed coupon bonds.  The
+BondOAS&trade; library is a thread-safe library written in C/C++.  The library
+is released as both static and dynamic libraries for multiple architectures
+including 32 and 64 bit Linux, Windows, and SunOS.  BondOAS&trade; has APIs for
+C++, C, Java, and C#.  See
+<a href='bondoas.overview.html'>BondOAS&trade; Overview</a> for additional
+information.
+</p>
+<a name='contents1'></a><a name='akaapi.hpp'></a><h1>C++ API &mdash; akaapi.hpp</h1>
+<div class='blockcomment'>
+<p>* Copyright (c) 2013, Andrew Kalotay Associates, Inc..  All rights reserved. *
+</p>
+</div>
+
+
+
+<div class='blockcomment'>
+<a name='contents2'></a><h2>   Overview</h2>
+<p>This file contains the class definitions for using the C++ API to
+BondOAS&trade;.  This file also serves as documentation for the API.
+It is arranged in the following sections:
+</p>
+<ol>
+<li>General Notes</li>
+<li>Error Handling</li>
+<li>Initialization</li>
+<li>Interest Rate Model Definition</li>
+<li>Bond Definition</li>
+<li>Valuation</li>
+<li>Date Handling</li>
+</ol>
+</div>
+
+
+<div class='blockcomment'>
+<a name='contents3'></a><h2>   Section 1. General Notes</h2>
+<p>BondOAS&trade; is a multi-thread safe C++ API.  The interface is
+through a small set of classes.  These classes are described below.
+</p>
+<p>There are four primary classes:
+</p>
+<ol>
+<li>Initialization -- initializes library functions</li>
+<li>InterestRateModel -- defines an interest rate environment</li>
+<li>Bond -- defines a bond</li>
+<li>Value -- values a bond given an interest rate environment</li>
+</ol>
+<p>All error handling is managed through the Status class which is inherited
+by each other class.
+</p>
+   A simple program has the following steps.<div style='white-space: pre-wrap; font-family: Courier;'>
+
+   // The Initialization object must be successfully created and authorized
+   Initialization init;
+   if (init.Authorize(key, name) &gt; 0)
+       exit(init.Error());
+   
+   // Create both an interest rate model and a bond object
+   Bond bond("bullet", Date(2000, 1, 1), Date(2030, 1, 1), 2.0); // 30yr, 2%
+   InterestRateModel model;
+   model.SetRate(1, 2.0);	// set a flat 2% rate
+   model.Solve();
+   if (model.Error() &gt; 0)
+       exit(model.Error());
+
+   // Now value the bond
+   Value value(bond, model, Date(2013, 7, 1));
+   if (value.Error() &gt; 0)
+       exit(value.Error());
+   double price = value.Price(0); // price at OAS 0
+
+</div>
+</div>
+
+
+<div class='blockcomment'>
+<a name='contents4'></a><h2>   Section 2. Error Handling</h2>
+<p>All major classes inherit from the Status class.  It supports
+retrieving status/errors/warnings about the state of an object.
+See <a href='#akaerrno.h'>akaerrno.h</a> for a C enum of the AKA library error codes.
+</p>
+</div>
+<strong style='display: block; margin: 1.5em;'>Note: all objects are defined within the namespace 'AndrewKalotayAssociates'
+</strong>
+<div class='code'>
+class <a name='Status'></a><span class="classdef">Status</span> {
+protected:
+    class StatusData *statusdata;
+public:
+    <b>Status</b>();
+    ~<b>Status</b>();
+public:					 <span class='comment'>// all are const methods</span>
+    int <b>Error</b>() const; <span class='comment'>// returns AKA Error Number of error (or zero, none)</span>
+    int <b>WarningCount</b>() const;
+    int <b>Warning</b>(int idx) const;	<span class='comment'>// returns AKA Error Number of warning</span>
+
+	<span class='comment'>/* converts a numeric status code to a string */</span>
+    static const char *<b>ErrorString</b>(int);
+	<span class='comment'>// get errors/warnings in string form</span>
+    const char *<b>ErrorString</b>() const { return <b>ErrorString</b>(<b>Error</b>()); };
+    const char *<b>WarningString</b>(int idx) const {
+	return <b>ErrorString</b>(<b>Warning</b>(idx));
+    };
+
+    <span class='comment'>/* Clear any error and warnings.  In most use cases there should be
+       no need to call this method as each class inheriting from this
+       object clears messages before each of its operations/methods. */</span>
+    void <b>Clear</b>();
+};
+
+<span class='comment'>// forward declaration</span>
+class Date;
+
+</div>
+<div class='blockcomment'>
+<a name='contents5'></a><h2>   Section 3. Initialization.</h2>
+<p>The Initialization object must be successfully authorized with a
+valid key in order to use the library.  All operations will fail if
+the library is not initialized or is shutdown.  By default, the
+library is shutdown (de-initialized) when the Initialization object
+goes out of scope or is deleted.  This behavior can be inhibited by
+ShutdownAutomatically(false), see below.  If automatic shutdown is
+disabled the library can be shutdown via the static Shutdown()
+method.  The Shutdown() method should otherwise never be called.
+The behavior of multiple concurrent initializations is undefined
+and should be avoided.  Use of valid library objects subsequent to
+shutdown is also undefined and should be avoided.
+</p>
+</div>
+<div class='code'>
+class <a name='Initialization'></a><span class="classdef">Initialization</span> : public <a href='bondoas.api.html#Status'>Status</a> {
+private:     <span class='comment'>// disallow copy, assignment</span>
+    <b>Initialization</b>(const <a href='#Initialization'>Initialization</a> &amp;) { };
+    <a href='#Initialization'>Initialization</a> &amp; <b>operator=</b>(const <a href='#Initialization'>Initialization</a> &amp;) { return *this; };
+public:
+	<span class='comment'>/* Initialize the library but do not check authorization.
+	   All library operations will fail until authorization is done. */</span>
+    <b>Initialization</b>();
+	<span class='comment'>/* Initialize and authorize, call the appropriate authorization
+	   method, below, and set <b>Error</b>(). */</span>
+    <b>Initialization</b>(long key, const char *uname);
+    <b>Initialization</b>(const char *keyfilename);
+
+    ~<b>Initialization</b>();		<span class='comment'>// by default library is shutdown</span>
+
+    void <b>ShutdownAutomatically</b>(bool); <span class='comment'>// set auto-shutdown behavior</span>
+    static void <b>Shutdown</b>();	<span class='comment'>// shutdown library when not done automatically</span>
+
+	<span class='comment'>/* Returns error code or 0 on success. */</span>
+    int <b>Authorize</b>(long key, const char *uname);
+
+	<span class='comment'>/* Authorize getting key and user-name from a key file with
+	   key and user-name in that order.  White space between the
+	   key and the user-name is ignored, as is trailing white
+	   space after the user-name.  Any read or parsing errors
+	   cause initialization to fail with
+	   AKA_ERROR_AUTHORIZATION.  Returns error code or 0 on success. */</span>
+    int <b>Authorize</b>(const char *keyfilename = "./akalib.key");
+
+    <span class='comment'>/* <a href='#Initialization'>Initialization</a> inherits from <a href='#Status'>Status</a>.  <b>Error</b>() must be checked
+       after instantiation.  No library operations will work if the
+       this object has an error.  Nor will they work if this object
+       is not instantiated. */</span>
+
+    <a href='#Date'>Date</a> <b>Expiration</b>() const; <span class='comment'>// when the provided key expires as a Date</span>
+    static double <b>Version</b>();   <span class='comment'>// library version as a number</span>
+    static const char *<b>VersionString</b>(); <span class='comment'>// library version as a string</span>
+};
+
+
+</div>
+<div class='blockcomment'>
+<a name='contents6'></a><h2>   Section 4. Interest Rate Model Definition</h2>
+<p>InterestRateModel is the solved representation of future interest
+rates states based on an interest rate curve and volatility.
+</p>
+</div>
+<div class='code'>
+class <a name='InterestRateModel'></a><span class="classdef">InterestRateModel</span> : public <a href='bondoas.api.html#Status'>Status</a> {
+private:
+    friend class <a href='#Value'>Value</a>;
+    friend class <a href='#ValueAfterTax'>ValueAfterTax</a>;
+    friend class <a href='#InterestRateScenario'>InterestRateScenario</a>;
+    friend class <a href='#Compatibility'>Compatibility</a>;
+    class InterestRateModelData *data;
+public:
+    enum <a name='INPUTTYPE'></a><span class="enumdef">INPUTTYPE</span> { FACTORCURVE, PARCURVE };
+	<span class='comment'>// note, for Zero curves use FACTORCURVE and <b>SetZeroRate</b>()</span>
+    <b>InterestRateModel</b>(<a href='#INPUTTYPE'>INPUTTYPE</a> = PARCURVE);
+    ~<b>InterestRateModel</b>();
+
+	<span class='comment'>/* Copy Constructor
+
+	   Using a forward period greater than zero creates a new
+	   interest rate model with rates projected forward that
+	   number of years. The resulting new curve will be of type
+	   PARCURVE.  It will not be already solved.
+
+	   A simple copy (no forward rate passed) of a solved model
+	   creates a new copied model that is also already solved.
+	   There is no cost to solving the new model. */</span>
+    <b>InterestRateModel</b>(const <a href='#InterestRateModel'>InterestRateModel</a> &amp;, double forward_period = 0);
+
+    <a href='#InterestRateModel'>InterestRateModel</a> &amp; <b>operator=</b>(const <a href='#InterestRateModel'>InterestRateModel</a> &amp;);
+
+	<span class='comment'>// <u>Curve Configuration</u></span>
+	<span class='comment'>/* all Set{X}() methods return true/false.  If the value is
+	   false the set operation has been ignored.  A false value is
+	   only due to bad/invalid inputs given to the method. */</span>
+
+	<span class='comment'>/* Set a rate on the par curve, 7% as 7.0.  Will fail if year is
+	   &lt;= 0, rate is too low, or curve is a FACTORCURVE */</span>
+    bool <b>SetRate</b>(double year, double rate);
+	<span class='comment'>/* Set a factor on the discount curve.  Will fail if year is
+	   &lt;= 0, factor is too low, or curve is a PARCURVE */</span>
+    bool <b>SetFactor</b>(double year, double factor);
+	<span class='comment'>/* Set a rate using the zero rate.  Will fail if year is
+	   &lt;= 0, rate is too low, or curve is not a FACTORCURVE */</span>
+    bool <b>SetZeroRate</b>(double year, double zerorate);
+
+	<span class='comment'>// remove the curve point, either par or factor -- always succeeds</span>
+    void <b>RemovePoint</b>(double year);
+    void <b>RemoveAllPoints</b>();
+
+	<span class='comment'>// returns the par rate at the year, interpolated if not explicitly set,</span>
+	<span class='comment'>// a year &lt;= 0 causes Value::BadValue to be returned.</span>
+    double <b>GetRate</b>(double year) const;
+	<span class='comment'>// like <b>GetRate</b>() but returns the discount factor</span>
+    double <b>GetFactor</b>(double year) const;
+
+	<span class='comment'>/* If the model input type (Factor or Par) does not match the
+	   type of rate requested (<b>GetRate</b>() vs. <b>GetFactor</b>()) the
+	   model must first be successfully solved using <b>Solve</b>().
+	   Otherwise, Value::BadValue will be returned. */</span>
+
+	<span class='comment'>/* Par rates and discount factors are interpolated
+	   differently.  Par rates are straight line interpolated
+	   while discount factors are fit exponentially.  This
+	   produces smooth curves in each case.  However, when
+	   converting between a one curve type and another you must
+	   specify points at semi-annual intervals or the different
+	   interpolation approaches will result in slightly different
+	   curves.  That is, if you specify new points using the
+	   rates/factors gotten from a curve of a different type, get
+	   and use points for each six month interval. */</span>
+
+	<span class='comment'>// convert between zero and factor rates</span>
+    static double <b>ZeroToFactor</b>(double rate, double year);
+    static double <b>FactorToZero</b>(double discount, double year);
+
+	<span class='comment'>// short-rate volatility, 18% represented as 18.0, initialized to zero</span>
+    bool <b>SetVolatility</b>(double);
+    double <b>GetVolatility</b>() const;
+
+	<span class='comment'>/* Interest rate model long volatility (30 year) is either
+	   determined by a mean reversion factor or by being
+	   set explicitly.  In the former case the short-term
+	   volatility and the mean reversion together determine the
+	   long-term volatility.  In the latter case the mean
+	   reversion is set explicitly.  These are mutually exclusive.
+	   The default behavior is to use a mean reversion of zero. */</span>
+
+	<span class='comment'>// mean reversion speed, 2% represented as 2.0, initialized to zero</span>
+    bool <b>SetAlpha</b>(double);	<span class='comment'>// forces use of mean reversion</span>
+    double <b>GetAlpha</b>() const;
+
+	<span class='comment'>// explicit long volatility, 18% is represented as 18.0</span>
+    bool <b>SetLongVolatility</b>(double); <span class='comment'>// forces use of explicit long volatility</span>
+
+	<span class='comment'>/* The long volatility is either explicitly set or solved for
+	   based on the mean reversion.  See note above.  If
+	   set explicitly this method returns the user set value.  If
+	   it must be solved for (mean reversion mode) then the
+	   interest rate model must be solved (see <b>Solve</b>() below)
+	   before the long volatility can be returned. */</span>
+    double <b>GetLongVolatility</b>() const;
+
+	<span class='comment'>// get the input curve type -- set in constructor</span>
+    <a href='#INPUTTYPE'>INPUTTYPE</a> <b>GetInputType</b>() const;
+    bool <b>IsParCurve</b>() const { return <b>GetInputType</b>() == PARCURVE; };
+
+	<span class='comment'>/* Solve for the interest rate model from the current
+	   configuration.  <b>Solve</b>() must be invoked successfully
+	   before the <a href='#InterestRateModel'>InterestRateModel</a> may be used in a Value
+	   constructor.
+	   <b>Solve</b>() returns the value of <b>Error</b>().  This will be
+	   AKA_ERROR_NONE except if a) initialization failed, b)
+	   permission is denied, c) curve is incomplete (no points),
+	   d) the curve points describe an insolvable interest
+	   environment.	*/</span>
+    int <b>Solve</b>();
+
+	<span class='comment'>/* Discount from the time in the future expressed as fractional years,
+	   returns Value::BadValue unless <b>Solve</b>() ran successfully */</span>
+    double <b>Discount</b>(double value, double fromtime, double oas = 0) const;
+
+	<span class='comment'>/* Returns the volatility at a time.
+	   Returns Value::BadValue unless <b>Solve</b>() ran successfully */</span>
+    double <b>GetVolatility</b>(double fromtime) const;
+
+	<span class='comment'>/* Deprecated interface */</span>
+    void <b>EnableCompatibility</b>();	<span class='comment'>// does nothing</span>
+};
+
+
+</div>
+<div class='blockcomment'>
+<a name='contents7'></a><h2>   Section 5. Bond Definition</h2>
+<p>The Bond object contains all the properties of a fixed income
+security.  It provides for a minimal initial definition and has
+Set methods in order to specialize the instrument.
+</p>
+<p>Error checking note: only the constructor can raise an error.  The
+only error conditions are failed initialization or bad dates or
+coupon as arguments to the constructor.  All the Set{} methods will
+return true/false as described below.  In either case they will not
+set/reset the Error() status.
+</p>
+</div>
+<div class='code'>
+class <a name='Bond'></a><span class="classdef">Bond</span> : public <a href='bondoas.api.html#Status'>Status</a> {
+private:
+    friend class <a href='#Value'>Value</a>;
+    friend class <a href='#ValueAfterTax'>ValueAfterTax</a>;
+    friend class <a href='#Compatibility'>Compatibility</a>;
+    class BondData *data;
+public:
+    <b>Bond</b>(const char *name, const <a href='#Date'>Date</a> &amp;idate, const <a href='#Date'>Date</a> &amp;mdate, double coupon);
+    ~<b>Bond</b>();
+    <b>Bond</b>(const <a href='#Bond'>Bond</a> &amp;);
+    <a href='#Bond'>Bond</a> &amp; <b>operator=</b>(const <a href='#Bond'>Bond</a> &amp;);
+
+	<span class='comment'>// <u>methods to set bond features</u></span>
+
+	<span class='comment'>/* all Set{X}() methods return true/false.  If the value is
+	   false the set operation has been ignored.  A false value is
+	   only due to bad/invalid values given to the method.  All
+	   dates must be valid dates and between the initial date and
+	   the maturity date.  In addition, all operations will fail
+	   if the constructor failed. The <b>Error</b>() status will not be
+	   updated by the Set{X}() methods. */</span>
+    enum <a name='DAYCOUNT'></a><span class="enumdef">DAYCOUNT</span> { <span class='comment'>// needed for yield and accrued interest calculation</span>
+        DC_30_360,  <span class='comment'>/* each month has 30 days and a year has 360 days,
+		       applies to most corporate, municipal, and agency bonds */</span>
+	DC_30E_360, <span class='comment'>// 30/360 with European treatment of Feb.</span>
+	DC_ACT_360, <span class='comment'>/* days in month are actual but year has 360 days,
+		       applies to U.S. Treasury bills */</span>
+	DC_ACT_365, <span class='comment'>/* days in month are actual but year has 365 days,
+		       applies to some CDs */</span>
+	DC_ACT_ACT  <span class='comment'>/* days in month are actual and coupon period days are
+		       actual, applies to U.S. Treasury notes and bonds, and
+		       some European sovereign debt issues */</span>
+    };
+    bool <b>SetDaycount</b>(<a href='#DAYCOUNT'>DAYCOUNT</a>); <span class='comment'>// constructor defaults to 30/360</span>
+
+    enum <a name='FREQUENCY'></a><span class="enumdef">FREQUENCY</span> {
+	FREQ_INT_AT_MATURITY, <span class='comment'>/* interest pays at maturity but yield is
+				 calculated on a semi-annual basis. */</span>
+	FREQ_ANNUAL,
+	FREQ_SEMIANNUAL,
+	FREQ_QUARTERLY,
+	FREQ_MONTHLY
+    };
+    bool <b>SetFrequency</b>(<a href='#FREQUENCY'>FREQUENCY</a>); <span class='comment'>// constructor defaults to semi-annual</span>
+
+    bool <b>SetRedemptionPrice</b>(double);	<span class='comment'>// ... par</span>
+
+	<span class='comment'>/* Note on pre-refunded bonds.  These must be characterized as
+	   optionless bonds maturing on the "pre-refunded to"
+	   date. They should not include calls and puts that may have
+	   been part of the original bond.  The pre-funded call price
+	   should be used as the redemption price. */</span>
+
+    bool <b>SetIssuePrice</b>(double);	<span class='comment'>// ... par</span>
+	<span class='comment'>/* Note, for after-tax valuation (see MuniOAS package) it
+	   is necessary to set the issue price of Original Issue
+	   Discount (OID) and Original Issue Premium (OIP) bonds in
+	   order for valuation to be accurate. */</span>
+
+	<span class='comment'>/* face amount, used in sinking funds to verify schedule;
+	   value of zero means trust schedule; constructor defaults
+	   to zero.
+	   For mortgages, this method must be used to set the mortgage
+	   amount.  A nominal value of 100 will otherwise be used. */</span>
+    bool <b>SetFaceAmount</b>(unsigned long);
+    bool <b>SetFaceAmount</b>(double);	<span class='comment'>// for very large numbers</span>
+
+	<span class='comment'>/* The next two methods allow specification of odd first and
+	   last coupons.  They are necessary only if these coupons are
+	   odd.  The last coupon is the final coupon before maturity.
+	   It is not necessary to specify the last coupon if a first
+	   coupon is specified and the last coupon is not longer than
+	   one regular coupon period. */</span>
+    bool <b>SetFirstCoupon</b>(const <a href='#Date'>Date</a> &amp;); <span class='comment'>// set first coupon</span>
+    bool <b>SetLastCoupon</b>(const <a href='#Date'>Date</a> &amp;);  <span class='comment'>// set penultimate coupon</span>
+
+	<span class='comment'>/* Configure the End-Of-Month (EOM) rule.  By default, EOM is
+	   disabled.  If EOM is enabled the cyclical coupon payment
+	   date will always fall on the end of the month.  For
+	   example, assume a semiannual bond that matures on 6/30 (or
+	   has a last coupon date of 6/30, if specified). It will pay
+	   on 6/30 and 12/30 with EOM disabled (the default).  It will
+	   pay on 6/30 and 12/31 (note, not 12/30) with EOM enabled.
+	   The EOM setting is ignored if the payment schedule would
+	   never fall on the end of the month.  A semiannual bond
+	   paying on 6/15 will always pay on 12/15 regardless of the
+	   EOM setting. */</span>
+    bool <b>SetPayDayEndOfMonth</b>(bool);
+    bool <b>SetPayDay</b>(int); <span class='comment'>// supports interface like C API (see documentation)</span>
+
+    enum <a name='YIELD_METHOD'></a><span class="enumdef">YIELD_METHOD</span> {
+	YLD_BEY = 1, <span class='comment'>/* Discount cash flows using bond equivalent
+			yield.  Example for semiannual 30/360, the
+			yield (y) explaining the input price is given
+			by applying discount factors to each cashflow
+			as 1/(1+y/2)^(days to cashflow/180) */</span>
+	YLD_SIMPLE_LAST_PERIOD, <span class='comment'>/* Default method.  If the pvdate is
+				   in the last coupon period then the
+				   yield is calculated on a
+				   simple-interest basis, otherwise
+				   BEY. */</span>
+
+	YLD_SIMPLE_LAST_YEAR, <span class='comment'>/* If the pvdate is within the last year
+				 of a bond's life, then simple
+				 interest is used for the cash flows
+				 occurring after the pvdate, otherwise
+				 BEY. (Used for some Canada bonds) */</span>
+
+	YLD_MUNI <span class='comment'>/* Like simple_last_period but has some special
+		    treatment if bond has odd first or last coupons.*/</span>
+    };
+    bool <b>SetYieldMethod</b>(<a href='#YIELD_METHOD'>YIELD_METHOD</a>); <span class='comment'>// set the yield method</span>
+
+	<span class='comment'>// add call/put/sink options</span>
+    bool <b>SetCall</b>(const <a href='#Date'>Date</a> &amp;, double px);
+    bool <b>SetPut</b>(const <a href='#Date'>Date</a> &amp;, double px);
+    bool <b>SetSink</b>(const <a href='#Date'>Date</a> &amp;, double amount, double px = 100);
+    bool <b>SetCoupon</b>(const <a href='#Date'>Date</a> &amp;, double);
+    bool <b>SetXCouponDays</b>(int);   <span class='comment'>/* Number of days bond trades ex-coupon
+				   (optional; defaults to zero), see
+				   notification settings, below. */</span>
+
+	<span class='comment'>// remove the call/put/sink/coupon for the date</span>
+    void <b>RemoveCall</b>(const <a href='#Date'>Date</a> &amp;);
+    void <b>RemovePut</b>(const <a href='#Date'>Date</a> &amp;);
+    void <b>RemoveSink</b>(const <a href='#Date'>Date</a> &amp;);
+    void <b>RemoveCoupon</b>(const <a href='#Date'>Date</a> &amp;);
+
+	<span class='comment'>// configure the call/put options</span>
+
+	<span class='comment'>/* Notice period must be &gt;= 0 and &lt; coupon frequency,
+	   constructor defaults to 30 days, the notice is the same for
+	   puts and calls.  See notification settings, below. */</span>
+    bool <b>SetNoticePeriod</b>(int);
+    bool <b>SetOptionDelay</b>(int d) { return <b>SetNoticePeriod</b>(d); };
+
+    bool <b>SetCallAmerican</b>(bool is_american); <span class='comment'>// constructor defaults to true</span>
+    bool <b>SetPutAmerican</b>(bool is_american); <span class='comment'>// constructor defaults to false</span>
+	<span class='comment'>/* there are no known examples of American puts but the library
+	   accommodates such a case */</span>
+
+	<span class='comment'>/* ALLOCATION configures the designation option in sinking
+	   funds.  It specifies how bonds purchased by issuer at a
+	   discount to satisfy sink are allocated */</span>
+    enum <a name='ALLOCATION'></a><span class="enumdef">ALLOCATION</span>  {
+	ALLOC_PRORATA, <span class='comment'>// on a pro-rata basis across sink schedule</span>
+	ALLOC_FRONT,   <span class='comment'>/* to the sink amounts after the pvdate, satisfying
+			  as much of the amount as available */</span>
+	ALLOC_BACK     <span class='comment'>// like front, but working back from maturity</span>
+    };
+
+	<span class='comment'>/* Configure the sinking fund options.  Allow delivery allows
+	   purchase of discount bonds by issuer to meet sink, defaults
+	   to false.  Acceleration allows the issuer to sink more than
+	   the sink amount on a sink date.  Acceleration is a percent
+	   where 100 is 100%.  100% allows issuer to sink twice the
+	   amount on the schedule on a given date, 200% three times
+	   the amount, The default is 0%.  Allocation is explained
+	   above. */</span>
+    bool <b>SetSinkOption</b>(bool allow_delivery, <span class='comment'>// .. false</span>
+		       double acceleration, <span class='comment'>// .. 0%</span>
+		       <a href='#ALLOCATION'>ALLOCATION</a> allocation); <span class='comment'>// ... pro-rata</span>
+
+	<span class='comment'>// coupon schedule dates can mark when coupon</span>
+	<span class='comment'>// begins or ends (reset at, or until)</span>
+    bool <b>SetCouponSchedulePeriod</b>(bool at_begin); <span class='comment'>// default is true</span>
+
+
+	<span class='comment'>/* Configure notification period behavior.  This is used for
+	   both option notification and ex-coupon days. */</span>
+    enum <a name='NotifyBehavior'></a><span class="enumdef">NotifyBehavior</span> {
+	<span class='comment'>/*  Extend the end of the notification/ex-coupon period so
+	    that it falls on a a business day.  This is the default
+	    behavior.  Example, for a currently callable American call
+	    with 30 days required notice, if the 30th day is a weekend
+	    (or holiday, if holiday list supplied) then push the next
+	    possible call opportunity to the next business day. */</span>
+	BusinessDaysExtend,
+
+	<span class='comment'>/* Only count business days when determining the notification
+	 * date. */</span>
+	BusinessDaysOnly
+    };
+	<span class='comment'>// configure the behavior, returns prior setting</span>
+    <a href='#NotifyBehavior'>NotifyBehavior</a> <b>SetNotifyBehavior</b>(<a href='#NotifyBehavior'>NotifyBehavior</a>);
+
+	<span class='comment'>/* Set weekends to be business days, returns prior setting.
+	   The default setting, for historical compatibility, is true.
+	   Note, if weekends are business days and no holidays are set
+	   (see below), notification is simply calendar days. */</span>
+    bool <b>SetBusinessDayWeekends</b>(bool);
+	<span class='comment'>// set a day to be a non-business day, true if date is valid</span>
+    bool <b>SetHoliday</b>(const <a href='#Date'>Date</a> &amp;);
+	<span class='comment'>// set an array of dates to be holidays, int must contain the count</span>
+    bool <b>SetHolidays</b>(const <a href='#Date'>Date</a> *, int);
+    bool <b>ClearHolidays</b>(); <span class='comment'>// remove all set holidays, true unless bond invalid</span>
+
+	<span class='comment'>/* Configure a bond to behave like a mortgage.
+
+	   This configures the option and sink schedules so that the
+	   bond behaves like a mortgage.  Existing sink and option
+	   schedules are removed.  Step Up/Down coupon schedules are
+	   also removed.  Subsequent calls to any Set methods for
+	   options or sinks will return false and fail.  The exception
+	   is <b>SetNoticeDays</b>(), see next.
+
+	   <b>SetMortgage</b>() will set the frequency to Monthly unless it
+	   has already been set by <b>SetFrequency</b>().  <b>SetFrequency</b>() may
+	   also be used after the call to <b>SetMortgage</b>() to reset it.
+
+	   Use <b>SetFaceAmount</b>() to set the mortgage amount.
+
+	   <b>SetMortgage</b>() will always succeed */</span>
+    bool <b>SetMortgage</b>();
+
+	<span class='comment'>/* Set mortgage amortization years.  This will return true if
+	   <b>SetMortgage</b>() has been invoked and the years are greater
+	   than the maturity of the bond.  Otherwise, it will return false. */</span>
+    bool <b>SetAmortization</b>(double years);
+
+	<span class='comment'>/* Set mortgage refinancing fees as a percent of par for
+	   "calling" the mortgage.  Fees are expressed as points, 1.5%
+	   is 1.5.  This will return true if <b>SetMortgage</b>() has been
+	   invoked.  Otherwise it will return false. */</span>
+    bool <b>SetMortgageRefinanceCost</b>(double);
+
+
+	<span class='comment'>/* Clears mortgage settings and restores functionality of Set methods
+	   for Options and Sinks. */</span>
+    void <b>ClearMortgage</b>();
+
+	<span class='comment'>// return basic setup</span>
+    const char *<b>GetName</b>() const;
+    <a href='#Date'>Date</a> <b>GetInitialDate</b>() const;
+    <a href='#Date'>Date</a> <b>GetMaturityDate</b>() const;
+    double <b>GetCoupon</b>() const;
+    <a href='#DAYCOUNT'>DAYCOUNT</a> <b>GetDaycount</b>() const;
+    <a href='#FREQUENCY'>FREQUENCY</a> <b>GetFrequency</b>() const;
+    double <b>GetFaceAmount</b>() const;
+};
+
+</div>
+<div class='blockcomment'>
+<a name='contents8'></a><h2>   Section 6. Valuation</h2>
+<p>All library valuation results are provided by the Value object.
+</p>
+<p>A Value object can be created with or without an interest rate
+model.  Some valuation methods require that an interest model
+be present.
+</p>
+</div>
+
+<div class='blockcomment'>
+<p>The following classes define complex values returned by some methods
+of the Value class (defined below).  These classes could/should be
+nested in Value however swig which is used to generate cross
+language interfaces does not support nested classes.
+</p>
+</div>
+
+<div class='code'>
+class <a name='Duration'></a><span class="classdef">Duration</span> {  <span class='comment'>// used to return complex value of duration and convexity</span>
+public:
+    <b>Duration</b>(double d, double c) : <b>duration</b>(d), <b>convexity</b>(c) {};
+    double duration;
+    double convexity;
+	<span class='comment'>// so can assign to a double and get just duration</span>
+    <b>operator double</b>() { return duration; };
+};
+
+class <a name='ScenarioAnalysis'></a><span class="classdef">ScenarioAnalysis</span> {	<span class='comment'>// the result of a scenario analysis</span>
+public:
+    enum <a name='REDEEMED'></a><span class="enumdef">REDEEMED</span> { NOTREDEEMED, CALL, PUT, SINK, MATURITY } redeemed;
+    int flowwhen;	    <span class='comment'>// index of flow when redeemed, or 0 if not</span>
+    double efficiency;	    <span class='comment'>// efficiency of redemption (call or put)</span>
+    double reinvestment;    <span class='comment'>// value at horizon of intermediary coupon and</span>
+			    <span class='comment'>// principal flows</span>
+
+    static const char *<b>redeemstring</b>(<a href='#REDEEMED'>REDEEMED</a>);
+    const char *<b>redeemstring</b>() const { return <b>redeemstring</b>(redeemed); };
+};
+
+</div>
+<div class='blockcomment'>
+<p>The following classes define complex inputs to Value methods
+</p>
+</div>
+<div class='code'>
+<span class='comment'>// forward declare -- see below</span>
+class SinkingFundStatus;
+class InterestRateScenario;
+
+class <a name='Quote'></a><span class="classdef">Quote</span> { <span class='comment'>// used to specify input price or other pricing value</span>
+public:
+    double quote;
+    enum <a name='QuoteType'></a><span class="enumdef">QuoteType</span> { OAS, PRICE, YTM, YTC, YTP } quotetype;
+    <b>Quote</b>(double q, <a href='#QuoteType'>QuoteType</a> qt) : <b>quote</b>(q), <b>quotetype</b>(qt) {};
+};
+
+</div>
+<div class='blockcomment'>
+<p>Value provides all library valuation functionality (except for after-tax)
+</p>
+<p>Note on caching and efficiency: this class caches values.  Thus,
+calling Value::&lt;method&gt;() is free the second time.  The values
+cached are based on the last valid OAS.  The OAS is reset each call
+to Value::OAS() or Value::Price() and the cache is flushed.
+</p>
+</div>
+<div class='code'>
+class <a name='Value'></a><span class="classdef">Value</span> : public <a href='bondoas.api.html#Status'>Status</a> {
+protected:     <span class='comment'>// disallow copy, assignment</span>
+    <b>Value</b>(const <a href='#Value'>Value</a> &amp;) { };
+    <a href='#Value'>Value</a> &amp; <b>operator=</b>(const <a href='#Value'>Value</a> &amp;) { return *this; };
+
+protected:
+    class ValueData *data;
+
+public:
+	<span class='comment'>// construct a <a href='#Value'>Value</a> without an <a href='#InterestRateModel'>InterestRateModel</a>, not all valuation</span>
+	<span class='comment'>// methods are supported</span>
+    <b>Value</b>(const <a href='#Bond'>Bond</a> &amp;, const <a href='#Date'>Date</a> &amp;pvdate);
+    <b>Value</b>(const <a href='#Bond'>Bond</a> &amp;, const <a href='#Date'>Date</a> &amp;pvdate, const <a href='#Date'>Date</a> &amp;tradedate);
+
+	<span class='comment'>// construct a <a href='#Value'>Value</a> with an InterestRateModel</span>
+    <b>Value</b>(const <a href='#Bond'>Bond</a> &amp;, const <a href='#InterestRateModel'>InterestRateModel</a> &amp;, const <a href='#Date'>Date</a> &amp;pvdate);
+    <b>Value</b>(const <a href='#Bond'>Bond</a> &amp;, const <a href='#InterestRateModel'>InterestRateModel</a> &amp;, const <a href='#Date'>Date</a> &amp;pvdate,
+	  const <a href='#Date'>Date</a> &amp;tradedate);
+
+
+	<span class='comment'>// construct a <a href='#Value'>Value</a> with an <a href='#InterestRateModel'>InterestRateModel</a> and additional sinking</span>
+	<span class='comment'>// fund information</span>
+    <b>Value</b>(const <a href='#Bond'>Bond</a> &amp;, const <a href='#InterestRateModel'>InterestRateModel</a> &amp;, const <a href='#SinkingFundStatus'>SinkingFundStatus</a> &amp;,
+	  const <a href='#Date'>Date</a> &amp;pvdate);
+    <b>Value</b>(const <a href='#Bond'>Bond</a> &amp;, const <a href='#InterestRateModel'>InterestRateModel</a> &amp;, const <a href='#SinkingFundStatus'>SinkingFundStatus</a> &amp;,
+	  const <a href='#Date'>Date</a> &amp;pvdate, const <a href='#Date'>Date</a> &amp;tradedate);
+
+    <span class='comment'>/* <u>Tradedate and Settlement Days</u>
+
+       Each constructor comes in two flavors: with and without a
+       tradedate.  Specifying a tradedate affects the option notice
+       period and ex-coupon days in effect at the pvdate.  The days
+       are counted from the tradedate rather than the pvdate.  The
+       tradedate must be less than the pvdate and no more than 31 days
+       before the pvdate.  Invalid tradedates cause a warning and are
+       then ignored.  A tradedate equal to the pvdate is the same as
+       no tradedate and is silently accepted.  Note, pvdate is
+       synonymous with settlement date. */</span>
+
+    ~<b>Value</b>();			<span class='comment'>// destructor</span>
+
+    <span class='comment'>/* Use the <b>Error</b>() method inherited from the <a href='#Status'>Status</a> object to
+       check the state after the last operation.  This must be checked
+       after construction and <b>reset</b>().  <b>Warnings</b>() should also be
+       checked.  Most subsequent operations will succeed if the
+       construction succeeded.  Operations after initialization may
+       also produce warnings. */</span>
+
+    <span class='comment'>/* Like the constructors, returns <b>Error</b>() for convenience. */</span>
+    int <b>Reset</b>(const <a href='#Bond'>Bond</a> &amp;, const <a href='#Date'>Date</a> &amp;pvdate);
+    int <b>Reset</b>(const <a href='#Bond'>Bond</a> &amp;, const <a href='#Date'>Date</a> &amp;pvdate, const <a href='#Date'>Date</a> &amp;tradedate);
+    int <b>Reset</b>(const <a href='#Bond'>Bond</a> &amp;, const <a href='#InterestRateModel'>InterestRateModel</a> &amp;, const <a href='#Date'>Date</a> &amp;pvdate);
+    int <b>Reset</b>(const <a href='#Bond'>Bond</a> &amp;, const <a href='#InterestRateModel'>InterestRateModel</a> &amp;, const <a href='#Date'>Date</a> &amp;pvdate,
+	      const <a href='#Date'>Date</a> &amp;tradedate);
+    int <b>Reset</b>(const <a href='#Bond'>Bond</a> &amp;, const <a href='#InterestRateModel'>InterestRateModel</a> &amp;,
+	      const class <a href='#SinkingFundStatus'>SinkingFundStatus</a> &amp;,
+	      const <a href='#Date'>Date</a> &amp;pvdate);
+    int <b>Reset</b>(const <a href='#Bond'>Bond</a> &amp;, const <a href='#InterestRateModel'>InterestRateModel</a> &amp;,
+	      const class <a href='#SinkingFundStatus'>SinkingFundStatus</a> &amp;,
+	      const <a href='#Date'>Date</a> &amp;pvdate, const <a href='#Date'>Date</a> &amp;tradedate);
+
+	<span class='comment'>// <u>constants</u></span>
+    static const double BadValue; <span class='comment'>/* returned by all valuation routines
+				     if the valuation failed.  <b>Error</b>()
+				     should be checked for an explanation */</span>
+
+	<span class='comment'>// <u><a href='#Bond'>Bond</a> fundamentals</u>, do not require an interest rate model</span>
+
+	<span class='comment'>/* returns number of coupon/option/principal flows, 0 indicates
+	   a bond configuration error, last flow is always maturity */</span>
+    int <b>FlowCount</b>() const;
+
+    enum <a name='FLOWTYPE'></a><span class="enumdef">FLOWTYPE</span> {  <span class='comment'>// a flow will be one or more the following</span>
+	INTEREST = 1,		<span class='comment'>// coupon payment</span>
+	PRINCIPAL = 2,		<span class='comment'>// maturity or sinking fund date</span>
+	CALLOPTION = 4,	<span class='comment'>// call option date (and subsequent flows if American)</span>
+	PUTOPTION = 8,	<span class='comment'>// put ...</span>
+	PSEUDO_REGULAR = 16	<span class='comment'>/* for irregular coupons this indicates
+				   the date of where the regular coupon would
+				   fall, it is not an actual interest payment */</span>
+    };
+    int <b>FlowType</b>(int) const; <span class='comment'>// returns bitwise-or'd flags of one or more</span>
+				<span class='comment'>//     of the above types</span>
+    bool <b>FlowType</b>(int idx, <a href='#FLOWTYPE'>FLOWTYPE</a> t) const { return (<b>FlowType</b>(idx) &amp; t) != 0; };
+    int <b>FirstFlow</b>() const;	<span class='comment'>// index of first flow after pvdate</span>
+    <a href='#Date'>Date</a> <b>FlowDate</b>(int) const;	<span class='comment'>// date of flow</span>
+    double <b>YearsTo</b>(int) const;	<span class='comment'>// year fractions to flow from pvdate</span>
+    double <b>Interest</b>(int) const;	<span class='comment'>// interest payment on flow</span>
+    double <b>Principal</b>(int) const; <span class='comment'>/* principal payment on flow,
+				    normally 100% (1) on maturity, 0 otherwise,
+				    but sinking funds will have principal
+				    flows as a % of the face value
+				    (e.g., 10% = .1). */</span>
+    double <b>PrincipalPrice</b>(int) const; <span class='comment'>/* price at which principal flow occurs,
+					 0 if not a principal flow,
+					 normally 100, but can be sink price
+					 or redemption value other than 100. */</span>
+    double <b>Accrued</b>(int) const; <span class='comment'>// accrued on flow, 0 for interest flows</span>
+    double <b>CallPrice</b>(int) const; <span class='comment'>// call price at flow or BadValue</span>
+    double <b>PutPrice</b>(int) const; <span class='comment'>// put price at flow or BadValue</span>
+    const char *<b>BondName</b>() const; <span class='comment'>// name of bond</span>
+
+	<span class='comment'>// <u>PV <a href='#Date'>Date</a> based values</u>, do not require an interest rate model</span>
+    double <b>Accrued</b>() const;	<span class='comment'>// accrued at pvdate</span>
+    int <b>AccruedDays</b>() const;	<span class='comment'>// accrued days on pvdate</span>
+
+    double <b>AccruedOn</b>(const <a href='#Date'>Date</a> &amp;);
+
+	<span class='comment'>// <u>Yields</u>, do not require an interest rate model</span>
+    bool <b>SetYieldMethod</b>(<a href='#Bond'>Bond</a>::<a href='#YIELD_METHOD'>YIELD_METHOD</a>); <span class='comment'>// set the yield method, cached</span>
+					     <span class='comment'>//    yield values will be flushed</span>
+    <a href='#Bond'>Bond</a>::<a href='#YIELD_METHOD'>YIELD_METHOD</a> <b>GetYieldMethod</b>() const; <span class='comment'>/* get current yield method,
+						  default is how <a href='#Bond'>Bond</a> was set */</span>
+
+    double <b>YieldToCall</b>(double price);
+    double <b>YieldToPut</b>(double price);
+    double <b>YieldToMaturity</b>(double price);
+
+	<span class='comment'>/* given a price, return the worst yield at that price,
+	   the second form sets the index of the worst flow,
+	   if also_to_sink is true, sinking fund principal flows
+	   are included as candidates */</span> 
+    double <b>YieldToWorst</b>(double price, bool also_to_sink = false);
+    double <b>YieldToWorst</b>(double price, int &amp;flowindex,
+			bool also_to_sink = false);
+    double <b>WeightedAverageMaturity</b>(double price);
+    <a href='#Duration'>Duration</a> <b>ModifiedDuration</b>(double px);
+
+	<span class='comment'>// Calculate yields to a particular flow -- will return BadValue</span>
+	<span class='comment'>// unless the flow has an option or principal payment.</span>
+	<span class='comment'>// Note, this result is not cached.</span>
+    double <b>YieldToFlow</b>(int, double price, bool as_cashflow_yield = false);
+	<span class='comment'>// given a price and a yield, compute modified duration to a flow,</span>
+	<span class='comment'>// like <b>YieldToFlow</b>(), flow must have an option or principal payment</span>
+    <a href='#Duration'>Duration</a> <b>ModifiedDurationToFlow</b>(int, double price, double yield);
+
+	<span class='comment'>// convert yields to a price, can also use <b>Price</b>(<a href='#Quote'>Quote</a>) method</span>
+    double <b>ytm2price</b>(double);
+    double <b>ytc2price</b>(double);
+    double <b>ytp2price</b>(double);
+
+	<span class='comment'>// <u>Complex Valuations</u>, require an interest rate model</span>
+    double <b>Price</b>(double oas);
+    double <b>Price</b>(<a href='#Quote'>Quote</a>);
+    double <b>OAS</b>(double price);
+    double <b>OAS</b>(<a href='#Quote'>Quote</a>);
+
+    double <b>OptionValue</b>(double oas);
+    double <b>OptionValue</b>(<a href='#Quote'>Quote</a>);
+
+	<span class='comment'>/* Calculate price to a particular flow given a yield to that
+	   flow -- will return BadValue unless the flow has an option
+	   or principal payment.  Note, this result is not cached. */</span>
+    double <b>PriceToFlow</b>(int, double yield, bool as_cashflow_yield = false);
+
+	<span class='comment'>/* given a yield, return the worst price at that yield,
+	   the second form sets the index of the worst flow,
+	   if also_to_sink is true, sinking fund principal flows
+	   are included as candidates */</span> 
+    double <b>PriceToWorst</b>(double yield, bool also_to_sinks = false);
+    double <b>PriceToWorst</b>(double yield, int &amp;flowindex,
+			bool also_to_sinks = false);
+
+	<span class='comment'>// effective duration and convexity</span>
+    <a href='#Duration'>Duration</a> <b>EffectiveDuration</b>(double oas, double durationbp = 30);
+    <a href='#Duration'>Duration</a> <b>EffectiveDuration</b>(<a href='#Quote'>Quote</a>, double durationbp = 30);
+	<span class='comment'>// one sided durations</span>
+    double <b>UpDuration</b>(double oas, double durationbp = 30);
+    double <b>DownDuration</b>(double oas, double durationbp = 30);
+    double <b>UpDuration</b>(<a href='#Quote'>Quote</a>, double durationbp = 30);
+    double <b>DownDuration</b>(<a href='#Quote'>Quote</a>, double durationbp = 30);
+
+	<span class='comment'>/* Key rate duration measures the sensitivity of the bond to a
+	   shift in a specified year's yield.  Key rate years will be
+	   rounded to semi-annual.  The key rate is not suddenly
+	   shifted, rather rates around it are "tented" with the key
+	   year at the center.  The tenting process keeps rates
+	   unchanged at anchor points (years) on either side of the
+	   key rate and interpolates the rates between the anchor
+	   points and the key rate.  The different flavors of
+	   <b>KeyRateDuration</b>(), below, control the anchor points. */</span>
+
+	<span class='comment'>// anchor at years +/- <b>sqrt</b>(year) rounded to semi-annual</span>
+    <a href='#Duration'>Duration</a> <b>KeyRateDuration</b>(double oas, double durationbp, double year);
+    <a href='#Duration'>Duration</a> <b>KeyRateDuration</b>(<a href='#Quote'>Quote</a>, double durationbp, double year);
+
+	<span class='comment'>// anchor at years +- width, rounded to semi-annual</span>
+    <a href='#Duration'>Duration</a> <b>KeyRateDuration</b>(double oas, double durationbp, double year,
+			     double width);
+    <a href='#Duration'>Duration</a> <b>KeyRateDuration</b>(<a href='#Quote'>Quote</a>, double durationbp, double year,
+			     double width);
+
+	<span class='comment'>// anchor at specified years, rounded to semi-annual</span>
+    <a href='#Duration'>Duration</a> <b>KeyRateDuration</b>(double oas, double durationbp, double year,
+			     double leftanchoryear, double rightanchoryear);
+    <a href='#Duration'>Duration</a> <b>KeyRateDuration</b>(<a href='#Quote'>Quote</a>, double durationbp, double year,
+			     double leftanchoryear, double rightanchoryear);
+
+	<span class='comment'>// see <a href='#InterestRateModel'>InterestRateModel</a>::<b>Discount</b>(), <b>GetRate</b>(), <b>GetFactor</b>()</span>
+    double <b>Discount</b>(double value, double fromtime, double oas = 0) const;
+    double <b>GetRate</b>(double year) const;
+    double <b>GetFactor</b>(double year) const;
+
+	<span class='comment'>// scenario Analysis, if false, <b>Error</b>() has been set</span>
+    bool <b>AnalyzeScenario</b>(const <a href='#InterestRateScenario'>InterestRateScenario</a> &amp;, double oas,
+			 <a href='#ScenarioAnalysis'>ScenarioAnalysis</a> &amp;);
+    bool <b>AnalyzeScenario</b>(const <a href='#InterestRateScenario'>InterestRateScenario</a> &amp;, <a href='#Quote'>Quote</a>,
+			 <a href='#ScenarioAnalysis'>ScenarioAnalysis</a> &amp;);
+
+	<span class='comment'>/* Solve for a single fixed spread such that if the same
+	   spread is added to each coupon in the coupon schedule of
+	   the bond, then the clean price of the bond, computed using
+	   the tree with zero OAS, is equal to clean_price provided as
+	   input. */</span>
+    double <b>AssetSwapSpread</b>(double price);
+
+	<span class='comment'>/* Compute the I-Spread.  This is the difference between the
+	   YTM of a bond at the provided price, and the yield on the
+	   weighted-average-maturity-matched point on the provided
+	   yield curve. The yield will be straight-line interpolated
+	   between points on the provided curve. Industry refers to
+	   this spread as I-Spread if swap curve provided and G-Spread
+	   if government curve (treasuries) provided. */</span>
+    double <b>ISpread</b>(double price);
+};
+
+
+</div>
+<div class='blockcomment'>
+<p>support classes for Value
+</p>
+</div>
+
+<div class='blockcomment'>
+<p>Sinking fund bonds have additional market information that determines
+pricing.  This information is only required/meaningful for sinking
+fund bonds and is optional even then.
+Note: doubles are used to accommodate very large numbers
+</p>
+</div>
+<div class='code'>
+class <a name='SinkingFundStatus'></a><span class="classdef">SinkingFundStatus</span> {
+public:
+    double outstanding;    <span class='comment'>/* Outstanding amount at pvdate.  This may be
+			    necessary for accurate sinking valuation
+			    if an incomplete sinking fund schedule is
+			    provided or there has been acceleration.
+			    If not provided, the outstanding amount
+			    will be the sum of the remaining schedule
+			    sinks, i.e., there has been no acceleration. */</span>
+    double accumulation; <span class='comment'>/* Amount in dollars held by accumulators, if
+			    not provided, will be zero. */</span>
+public:
+    <b>SinkingFundStatus</b>(unsigned long os, unsigned long ac) : <b>outstanding</b>(os), <b>accumulation</b>(ac) {};
+    <b>SinkingFundStatus</b>(double os, double ac) : <b>outstanding</b>(os), <b>accumulation</b>(ac) {};
+	<span class='comment'>// construct so uses default behavior</span>
+    <b>SinkingFundStatus</b>() : <b>outstanding</b>(-1), <b>accumulation</b>(0) {};
+};
+
+</div>
+<div class='blockcomment'>
+<p>Define an interest rate scenario for analysis.  An interest rate
+scenario requires at minimum one interest rate model.  The base
+Value class interest rate model is transformed over time into the
+models in the scenario.  The bond is valued at each of its flows
+in order to determine whether it is redeemed.
+</p>
+</div>
+<div class='code'>
+class <a name='InterestRateScenario'></a><span class="classdef">InterestRateScenario</span> {
+protected:     <span class='comment'>// disallow copy, assignment</span>
+    <b>InterestRateScenario</b>(const <a href='#InterestRateScenario'>InterestRateScenario</a> &amp;) { };
+    <a href='#InterestRateScenario'>InterestRateScenario</a> &amp; <b>operator=</b>(const <a href='#InterestRateScenario'>InterestRateScenario</a> &amp;) {
+	return *this;
+    };
+protected:
+    friend class <a href='#Value'>Value</a>;
+    class InterestRateScenarioData *data;
+
+public:
+    enum <a name='SCENTYPE'></a><span class="enumdef">SCENTYPE</span> {   <span class='comment'>// When scenario shifts occur</span>
+	NOW,  <span class='comment'>/* Suddenly at time 0 */</span>
+	GRADUAL,  <span class='comment'>/* Linearly in time, this can be slow  */</span>
+	THEN  <span class='comment'>/* Suddenly at horizon */</span>
+    };
+
+	<span class='comment'>// create with at least one interest rate environment at</span>
+	<span class='comment'>// years in the future, years does not have to be a whole number</span>
+    <b>InterestRateScenario</b>(double years, const <a href='#InterestRateModel'>InterestRateModel</a> &amp;horizonmodel,
+			 <a href='#SCENTYPE'>SCENTYPE</a> = NOW);
+    ~<b>InterestRateScenario</b>();
+
+	<span class='comment'>/* add an interest rate environment between the start and the
+	   horizon to fine tune how interest rates transition over
+	   time.  Will return false if <a href='#InterestRateModel'>InterestRateModel</a> is unsolved */</span>
+    bool <b>AddTransition</b>(double years, const <a href='#InterestRateModel'>InterestRateModel</a> &amp;);
+
+	<span class='comment'>// efficiency threshold for option exercise, default is 100%</span>
+	<span class='comment'>// must be &gt; 0 and &lt;= 100</span>
+    bool <b>SetEfficiencyThreshold</b>(double);
+
+	<span class='comment'>/* Scenario analysis is normally based on input yield curves
+	   and the input OAS. */</span>
+    void <b>SetReinvestStandard</b>();	<span class='comment'>// default behavior</span>
+
+	<span class='comment'>/* The initial OAS may not be appropriate for subsequent curves
+	   in the scenario.  The user can suppress using the OAS after
+	   the start date. */</span>
+    void <b>SetReinvestAtZeroOAS</b>();
+
+	<span class='comment'>/* Finally, the reinvestment can be done at a fixed rate.  In this
+	   case option decisions are still made using the OAS */</span>
+    void <b>SetReinvestAtFixed</b>(double);
+};
+
+</div>
+<div class='blockcomment'>
+<a name='contents9'></a><h2>   Section 6. Date Handling</h2>
+<p>This object handles validation and construction of a date
+representation from a variety of forms.  It also provides simple
+date math.  The constructor will always succeed, however invalid
+input will result in the invalid date of zero.
+</p>
+<p>Note, the C library API expresses dates as 8-digit longs in the
+form yyyymmdd.  This object also supports translation from/to
+that form.
+</p>
+</div>
+<div class='code'>
+class <a name='Date'></a><span class="classdef">Date</span> {
+private:
+    long _data;
+public:
+	<span class='comment'>// order of pieces passed to constructor</span>
+    enum <a name='ENTRY'></a><span class="enumdef">ENTRY</span> { YMD, <span class='comment'>/* sortable */</span> MDY, <span class='comment'>/* American */</span> DMY <span class='comment'>/* European */</span> };
+    <b>Date</b>(int, int, int, <a href='#ENTRY'>ENTRY</a> = YMD ); <span class='comment'>// construct from pieces</span>
+
+    <span class='comment'>/* construct a date from a string ordered via entry and with the
+       pieces separated by sep.  If sep is not found assumes (for
+       historical reasons) that string is yyyymmdd and ignores <a href='#ENTRY'>ENTRY</a>. */</span>
+    <b>Date</b>(const char *, <a href='#ENTRY'>ENTRY</a>, char sep = '/');
+
+    <b>Date</b>(long = 0);		<span class='comment'>// construct a date from a long</span>
+
+	<span class='comment'>// construct a date by adding fractional years according to daycount</span>
+	<span class='comment'>// to the give <a href='#Date'>Date</a>.  Years can be negative.</span>
+    <b>Date</b>(const <a href='#Date'>Date</a> &amp;, double yrs, <a href='#Bond'>Bond</a>::<a href='#DAYCOUNT'>DAYCOUNT</a>);
+
+    bool <b>Good</b>() const;		<span class='comment'>// whether date is valid</span>
+
+	<span class='comment'>// C API date format, yyyymmdd as a long</span>
+    long <b>Libdate</b>() const { return _data; };
+
+    int <b>DayOf</b>() const { return ((int) (_data) % 100); };
+    int <b>MonthOf</b>() const { return (((int) (_data) / 100) % 100); };
+    int <b>YearOf</b>() const { return ((int) (_data) / 10000); };
+
+	<span class='comment'>// returns time from date to other (i.e. other - this) in</span>
+	<span class='comment'>// fractional years according to the daycount</span>
+    double <b>YearsTo</b>(const <a href='#Date'>Date</a> &amp;other, <a href='#Bond'>Bond</a>::<a href='#DAYCOUNT'>DAYCOUNT</a>) const;
+	<span class='comment'>// compute calendar days between dates</span>
+    int <b>DaysTo</b>(const <a href='#Date'>Date</a> &amp;other) const;
+
+    <a href='#Date'>Date</a> &amp; <b>operator +=</b>(int);
+    <a href='#Date'>Date</a> &amp; <b>operator -=</b>(int days) { return *this += -days; };
+
+    bool <b>operator &lt;</b>(const <a href='#Date'>Date</a> &amp;other) const {
+	return <b>Libdate</b>() &lt; other.<b>Libdate</b>();};
+    bool <b>operator &lt;= </b>(const <a href='#Date'>Date</a> &amp;other) const {
+	return <b>Libdate</b>() &lt;= other.<b>Libdate</b>();};
+    bool <b>operator == </b>(const <a href='#Date'>Date</a> &amp;other) const {
+	return <b>Libdate</b>() == other.<b>Libdate</b>();};
+    bool <b>operator &gt;= </b>(const <a href='#Date'>Date</a> &amp;other) const {
+	return <b>Libdate</b>() &gt;= other.<b>Libdate</b>();};
+    bool <b>operator &gt; </b>(const <a href='#Date'>Date</a> &amp;other) const {
+	return <b>Libdate</b>() &gt; other.<b>Libdate</b>();};
+};
+
+</div><hr>
+<a name='contents10'></a><h2>Index of Classes</h2>
+<a href="#Bond">Bond</a><br>
+<a href="#Date">Date</a><br>
+<a href="#Duration">Duration</a><br>
+<a href="#Initialization">Initialization</a><br>
+<a href="#InterestRateModel">InterestRateModel</a><br>
+<a href="#InterestRateScenario">InterestRateScenario</a><br>
+<a href="#Quote">Quote</a><br>
+<a href="#ScenarioAnalysis">ScenarioAnalysis</a><br>
+<a href="#SinkingFundStatus">SinkingFundStatus</a><br>
+<a href="#Status">Status</a><br>
+<a href="#Value">Value</a><br>
+<a name='contents11'></a><a name='akaapi_compatibility.hpp'></a><h1>C++/C Compatibility &mdash; akaapi_compatibility.hpp</h1>
+<div class='blockcomment'>
+<p>* Copyright (c) 2013, Andrew Kalotay Associates.  All rights reserved. *
+</p>
+</div>
+
+
+
+<div class='code'>
+#include "<a href='#akaapi.hpp'>akaapi.hpp"</a>
+
+#include "<a href='#akaapi.h'>akaapi.h"</a>
+
+
+</div>
+<div class='blockcomment'>
+<a name='contents12'></a><h2>   Overview</h2>
+<p>The C language API is defined in akaapi.h.  The C++ API provides
+all the functionality of the C API, however, it may be useful when
+migrating code to use to both APIs in a mixed model.  The
+compatibility layer support this approach.
+</p>
+</div>
+
+<strong style='display: block; margin: 1.5em;'>Note: all objects are defined within the namespace 'AndrewKalotayAssociates'
+</strong>
+<div class='code'>
+<span class='comment'>/*  allows akaapi C API functions to be intermixed with the C++ API. */</span>
+class <a name='Compatibility'></a><span class="classdef">Compatibility</span> {
+public:
+	<span class='comment'>/* Provide C API interest rate tree handle so that C API
+	   functions can be used.  <b>Solve</b>() must have been successfully
+	   invoked on the InterestRateModel or else a tree handle of
+	   zero (no tree) will be returned.  IMPORTANT: This method
+	   should only be used to get the AKAHTREE as a temporary.
+	   Using a Set{x}() method on, or deleting the InterestModel
+	   object which returned the TreeHandle invalidates the
+	   returned handle.  The returned TreeHandle should never be
+	   released (i.e., do not call <b>AKATreeRelease</b>()).  */</span>
+    static AKAHTREE <b>CApiTreeHandle</b>(const InterestRateModel &amp;);
+
+	<span class='comment'>/* Provide C style structure so that C API functions can be
+	   used.  This returns a constant pointer to constant memory.
+	   The memory points to an AKA Library C AKABOND structure.
+	   IMPORTANT: This method should only be used to get the C
+	   structure as a temporary.  Using a Set{x}() method on, or
+	   deleting the Bond object which returned the AKABOND
+	   structure invalidates the returned structure.  The returned
+	   structure should never be freed (i.e., do not call
+	   <b>AKABondFree</b>()). */</span> 
+    static const AKABOND* const <b>CApiBond</b>(const Bond &amp;);
+
+	<span class='comment'>/* Provide C style structure so that C API functions can be
+	   used.  This returns a constant pointer to constant memory.
+	   The memory points to an AKA Library C AKACURVE structure.
+	   IMPORTANT: This method should only be used to get the C
+	   structure as a temporary.  Using a Set{x}() method on, or
+	   deleting the InterestRateModel object which returned the
+	   AKACURVE structure invalidates the returned structure.  The
+	   returned structure should never be freed (i.e., do not call
+	   <b>AKACurveFree</b>()). */</span> 
+    static const AKACURVE* const <b>CApiCurve</b>(const InterestRateModel &amp;);
+
+	<span class='comment'>/* Create an InterestRateModel from a C API AKACURVE.  The
+	   resulting InterestRateModel still needs to be solved.  The
+	   returned object is a new object and may be freely assigned
+	   and used. */</span>
+    static InterestRateModel <b>ModelFromCurve</b>(const AKACURVE *);
+
+	<span class='comment'>/* Create a C++ API Bond from a C API AKABOND.  The returned
+	   object is a new object and may be freely assigned and
+	   used. */</span>
+    static Bond <b>BondFromBOND</b>(const AKABOND *);
+};
+
+
+
+</div>
+<div class='blockcomment'>
+<a name='contents13'></a><h2>    Section 1. Calling C Functions with C++ Objects</h2>
+<p>Invoking a C API function using C++ objects is supported with
+    Compatibility methods.  For example:<div style='white-space: pre-wrap; font-family: Courier;'>
+
+    Date pvdate;
+    InterestRateModel model;
+    Bond bond(...);
+    ... // initialize the objects
+    model.Solve();
+
+    AKABONDREPORT report;    	// old style report structure
+
+    AKABONDVAL(pvdate.Libdate(), AKA_QUOTE_PRICE, 100,
+               Compatibility::CApiTreeHandle(model),
+	       Compatibility::CApiBond(bond), &report);
+</div>
+</div>
+
+<div class='blockcomment'>
+<a name='contents14'></a><h2>    Section 2. Creating C++ Objects from C Structures</h2>
+<p>The C++ API objects can be created from already initialized
+    C structures.  For example:<div style='white-space: pre-wrap; font-family: Courier;'>
+
+    AKACURVE *curve = AKACurveAlloc(10);
+    AKABOND *cbond = AKABondAlloc(1, 0, 0, 0);
+    ... // initialize the structures
+
+    InterestRateModel model = Compatibility::ModelFromCurve(curve);
+    AKACurveFree(curve); // curve may be freed, it is not referenced in model
+    model.Solve();	 // model must be solved before it can be used
+
+    Bond bond = Compatibility::BondFromBOND(cbond); // assign from C structure
+    AKABondFree(cbond); // cbond may be freed, it is not referenced in bond
+
+    Value value(bond, model, Date(2013, 10, 12)); // create value object
+</div>
+</div>
+
+<div class='blockcomment'>
+<a name='contents15'></a><h2>   Section 3. Mixed Model Issues</h2>
+<p>There are two potential problems when mixing the C and C++ APIs.
+</p>
+<p>The library initialization must be done using the C++ API
+Initialization object or the C++ API will not function correctly.
+The C++ initialization will enable the C API.
+</p>
+<p>Error handling in the C API is on a global basis.  If a C function
+is used the C API error interfaces AKAError() and AKAWarnings()
+must be called immediately afterward or any errors/warnings will
+be lost or confused with subsequent operations.
+</p>
+</div>
+
+<div class='blockcomment'>
+<a name='contents16'></a><h2>   Section 4. C++ API to C API Correspondence</h2>
+<p>In most cases the values stored in C report structures have a
+recognizable one-to-one correspondence to methods of the Value
+object.  The method names follow C++ naming conventions and
+so vary slightly from the C structure member names.
+</p>
+<p>a) The method names are consistently title capitalized.  E.g., the
+C report structure member accrued becomes the method Accrued() and
+price becomes Price().
+</p>
+<p>b) The method names are fully instantiated.  E.g., the C report
+structure member ytc becomes the method YieldToCall() and modDur
+becomes ModifiedDuration().
+</p>
+<p>The remainder of this document describes cases where there is not
+an exact correspondence.
+</p>
+</div>
+
+<div class='blockcomment'>
+<a name='contents17'></a><h2>   Section 5. Key Rate Durations</h2>
+<p>The key rate duration report AKAKRDURREPORT provides duration at
+specific maturities defined as input to the C key rate functions.
+The C key rate functions have two behaviors.  First, the tenting
+(see the KeyRateDuration() method documentation in akaapi.hpp) is
+from input maturity to input maturity.  Second, the durations are
+scaled after they are computed so that the sum of the durations
+equals the overall duration.  To use the C++ API and still get the
+same values as returned by the C function it is necessary to
+implement both of these behaviors.  The following code snippet is
+   an example:<div style='white-space: pre-wrap; font-family: Courier;'>
+
+{
+    double sumdur = 0;
+    for (int i = 0; i &lt; matcnt; i++) {
+	double left = (i == 0) ? -1000 : mats[i - 1];
+	double right = (i == matcnt - 1) ? 1000 : mats[i + 1];
+	sumdur +=
+	    results[i] = value.KeyRateDuration(oas, durbp, mats[i], 
+					       left, right);
+    }
+    double sumratio = sumdur / value.EffectiveDuration(oas, durbp);
+    for (int i = 0; i &lt; matcnt; i++)
+	results[i] /= sumratio;
+}
+</div>
+</div>
+
+<div class='blockcomment'>
+<a name='contents18'></a><h2>   Section 6. Flow Reports</h2>
+<p>All the flows for an instrument can be gotten by using the Flow()
+access methods in Value.  These can be used as is or discounted
+using the Discount() method.  The Scenario Analysis section below
+has an example of how to walk the flows.
+</p>
+</div>
+
+<div class='blockcomment'>
+<a name='contents19'></a><h2>   Section 7. Scenario Analysis</h2>
+<p>The Value::AnalyzeScenario() provides the redemption information
+and the reinvestment income.  The remainder of the values can be
+calculated using other Value methods.  The initial price, accrued,
+duration, etc., is returned by the same Value object used for
+AnalyzeScenario().  The horizon values can be computed by creating
+a new Value object with the horizon Interest Rate Model.  The
+summed principals and coupon income at the horizon can be computed
+   by walking the bond flows.  For example:<div style='white-space: pre-wrap; font-family: Courier;'>
+
+    double outstanding = 1;
+    double remaining = 1; // these two handle sinking funds
+    for (int f = 1; f &lt; value.FlowCount(); f++) {
+	if (value.FlowDate(f) &gt; horizondate)
+	    break;
+	if (f &lt; value.FirstFlow())  // calculate outstanding
+	    outstanding -= value.Principal(f);
+	else {
+	    if (f == value.FirstFlow()) // keep track of remaining
+		remaining = outstanding;
+		// always get coupon on the flow
+	    couponincome += value.Interest(f);
+	    if (f == analysis.flowwhen) { // done
+		    // if balance is gone, get any accrued
+		couponincome += value.Accrued(f);
+		    // default final price is sink or redemption
+		double atprice = value.PrincipalPrice(f);
+		if (analysis.redeemed == ScenarioAnalysis::CALL)
+		    atprice = value.CallPrice(f);
+		else if (analysis.redeemed == ScenarioAnalysis::PUT)
+		    atprice = value.PutPrice(f);
+		    // note, using remaining in case of sinking fund
+		principalincome += atprice *
+		    remaining / outstanding;
+		remaining = 0;
+		break;
+	    }
+	    else {	// just a regular flow, only for sinks
+		principalincome += value.PrincipalPrice(f) *
+		    value.Principal(f) / outstanding;
+		remaining -= value.Principal(f);
+	    }
+	}
+    }
+
+    Please see additional scenario analysis example code in the
+    example directory of the release.
+</div>
+</div>
+
+<hr>
+<a name='contents20'></a><h2>Index of Classes</h2>
+<a href="#Compatibility">Compatibility</a><br>
+<a name='contents21'></a><h1>Java API</h1>
+<p>
+BondOAS&trade; provides a Java API.  The Java API exactly follows the C++ API.
+The class files and the bodoas.jar file are in the java directory of the
+release.  The akalib/java/bondoas.jar file is created by compiling the .java
+files in the akalib/java directory and assembling the .jar file.  The package
+path used is com/kalotay/akalib.  Both the compiled jar file and the java
+sources are provided in akalib/java.
+</p>
+
+<p>
+A dynamic library bondoas_java_wrap is provided in the architecture
+appropriate lib directory of the release.  The bondoas.jar file can be used in
+your java project.  Before objects in the jar file can be used, you must
+dynamically load the bondoas_java_wrap dynamic library.  If your path is set
+up approriately so that the Andrew Kalotay Associates library for the
+appropriate architecture can be found, the load instruction looks like:
+System.loadLibrary("bondoas_java_wrap");
+</p>
+<a name='contents22'></a><h1>C# API</h1>
+<p>
+BondOAS&trade; provides a C# API.  The C# API exactly follows the C++ API.
+The C# class files are in the csharp directory of the release.  These need to
+be compiled.  The C# classes explicitly load the Andrew Kalotay Associates C#
+API dynamic library bondoas_csharp_wrap.  This dynamic library is provided in
+the architecture appropriate lib directory of the release.
+</p>
+
+<a name='contents23'></a><h2>.Net</h2>
+<p>
+These instructions apply to using the Andrew Kalotay Associates C# API
+under Windows for a .NET application.
+</p>
+
+<p>
+The .cs files in the akalib/csharp directory need to be compiled.
+They can either be imported directly into your project or they can be
+separately compiled into a .NET dll.  In the latter case, that
+compiled dll can then be referenced in a project.
+</p>
+
+<p>
+Note, It is not necessary (and does not work) to directly reference
+the akalib library dlls in a .NET project.  The code in
+AkaApiPINVOKE.cs dynamically loads the appropriate Andrew Kalotay
+Associates bondoas dlls.  The path to the Andrew Kalotay Associates
+bondoas dlls, (e.g., akalib/lib/win64) must be in your path at runtime.
+</p>
+<a name='contents24'></a><a name='akaapi.h'></a><h1>C API &mdash; akaapi.h</h1>
+<div class='blockcomment'>
+<p>* Copyright (c) 1995-2012, Andrew Kalotay Associates, Inc.. All rights reserved. *
+</p>
+</div>
+
+
+<div class='blockcomment'>
+<a name='contents25'></a><h2>   Overview</h2>
+<p>This file contains the function prototypes, structure definitions,
+and constants needed for invoking BondOAS&trade;.  This file also
+serves as documentation for the API.  It is arranged in the
+following sections:
+</p>
+<ol>
+<li>General Notes</li>
+<li>Initialization and Shutdown</li>
+<li>Tree Creation</li>
+<li>Valuation</li>
+<li>Bond Structure Configuration Functions</li>
+<li>Miscellaneous Functions</li>
+<li>Error Handling</li>
+<li>Memory Allocation and Free</li>
+<li>Data Structures and Constants</li>
+<li>Deprecated Functions</li>
+</ol>
+</div>
+
+
+<div class='blockcomment'>
+<a name='contents26'></a><h2>   Section 1. General Notes</h2>
+<p>BondOAS&trade; is a multi-thread safe C library.  Library interface
+calls take objects in the form of C structures.  These structures
+are described below.  All structures are documented.
+</p>
+<p>All dates are expressed as 8-digit longs in the form yyyymmdd.
+Percentages are expressed as x 100.  I.e., 10% is 10 rather than 0.10.
+</p>
+<p>All AKA structures which have allocators (e.g., reports, AKABOND,
+etc.) must be allocated using the library provided allocation
+functions only.  Using stack local variables or directly allocating
+the structures via malloc will cause unexpected results and memory
+errors.  The only stack safe report structure is AKABONDREPORT.
+</p>
+</div>
+
+
+<div class='blockcomment'>
+<a name='contents27'></a><h2>   Section 2. Initialization and Shutdown</h2>
+<p>One of the initialization functions must be called before the library
+may be used.
+</p>
+<p>The library requires a valid user name and key to run.  These must be
+provided to the initialization routines.  The user name and key are
+authorization keys provided to authorized users by AKA.
+</p>
+<p>The initialization routines return an AKA_ERROR code.  Any code but
+AKA_ERROR_NONE is a failure.  The return code must be checked;
+continuing to call BondOAS routines after init fails will not work.
+Similarly, calling a BondOAS routine prior to a valid initialization
+will not work.
+</p>
+<p>One of the shutdown functions should be called after the library use
+is finished.  Memory will be lost if this is not done.
+</p>
+<p>The initialization function should not be called more than once.  It
+is valid to call the initialization function again if the shutdown
+function has been called.  This is not recommended as initialization
+and shutdown functions require cycles.
+</p>
+<p>MULTI-THREAD note: only one thread may call the initialization
+function.  The initialization function creates BondOAS mutex.
+Calling the shutdown function while other threads are still running
+BondOAS routines is not safe.  The configuration settings used in
+the init function are inherited by each thread.  The duration global
+settings can be reset on a per thread basis, see AKA_set_duration_shift().
+</p>
+</div>
+
+
+<div class='code'>
+typedef struct <a href="#struct AKAInitData">AKAInitData</a> <a name=AKAINITDATA></a><b>AKAINITDATA</b>;
+
+<span class='comment'>/* The initialization routines return an error code.  A value
+   other that AKA_ERROR_NONE is a failure.
+   AKA_initialize() uses default configuration values; see AKAINITDATA
+   below. */</span>
+long <a name="AKA_initialize"></a><b>AKA_initialize</b>(long key, const char *uname);
+long <a name="AKA_initialize_configure"></a><b>AKA_initialize_configure</b>(long key, const char *uname,
+			      <a href="#AKAINITDATA">AKAINITDATA</a> *config);
+
+<span class='comment'>/* Gets the default initialization configuration values and assigns
+   them to the passed in configuration structure. */</span>
+void <a name="AKA_initialize_get_defaults"></a><b>AKA_initialize_get_defaults</b>(<a href="#AKAINITDATA">AKAINITDATA</a> *config);
+
+<span class='comment'>/* Returns expiration of key; only valid after call to init, */</span>
+void <a name="AKA_authorize_expiration_date"></a><b>AKA_authorize_expiration_date</b>(int *year, int *month, int *day);
+
+<span class='comment'>/* Shutdown the library, free internal memory */</span>
+void <a name="AKA_shutdown"></a><b>AKA_shutdown</b>();
+
+<span class='comment'>/* Shutdown the library */</span>
+void <a name="AKA_shutdown_configure"></a><b>AKA_shutdown_configure</b>(int unused);
+
+<span class='comment'>/* The variable, AKA_memory_diagnostics_enabled, controls whether all
+   memory allocations in library routines are wrapped in a memory
+   diagnostics counter.  Enabling memory diagnostics allows the user
+   track library memory usage.  The variable must be set to one prior
+   to library initialization in order for memory diagnostics to be
+   enabled.  Enabling memory diagnostics will impact performance of
+   multi-threaded invocations of the BondOAS library. */</span>
+extern int AKA_memory_diagnostics_enabled;
+
+<span class='comment'>/* Provides diagnostics information on library memory usage.
+   Allocations, total_memory, and trees are a snapshot of usage when
+   the function is called.  The numbers are for unfreed allocations and
+   unreleased trees.  After shutdown, all the numbers should be zero.
+   This routine is multi-thread safe.  Note, allocations and total_memory
+   will always be zero unless AKA_memory_diagnostics_enabled is set. */</span>
+void <a name="AKA_memory_diagnostics"></a><b>AKA_memory_diagnostics</b>(unsigned long *allocations,
+			    unsigned long *total_memory, unsigned long *trees);
+
+
+</div>
+<div class='blockcomment'>
+<a name='contents28'></a><h2>   Section 3. Tree Creation</h2>
+<p>Trees are interest rate lattices used to value instruments.  The
+first step in any valuation is to create a tree using one of the
+tree fit routines below.
+</p>
+<p>These return an AKAHTREE which is a library internal reference.  The
+user is given the handle to pass to other routines. This is not a
+pointer.  The AKATreeRelease() routine frees internal library
+memory.  After AKATreeRelease(), the handle is no longer valid.
+Un-released trees will cause memory leaks.
+An AKAHTREE of zero indicates failure and is not a valid tree.
+</p>
+<p>MULTI-THREAD note: the tree handle may be shared across threads.
+Freeing the handle via AKATreeRelease() more than once is not safe.
+Freeing the handle while it is in use by multiple threads is not safe.
+</p>
+<p>Performance Note: When AKABondVal() and AKABondVal2() is used to
+compute par duration, the library will internally attempt to fit
+trees.  The handles to these trees are not exposed to the caller.
+They will be cached internally with the tree structure.
+</p>
+</div>
+
+<div class='code'>
+typedef unsigned long <a name=AKAHTREE></a><b>AKAHTREE</b>;   <span class='comment'>/* Returned from tree fit routines */</span>
+
+<span class='comment'>/* forward declarations -- definitions in structures section below */</span>
+typedef struct <a href="#struct AKACurve">AKACurve</a> <a name=AKACURVE></a><b>AKACURVE</b>;
+typedef struct <a href="#struct AKASpreads">AKASpreads</a> <a name=AKASPREAD></a><b>AKASPREAD</b>;
+
+<span class='comment'>/* Fit trees from yield curves; spread curves are optional, pass as NULL */</span>
+<a href="#AKAHTREE">AKAHTREE</a> <a name="AKATreeFit"></a><b>AKATreeFit</b>(const <a href="#AKACURVE">AKACURVE</a> *crv, const <a href="#AKASPREAD">AKASPREAD</a> *spr);
+
+<span class='comment'>/* Fit a tree from another tree and a spread curve */</span>
+<a href="#AKAHTREE">AKAHTREE</a> <a name="AKATreeFitSpreads"></a><b>AKATreeFitSpreads</b>(<a href="#AKAHTREE">AKAHTREE</a> tree, const <a href="#AKASPREAD">AKASPREAD</a> *spr);
+
+<span class='comment'>/* Fit a tree from another tree and a shift of the zero or par curve.
+   bpShift of 20 means 20 basis points.  Select mode from <a href="#AKAShiftMode">AKAShiftMode</a>
+   defined below. Using SHIFT_NONE here is an error. */</span>
+<a href="#AKAHTREE">AKAHTREE</a> <a name="AKATreeFitShift"></a><b>AKATreeFitShift</b>(<a href="#AKAHTREE">AKAHTREE</a> tree, double bpShift, long mode);
+
+<span class='comment'>/* Fit a tree from a yield curve using zero volatility.  For computing
+   Z-Spread.  Z-Spread is the zero-volatility OAS of a bond given its
+   price. */</span>
+<a href="#AKAHTREE">AKAHTREE</a> <a name="AKATreeFitZero"></a><b>AKATreeFitZero</b>(const <a href="#AKACURVE">AKACURVE</a> *crv);
+
+<span class='comment'>/* Return the minimum rate on a tree (.10 is 10%) -1 is error */</span>
+double <a name="AKATreeMinRate"></a><b>AKATreeMinRate</b>(<a href="#AKAHTREE">AKAHTREE</a> hTree);
+
+<span class='comment'>/* Release a tree handle returned by one of the tree fit routines */</span>
+void <a name="AKATreeRelease"></a><b>AKATreeRelease</b>(<a href="#AKAHTREE">AKAHTREE</a> tree);
+
+
+</div>
+<div class='blockcomment'>
+<a name='contents29'></a><h2>   Section 4. Valuation</h2>
+<p>These routines value bonds.
+</p>
+<p>There are two types of valuation routines.
+</p>
+<ol>
+<li>Simple Valuation -- return a single value through the function return</li>
+<li>Report Based -- return multiple values via a report structure</li>
+</ol>
+<p>Simple Valuation routines return their answer as the function
+return value.  Error return values are as described below.  These
+routines also set the error handling flags like the Report Based
+routines.
+</p>
+<p>Report Based routines require a report structure to be passed in.  All 
+report structures except AKABONDREPORT must be created with the 
+appropriate allocation function and must be freed with the corresponding 
+free function.  The return code for report based functions is not used.
+See the error handling section below for checking errors.
+</p>
+<p>MULTI-THREAD note: AKAHTREE may be shared across threads.  Pointers
+to AKABOND and AKASCEN are to const objects in these functions and
+therefore may be shared across threads.  However, changing the values
+of an AKABOND or AKASCEN while it is in use by another thread
+violates the const requirement and is not thread safe.
+</p>
+</div>
+<div class='code'>
+<span class='comment'>/* forward declarations -- definitions below */</span>
+typedef struct <a href="#struct AKABond">AKABond</a> <a name=AKABOND></a><b>AKABOND</b>;
+typedef struct <a href="#struct AKAScen">AKAScen</a> <a name=AKASCEN></a><b>AKASCEN</b>;
+typedef struct <a href="#struct AKAScenSetup">AKAScenSetup</a> <a name=AKASCENSETUP></a><b>AKASCENSETUP</b>;
+typedef struct <a href="#struct AKABondReport">AKABondReport</a> <a name=AKABONDREPORT></a><b>AKABONDREPORT</b>;
+typedef struct <a href="#struct AKABondYieldReport">AKABondYieldReport</a> <a name=AKABONDYIELDREPORT></a><b>AKABONDYIELDREPORT</b>;
+typedef struct <a href="#struct AKAFlowReport">AKAFlowReport</a> <a name=AKAFLOWREPORT></a><b>AKAFLOWREPORT</b>;
+typedef struct <a href="#struct AKAFwdReport">AKAFwdReport</a> <a name=AKAFWDREPORT></a><b>AKAFWDREPORT</b>;
+typedef struct <a href="#struct AKAKRDurReport">AKAKRDurReport</a> <a name=AKAKRDURREPORT></a><b>AKAKRDURREPORT</b>;
+typedef struct <a href="#struct AKAkrdursetup">AKAkrdursetup</a> <a name=AKAKRDURSETUP></a><b>AKAKRDURSETUP</b>;
+typedef struct <a href="#struct AKAScenReport">AKAScenReport</a> <a name=AKASCENREPORT></a><b>AKASCENREPORT</b>;
+typedef struct <a href="#struct AKAVolReport">AKAVolReport</a> <a name=AKAVOLREPORT></a><b>AKAVOLREPORT</b>;
+typedef struct <a href="#struct AKAYldWorst">AKAYldWorst</a> <a name=AKAYLDWORST></a><b>AKAYLDWORST</b>;
+typedef struct <a href="#struct AKAPrcWorst">AKAPrcWorst</a> <a name=AKAPRCWORST></a><b>AKAPRCWORST</b>;
+typedef struct <a href="#struct AKAAtaxYld">AKAAtaxYld</a> <a name=AKAATAXYLD></a><b>AKAATAXYLD</b>;
+typedef struct <a href="#struct AKAAtaxBasis">AKAAtaxBasis</a> <a name=AKAATAXBASIS></a><b>AKAATAXBASIS</b>;
+
+<span class='comment'>/* ********************************************
+   SIMPLE VALUATION routines
+   ******************************************** */</span>
+<span class='comment'>/* Price a bond; returns price; -1 indicates an error */</span>
+double <a name="AKABondPrice"></a><b>AKABondPrice</b>(long pvdate, <a href="#AKAHTREE">AKAHTREE</a> hTree, const <a href="#AKABOND">AKABOND</a> *bond,
+		    double oas);
+
+<span class='comment'>/* Compute the OAS for a bond; returns OAS; -99999 indicates an error */</span>
+double <a name="AKABondOAS"></a><b>AKABondOAS</b>(long pvdate, <a href="#AKAHTREE">AKAHTREE</a> hTree, const <a href="#AKABOND">AKABOND</a> *bond,
+		  double price);
+
+<span class='comment'>/* Determine accrued for a bond - returns accrued; -1 indicates an error */</span>
+double <a name="AKABondAccrued"></a><b>AKABondAccrued</b>(long pvdate, const <a href="#AKABOND">AKABOND</a> *bond);
+
+<span class='comment'>/* Determine accrued and accrued days for a bond.
+   Returns 1 on success, 0 on an error */</span>
+double <a name="AKABondAccrued2"></a><b>AKABondAccrued2</b>(long pvdate, const <a href="#AKABOND">AKABOND</a> *bond,
+		       double *accrued, int *accrued_days);
+
+<span class='comment'>/* Spot shift (see AKAShiftMode, below) a tree &lt;treeshift&gt; basis points
+   then value a bond; returns price; -1 indicates an error */</span>
+double <a name="AKABondPriceShifted"></a><b>AKABondPriceShifted</b>(long pvdate, <a href="#AKAHTREE">AKAHTREE</a> hTree, const <a href="#AKABOND">AKABOND</a> *bond,
+			   double oas, double treeshift);
+
+<span class='comment'>/* convert between price and yield.  Select cnvfrom/cnvto from <a href="#AKAQuoteType">AKAQuoteType</a>
+   defined below.  AKAQuoteType OAS is not supported for price conversion.
+   To convert from OAS use AKABondVal().
+   Returns:   value in cnvto units; -99999 indicates an error. */</span>
+double <a name="AKABondPriceCnv"></a><b>AKABondPriceCnv</b>(long pvdate, long cnvfrom, long cnvto, double quote,
+		       const <a href="#AKABOND">AKABOND</a> *bond);
+
+<span class='comment'>/* Solve for a single fixed spread such that if the same spread is
+   added to each coupon in the coupon schedule of the bond, then the
+   clean price of the bond, computed using the tree with zero OAS, is
+   equal to clean_price provided as input.
+   Returns: this spread, in basis points, with sign reversed
+   -99999 indicates an error. */</span>
+double <a name="AKAAssetSwapSpread"></a><b>AKAAssetSwapSpread</b>(double clean_price, long pvdate, <a href="#AKAHTREE">AKAHTREE</a> hTree, 
+                          const <a href="#AKABOND">AKABOND</a> *bond);
+
+
+<span class='comment'>/* Compute the price of a bond at zero OAS when the input asset_swap_spread is
+   applied.
+   Returns: the clean price
+   -99999 indicates an error */</span>
+double <a name="AKAConvertAssetSwapSpread"></a><b>AKAConvertAssetSwapSpread</b>(double asset_swap_spread, long pvdate, 
+                                 <a href="#AKAHTREE">AKAHTREE</a> hTree, const <a href="#AKABOND">AKABOND</a> *bond);
+
+<span class='comment'>/* Compute the I-Spread.  This is the difference between the YTM of a
+   bond at the provided price, and the yield on the
+   weighted-average-maturity-matched point on the provided yield
+   curve. The yield will be straight-line interpolated between points
+   on the provided curve. Industry refers to this spread as I-Spread
+   if swap curve provided and G-Spread if government curve
+   (treasuries) provided.
+   Returns: this spread, in basis points, -99999 indicates an error. */</span>
+double <a name="AKAISpread"></a><b>AKAISpread</b>(const <a href="#AKABOND">AKABOND</a> *bond, long pvdate, double price,
+		  const <a href="#AKACURVE">AKACURVE</a> *crv);
+
+
+<span class='comment'>/* Discount the provided value to now from the time in the future expressed
+   as fractional years using the rates in the tree. */</span>
+double <a name="AKADiscount"></a><b>AKADiscount</b>(<a href="#AKAHTREE">AKAHTREE</a> hTree, double oas, double value, double fromtime);
+
+<span class='comment'>/* ********************************************
+   REPORT STRUCTURE BASED VALUATION routines
+   ******************************************** */</span>
+
+<span class='comment'>/* Value a bond and fill out all fields in the bond report (see
+   bond report definition below).  Select quoteType from <a href="#AKAQuoteType">AKAQuoteType</a> */</span>
+long <a name="AKABondVal"></a><b>AKABondVal</b>(long pvDate, long quoteType, double quote,
+		<a href="#AKAHTREE">AKAHTREE</a> hTree, const <a href="#AKABOND">AKABOND</a> *bond,
+		<a href="#AKABONDREPORT">AKABONDREPORT</a> *rpt);
+
+<span class='comment'>/* Like AKABondVal() but allows configuration of which bond report
+   values to calculate.  See the definition of the bond report below
+   to understand which values are calculated. Set value_x to 1 to
+   value, zero to not value. */</span>
+long <a name="AKABondVal2"></a><b>AKABondVal2</b>(long pvDate, long quoteType, double quote,
+		 <a href="#AKAHTREE">AKAHTREE</a> hTree, const <a href="#AKABOND">AKABOND</a> *bond,
+		 <a href="#AKABONDREPORT">AKABONDREPORT</a> *rpt,
+		 int value_option, int value_duration, int value_yield);
+
+<span class='comment'>/* Like AKABondVal3() but w/ a single control flag of or'd values */</span>
+enum {
+    AKABONDVAL_DURATION = 1,
+    AKABONDVAL_OPTION = 2,
+    AKABONDVAL_YIELDS = 4,
+    AKABONDVAL_WEIGHTED_TIME_TO_CALL = 8 <span class='comment'>/* see AKABONDREPORT, below */</span>
+};
+
+long <a name="AKABondVal3"></a><b>AKABondVal3</b>(long pvDate, long quoteType, double quote,
+		 <a href="#AKAHTREE">AKAHTREE</a> hTree, const <a href="#AKABOND">AKABOND</a> *bond,
+	<a href="#"></a>	 <a href="#AKABONDREPORT">AKABONDREPORT</a> *rpt, void *reserved, <span class='comment'>/* use NULL for reserved */</span>
+		 int value_what_flag);
+
+<span class='comment'>/* Perform scenario analysis for a bond over a series of interest rate
+   scenarios (usually two).  See the definitions of AKASCENSETUP and
+   AKASCENREPORT, below, for details of the inputs and outputs. */</span>
+long <a name="AKABondScenEx"></a><b>AKABondScenEx</b>(long quoteType, double quote,
+		   const <a href="#AKASCENSETUP">AKASCENSETUP</a> *akascen, const <a href="#AKABOND">AKABOND</a> *bond,
+		   <a href="#AKASCENREPORT">AKASCENREPORT</a> *rpt, double *efficiency);
+
+<span class='comment'>/* Allocate and free the extended scenario analysis setup structure.
+   AKAScenSetupFree() does not release the trees.  The trees in the
+   AKASCENSETUP structure must be created and released by the
+   caller. */</span>
+<a href="#AKASCENSETUP">AKASCENSETUP</a> *<a name="AKAScenSetupAlloc"></a><b>AKAScenSetupAlloc</b>(long n);
+<a href="#AKASCENSETUP">AKASCENSETUP</a> *<a name="AKAScenSetupFree"></a><b>AKAScenSetupFree</b>(<a href="#AKASCENSETUP">AKASCENSETUP</a> *scen);
+
+
+<span class='comment'>/* Compute the key rate durations for a bond and return the results
+   in an allocated report.  The returned report must be freed by the
+   caller using AKAKRDurReportFree().  On failure, it returns NULL.
+   This routine uses shifts of the par curve at each maturity to do
+   duration.  These are created by calling AKAKeyDurSetup(); */</span>
+<a href="#AKAKRDURREPORT">AKAKRDURREPORT</a> *<a name="AKABondKeyDur3"></a><b>AKABondKeyDur3</b>(long pvdate, const <a href="#AKABOND">AKABOND</a> *bond,
+			       long quoteType, double quote,
+			       <a href="#AKAKRDURSETUP">AKAKRDURSETUP</a> *setup);
+
+<span class='comment'>/* Construct a structure for computing the key rate durations of a
+   bond using the specified duration shift (durbp), at specific
+   maturities.  This structure is used in AKABondKeyDur3().  The array
+   maturities contains the specific key rates for which to calculate
+   duration.  If it is NULL (or maturities_count is zero) all the
+   maturities in the curve are used.  maturities_count must be the
+   number of elements in the maturities_array.  This structure must
+   be freed by the caller using AKAKeyDurSetupFree(). */</span>
+<a href="#AKAKRDURSETUP">AKAKRDURSETUP</a> *<a name="AKAKeyDurSetup"></a><b>AKAKeyDurSetup</b>(const <a href="#AKACURVE">AKACURVE</a> *curve, const <a href="#AKASPREAD">AKASPREAD</a> *spread,
+			      double durbp,
+			      double *maturities, int maturities_count);
+
+<span class='comment'>/* Frees the structure created in AKAKeyDurSetup().  Always returns NULL. */</span>
+<a href="#AKAKRDURSETUP">AKAKRDURSETUP</a> *<a name="AKAKeyDurSetupFree"></a><b>AKAKeyDurSetupFree</b>(<a href="#AKAKRDURSETUP">AKAKRDURSETUP</a> *setup);
+
+
+<span class='comment'>/* AKABondKeyDur2() is the same as invoking, AKAKeyDurSetup(), then
+   AKABondKeyDur3(), and finally AKAKeyDurSetupFree().  Because
+   creating the par shifted trees for each maturity is relatively
+   expensive, calling this routine repeatedly with the same
+   curve/spread is inefficient.  Use AKABondKeyDur3(), instead. */</span>
+<a href="#AKAKRDURREPORT">AKAKRDURREPORT</a> *<a name="AKABondKeyDur2"></a><b>AKABondKeyDur2</b>(long pvdate, const <a href="#AKABOND">AKABOND</a> *bond,
+			       long quoteType, double quote,
+			       const <a href="#AKACURVE">AKACURVE</a> *curve, const <a href="#AKASPREAD">AKASPREAD</a> *spread,
+			       int durbp,
+			       <a href="#AKAKRDURREPORT">AKAKRDURREPORT</a> *rpt);
+
+
+<span class='comment'>/* AKABondKeyDur() is exactly the same as calling AKABondKeyDur2()
+   with the rpt structure being NULL. */</span>
+<a href="#AKAKRDURREPORT">AKAKRDURREPORT</a> *<a name="AKABondKeyDur"></a><b>AKABondKeyDur</b>(long pvdate, const <a href="#AKABOND">AKABOND</a> *bond,
+			      long quoteType, double quote,
+			      const <a href="#AKACURVE">AKACURVE</a> *curve, const <a href="#AKASPREAD">AKASPREAD</a> *spread,
+			      int durbp);
+
+
+
+<span class='comment'>/* Compute key-rate durations using SPOT shift.  It must be passed
+   an allocated AKAKRDURREPORT with the maturities of the desired key
+   rates for durations, already filled out.  Because it does spot
+   shifts of the tree, we recommend using AKABondKeyDur3(), instead. */</span>
+long <a name="AKABondKRDur"></a><b>AKABondKRDur</b>(long pvDate, long quoteType, double quote,
+		  <a href="#AKAHTREE">AKAHTREE</a> hTree, const <a href="#AKABOND">AKABOND</a> *bond,
+		  <a href="#AKAKRDURREPORT">AKAKRDURREPORT</a> *rpt);
+
+
+<span class='comment'>/* Both the following cash flow reports use the same structure.  The
+   first simply reports the cash flows from the instrument.  The
+   second discounts the flows and calculates bond value
+   fundamentals. */</span>
+
+<span class='comment'>/* report cashflows -- leaves much of the report structure blank */</span>
+long <a name="AKABondFlowOnly"></a><b>AKABondFlowOnly</b>(long pvDate, const <a href="#AKABOND">AKABOND</a> *bond, <a href="#AKAFLOWREPORT">AKAFLOWREPORT</a> *rpt);
+
+
+<span class='comment'>/* Compute and discount cashflows */</span>
+long <a name="AKABondFlow"></a><b>AKABondFlow</b>(long pvDate, long quoteType, double quote,
+		 <a href="#AKAHTREE">AKAHTREE</a> hTree, const <a href="#AKABOND">AKABOND</a> *bond,
+		 <a href="#AKAFLOWREPORT">AKAFLOWREPORT</a> *rpt);
+
+<span class='comment'>/* Compute yield for each option exercise date in option schedules and to
+   maturity.  If both a call and a put are in effect, both are reported.
+   The function also returns the lowest of all these yields.  */</span>
+long <a name="AKAYieldToWorst"></a><b>AKAYieldToWorst</b>(long pvDate, long quoteType, double quote,
+		     const <a href="#AKABOND">AKABOND</a> *bond, <a href="#AKAYLDWORST">AKAYLDWORST</a> *rpt);
+
+<span class='comment'>/* Same as AKAYieldToWorst except that yields are computed to each sink
+   date. */</span>
+long <a name="AKALowestYieldToSink"></a><b>AKALowestYieldToSink</b>(long pvDate, long quoteType, double quote,
+			   const <a href="#AKABOND">AKABOND</a> *bond, <a href="#AKAYLDWORST">AKAYLDWORST</a> *rpt);
+
+<span class='comment'>/* Compute yields for each option or flow date of a bond.  The price
+   of the bond must be supplied.  The two control flags ascfy and
+   tosink extend the behavior.  If tosink is 1 the worst yields are
+   for yields to sink dates.  If ascfy is 1 the ytc, ytp, and worst
+   yields are on a cash flow basis.  The two flags can be combined.
+   If both ascfy is 0 and tosink is 0, the behavior is the same as
+   AKABondValueYields().  */</span>
+long <a name="AKAYieldToWorstEx"></a><b>AKAYieldToWorstEx</b>(long pvDate, long quoteType, double quote,
+		       const <a href="#AKABOND">AKABOND</a> *bond, int tosink, int ascfy,
+		       <a href="#AKAYLDWORST">AKAYLDWORST</a> *rpt);
+
+<span class='comment'>/* Exactly like AKAYieldToWorstEx() except this returns the allocated
+   report structure, or NULL on error.  The returned structure must be
+   freed via AKAYldWorstReportFree().  Note it is safe to call any {X}Free()
+   function with NULL. */</span>
+<a href="#AKAYLDWORST">AKAYLDWORST</a> *<a name="AKAYieldToWorstEx2"></a><b>AKAYieldToWorstEx2</b>(long pvDate, long quoteType, double quote,
+				const <a href="#AKABOND">AKABOND</a> *bond, int tosink, int ascfy);
+
+<span class='comment'>/* Compute price for each option exercise date in option schedules and to
+   maturity.  If both a call and a put are in effect, both are reported.
+   The function also returns the lowest of all these prices.
+   The bond ytm is used as the yield at each date when computing the price.
+   If the provided quoteType is not AKA_QUOTE_YTM, the ytm will be calculated
+   based on the provided quote. */</span>
+long <a name="AKAPriceToWorst"></a><b>AKAPriceToWorst</b>(long pvDate, long quoteType, double quote,
+		     const <a href="#AKABOND">AKABOND</a> *bond, <a href="#AKAPRCWORST">AKAPRCWORST</a> *rpt);
+
+<span class='comment'>/* Fill out after-tax yield report -- input fields in report structure
+   must be filled out prior to invocation.  Pvdate is purchase date,
+   and quote is purchase price. quoteType cannot be OAS. */</span>
+long <a name="AKAAtaxYield"></a><b>AKAAtaxYield</b>(long pvDate, long quoteType, double quote,
+		  const <a href="#AKABOND">AKABOND</a> *bond, <a href="#AKAATAXYLD">AKAATAXYLD</a> *rpt);
+
+<span class='comment'>/* Fill out after-tax basis report -- input fields in report structure
+   must be filled out prior to invocation.  Pvdate is sale date, and
+   quote is sale price. quoteType cannot be OAS. */</span>
+long <a name="AKAAtaxBasis"></a><b>AKAAtaxBasis</b>(long pvDate, long quoteType, double quote,
+		  const <a href="#AKABOND">AKABOND</a> *akabond, <a href="#AKAATAXBASIS">AKAATAXBASIS</a> *rpt);
+
+<span class='comment'>/* Compute yields and modified durations for a bond.  The price of
+   the bond must be supplied. */</span>
+long <a name="AKABondValueYields"></a><b>AKABondValueYields</b>(long pvdate, double price, const <a href="#AKABOND">AKABOND</a> *bond,
+			<a href="#AKABONDYIELDREPORT">AKABONDYIELDREPORT</a> *rpt);
+
+<span class='comment'>/* Compute yields and modified durations for a bond.  The price of the
+   bond must be supplied.  The two control flags ascfy and tosink
+   extend the behavior.  If tosink is 1 the worst yields are for
+   yields to sink dates.  If ascfy is 1 the ytc, ytp and worst yields
+   are on a cash flow basis.  The two flags can be combined.  If both
+   ascfy and tosink are 0, the behavior is the same as
+   AKABondValueYields().  */</span>
+long <a name="AKABondValueYieldsEx"></a><b>AKABondValueYieldsEx</b>(long pvdate, double price, const <a href="#AKABOND">AKABOND</a> *bond,
+			  int tosink, int ascfy, <a href="#AKABONDYIELDREPORT">AKABONDYIELDREPORT</a> *rpt);
+
+
+
+</div>
+<div class='blockcomment'>
+<a name='contents30'></a><h2>   Section 5. Bond Structure Configuration Functions</h2>
+</div>
+
+<div class='code'>
+<span class='comment'>/* ********************************************
+   AFTER-TAX CONFIGURATION
+   ******************************************** */</span>
+
+<span class='comment'>/* Set the default tax rate used for after-tax valuation of bonds.  Tax-rates
+   are as percents, i.e., 15 is 15%.
+   If this function is not called the defaults are: 35%, 35%, 15%, 15% */</span>
+void <a name="AKADefaultTaxRate"></a><b>AKADefaultTaxRate</b>(double income, double capgain_short, double capgain_long,
+		       double capgain_superlong);
+
+<span class='comment'>/* Set the after-tax rate of a specific bond, defaults are used otherwise */</span>
+void <a name="AKABondTaxRate"></a><b>AKABondTaxRate</b>(<a href="#AKABOND">AKABOND</a> *bond,
+		    double income, double capgain_short, double capgain_long,
+		    double capgain_superlong);
+
+<span class='comment'>/* Get the after-tax rate in effect for a specific bond */</span>
+void <a name="AKABondTaxRateGet"></a><b>AKABondTaxRateGet</b>(<a href="#AKABOND">AKABOND</a> *bond,
+		       double *income, double *capgain_short,
+		       double *capgain_long, double *capgain_superlong);
+
+<span class='comment'>/* Configure the business day behavior of the bond */</span>
+
+enum <a name='AKANotifyBehavior'></a><span class="enumdef">AKANotifyBehavior</span> {
+	<span class='comment'>/*  Extend the end of the notification/ex-coupon period so
+	    that it falls on a a business day.  This is the default
+	    behavior.  Example, for a currently callable American call
+	    with 30 days required notice, if the 30th day is a weekend
+	    (or holiday, if holiday list supplied) then push the next
+	    possible call opportunity to the next business day. */</span>
+    AKABusinessDaysExtend,
+
+	<span class='comment'>/* Only count business days when determining the notification
+	 * date. */</span>
+    AKABusinessDaysOnly
+};
+
+<span class='comment'>/* Configure the notify behavior, select from <a href="#"></a><a href='#AKANotifyBehavior'>AKANotifyBehavior</a>.
+   Returns prior setting. */</span>
+i<a href="#"></a>nt <a name="AKA_set_notifybehavior"></a><b>AKA_set_notifybehavior</b>(AKABOND *, int behavior);
+
+<span class='comment'>/* Set weekends to be business days, returns prior setting.
+   The default setting, for historical compatibility, is true.
+   Note, if weekends are business days and no holidays are set
+   (see below), notification is simply calendar days. */</span>
+i<a href="#"></a><a href="#"></a>nt <a name="AKA_set_notifyweekends"></a><b>AKA_set_notifyweekends</b>(AKABOND *, int);
+
+<span class='comment'>/* Set a day to be a non-business day */</span>
+v<a href="#"></a><a href="#"></a>oid <a name="AKA_set_notifyholiday"></a><b>AKA_set_notifyholiday</b>(AKABOND *, long);
+
+<span class='comment'>/* Remove all set holidays */</span>
+v<a href="#"></a>oid <a name="AKA_clear_notifyholidays"></a><b>AKA_clear_notifyholidays</b>(AKABOND *);
+
+<span class='comment'>/* ********************************************
+   Mortgage Setup
+
+   Configure a bond to behave like a mortgage.
+
+   This configures the option and sink schedules so that the bond behaves
+   like a mortgage.  Existing sink and option schedules are removed.  The
+   bond must already have valid values for:
+   	- Dated/Initial Date
+	- Maturity Date
+	- Coupon
+	- Daycount (recommend 30/360)
+	- Frequency (recommend monthly)
+	- Fcdate/lcdate
+   Subsequently changing any of those values will corrupt the
+   mortgage configuration and valuation results will be undefined.
+
+   The call option delay days will be set to 15.  This can be modified.
+
+   A frequency of Interest at Maturity will be reset to Monthly and
+   the warning AKA_WARN_FREQUENCY will be set.
+
+   Amortization years is optional.  If zero is passed, the bond amortizes
+   at maturity.  If the years are less than the life of the mortgage the
+   warning WARN_AMORTIZATION is set.
+
+   Reficost is the mortgage refinancing fees as a percent of par for
+   "calling" the mortgage.  Fees are expressed as points, 1.5% is 1.5.
+
+   The function returns an AKA_ERROR code or AKA_ERROR_NONE.
+   ******************************************** */</span>
+int <a name="AKABondMortgage"></a><b>AKABondMortgage</b>(<a href="#AKABOND">AKABOND</a> *bond, double amount, double amortization_years,
+		    double reficost);
+
+</div>
+<div class='blockcomment'>
+<a name='contents31'></a><h2>   Section 6. Miscellaneous Functions</h2>
+</div>
+
+<div class='code'>
+<span class='comment'>/* Version information as floating point number in the format v.rr
+   where
+   v = major version number
+   rr = minor release number
+   e.g., 1.10 */</span>
+double <a name="AKA_version"></a><b>AKA_version</b>();
+
+<span class='comment'>/* Version information as a string: AKA BondOAS Library version v.rr */</span>
+const char *<a name="AKA_version_string"></a><b>AKA_version_string</b>();
+
+<span class='comment'>/* Compute par curves at forward times based on rates
+   of input tree or curve.  See definition of AKAFWDRATE report below */</span>
+long <a name="AKAFwdRates"></a><b>AKAFwdRates</b>(<a href="#AKAHTREE">AKAHTREE</a> hTree, <a href="#AKAFWDREPORT">AKAFWDREPORT</a> *report);
+long <a name="AKAFwdRatesFromCurve"></a><b>AKAFwdRatesFromCurve</b>(<a href="#AKACURVE">AKACURVE</a> *curve, <a href="#AKAFWDREPORT">AKAFWDREPORT</a> *report);
+
+<span class='comment'>/* Probe the term structure of volatility */</span>
+long <a name="AKAYieldVol"></a><b>AKAYieldVol</b>(<a href="#AKAHTREE">AKAHTREE</a> hTree, <a href="#AKAVOLREPORT">AKAVOLREPORT</a> *report);
+
+struct <a name="struct TREESAMPLE"></a><b>TREESAMPLE</b>;
+<span class='comment'>/* Provide random walks through the expected interest rates in order
+   to do sampling valuation analysis.  Returns 0 on success. */</span>
+int <a name="AKA_treesample"></a><b>AKA_treesample</b>(<a href="#AKACURVE">AKACURVE</a> *curve, <a href="#struct TREESAMPLE">struct TREESAMPLE</a> *sample);
+
+<span class='comment'>/* Set the duration shift method and basis points - like in AKAINITDATA.
+   Permits the user to reset the duration shift parameters during
+   a run of the library.
+   MULTI-THREAD note: this routine is multi-thread safe.
+   It will change these settings for the thread only. */</span>
+void <a name="AKA_set_duration_shift"></a><b>AKA_set_duration_shift</b>(long smode, double bp_no_options,
+			    double bp_with_options);
+
+
+<span class='comment'>/* Return the time between two dates in fractional years, according to the
+   daycount. */</span>
+double <a name="AKAYears"></a><b>AKAYears</b>(long adate, long bdate, long daycount);
+
+<span class='comment'>/* Return a new date by adding the year fraction to the passed in date,
+   according to the daycount. */</span>
+long <a name="AKADateAdd"></a><b>AKADateAdd</b>(long adate, double time, long daycount);
+
+<span class='comment'>/* Pack the settlement date and the trade date into a pvdate long.
+   The settlement date will be the pvdate and the trade date will be
+   used for counting days until an option for call notification. */</span>
+long <a name="AKADatePack"></a><b>AKADatePack</b>(long settlement, long trade);
+
+
+</div>
+<div class='blockcomment'>
+<a name='contents32'></a><h2>   Section 7. Error Handling</h2>
+<p>All AKA API routines will set the AKA_ERROR_CODE.  The error codes
+are described below.  AKA_ERROR_NONE is zero, and indicates success.
+Unlike the C library errno, the AKA_ERROR_CODE is reset to
+AKA_ERROR_NONE after any API routine completes successfully.
+Access to the error code is provided by a thread-safe function.
+After a non-zero error, results of valuation routines are not
+defined.
+</p>
+<p>Many AKA API routines can also generate warnings.  These are
+recoverable errors.  There may be more than one warning per
+invocation.  Warnings, like errors are reset in each invocation.
+Access to the warnings is provided by a thread-safe function.
+</p>
+<p>Warnings can be one of two types: a) Fully recoverable, in which
+the operation proceeds and all returned values are valid.  These
+warnings are all named AKA_WARN_x. b) Partially recoverable, in
+which some portions of a complex operation failed and some of the
+returned data is invalid.  These second class of warnings use the
+error codes of AKA_ERROR_x in the warnings.  Note, the operation
+as a whole, could still have an error value of AKA_ERROR_NONE because
+it was partially successful.
+</p>
+<p>MULTI-THREAD note: each thread has its own error message stack.  All
+error handling routines are per thread.  Errors for one thread are
+not visible to any other thread.
+</p>
+</div>
+
+<div class='code'>
+#include "<a href='#akaerrno.h'>akaerrno.h"</a> <span class='comment'>/* All error numbers and AKA_WARNINGS_MAX are defined
+			 in akaerrno.h */</span>
+
+<span class='comment'>/* Returns the error, if any, from the last operation. */</span>
+enum <a name='AKA_ERROR_NUMBER'></a><span class="enumdef">AKA_ERROR_NUMBER</span> AKAError();
+
+<span class='comment'>/* Returns the number of warnings from the last operation.  The array
+   passed into this function must be large enough to hold
+   AKA_WARNINGS_MAX values.  No more than AKA_WARNINGS_MAX warnings
+   will be returned.  If more warnings are generated, the warnings
+   will include AKA_WARN_TOOMANY. */</span>
+int <a name="AKAWarnings"></a><b>AKAWarnings</b>(enum <a href='#AKA_ERROR_NUMBER'>AKA_ERROR_NUMBER</a> *warnings);
+
+<span class='comment'>/* Returns the string representation of the error represented by errnum. */</span>
+const char *<a name="AKAErrorString"></a><b>AKAErrorString</b>(enum <a href='#AKA_ERROR_NUMBER'>AKA_ERROR_NUMBER</a> errnum);
+
+</div>
+<div class='blockcomment'>
+<a name='contents33'></a><h2>   Section 8. Memory Allocation and Free</h2>
+<p>These routines must be used to allocate and free BondOAS structures.
+</p>
+<p>All AKA structures which have allocators (e.g., reports, AKABOND,
+etc.) must be allocated using the library provided allocation
+functions only.  Using stack local variables or directly allocating
+the structures via malloc will cause unexpected results and memory
+errors.  The only stack safe report structure is AKABONDREPORT.
+</p>
+</div>
+
+<div class='code'>
+<span class='comment'>/* forward declarations -- definitions below */</span>
+typedef struct <a href="#struct AKASecurity">AKASecurity</a> <a name=AKASECURITY></a><b>AKASECURITY</b>;
+typedef struct <a href="#struct AKACoupon">AKACoupon</a> <a name=AKACOUPON></a><b>AKACOUPON</b>;
+typedef struct <a href="#struct AKAOption">AKAOption</a> <a name=AKAOPTION></a><b>AKAOPTION</b>;
+typedef struct <a href="#struct AKASink">AKASink</a> <a name=AKASINK></a><b>AKASINK</b>;
+
+<a href="#AKACURVE ">AKACURVE </a>* <a name="AKACurveAlloc"></a><b>AKACurveAlloc</b>(long n);
+<a href="#AKACURVE ">AKACURVE </a>* <a name="AKACurveFree"></a><b>AKACurveFree</b>(<a href="#AKACURVE">AKACURVE</a> *curve);
+<a href="#AKACURVE ">AKACURVE </a>* <a name="AKACurveCopy"></a><b>AKACurveCopy</b>(const <a href="#AKACURVE">AKACURVE</a> *other);
+
+<a href="#AKASPREAD ">AKASPREAD </a>* <a name="AKASpreadAlloc"></a><b>AKASpreadAlloc</b>(long n);
+<a href="#AKASPREAD ">AKASPREAD </a>* <a name="AKASpreadFree"></a><b>AKASpreadFree</b>(<a href="#AKASPREAD">AKASPREAD</a> *spr);
+
+<a href="#AKABOND ">AKABOND </a>* <a name="AKABondAlloc"></a><b>AKABondAlloc</b>(long nCpns, long nCalls, long nPuts, long nSinks);
+<a href="#AKABOND ">AKABOND </a>* <a name="AKABondFree"></a><b>AKABondFree</b>(<a href="#AKABOND">AKABOND</a> *bond);
+<a href="#AKABOND ">AKABOND </a>* <a name="AKABondCopy"></a><b>AKABondCopy</b>(const <a href="#AKABOND">AKABOND</a> *other);
+
+<span class='comment'>/* allocate pieces of a bond -- not the recommended approach */</span>
+<a href="#AKACOUPON ">AKACOUPON </a>* <a name="AKACouponFree"></a><b>AKACouponFree</b>(<a href="#AKACOUPON">AKACOUPON</a> *cpn);
+<a href="#AKACOUPON ">AKACOUPON </a>* <a name="AKACouponAlloc"></a><b>AKACouponAlloc</b>(long n);
+<a href="#AKAOPTION ">AKAOPTION </a>* <a name="AKAOptionAlloc"></a><b>AKAOptionAlloc</b>(long n);
+<a href="#AKAOPTION ">AKAOPTION </a>* <a name="AKAOptionFree"></a><b>AKAOptionFree</b>(<a href="#AKAOPTION">AKAOPTION</a> *opt);
+<a href="#AKASINK ">AKASINK </a>* <a name="AKASinkAlloc"></a><b>AKASinkAlloc</b>(long n);
+<a href="#AKASINK ">AKASINK </a>* <a name="AKASinkFree"></a><b>AKASinkFree</b>(<a href="#AKASINK">AKASINK</a> *opt);
+
+<a href="#AKASCENSETUP ">AKASCENSETUP </a>* <a name="AKAScenSetupAlloc"></a><b>AKAScenSetupAlloc</b>(long n);
+<a href="#AKASCENSETUP ">AKASCENSETUP </a>* <a name="AKAScenSetupFree"></a><b>AKAScenSetupFree</b>(<a href="#AKASCENSETUP">AKASCENSETUP</a> *scen);
+
+<a href="#AKASCEN ">AKASCEN </a>* <a name="AKAScenAlloc"></a><b>AKAScenAlloc</b>(long n);
+<a href="#AKASCEN ">AKASCEN </a>* <a name="AKAScenFree"></a><b>AKAScenFree</b>(<a href="#AKASCEN">AKASCEN</a> *scen);
+
+<a href="#AKAFLOWREPORT ">AKAFLOWREPORT </a>* <a name="AKAFlowReportAlloc"></a><b>AKAFlowReportAlloc</b>();
+<a href="#AKAFLOWREPORT ">AKAFLOWREPORT </a>* <a name="AKAFlowReportFree"></a><b>AKAFlowReportFree</b>(<a href="#AKAFLOWREPORT">AKAFLOWREPORT</a> *rpt);
+
+<a href="#AKAKRDURREPORT ">AKAKRDURREPORT </a>* <a name="AKAKRDurReportAlloc"></a><b>AKAKRDurReportAlloc</b>(long n);
+<a href="#AKAKRDURREPORT ">AKAKRDURREPORT </a>* <a name="AKAKRDurReportFree"></a><b>AKAKRDurReportFree</b>(<a href="#AKAKRDURREPORT">AKAKRDURREPORT</a> *rpt);
+
+<a href="#AKAFWDREPORT ">AKAFWDREPORT </a>* <a name="AKAFwdReportAlloc"></a><b>AKAFwdReportAlloc</b>(long nTimes, long nMats);
+<a href="#AKAFWDREPORT ">AKAFWDREPORT </a>* <a name="AKAFwdReportFree"></a><b>AKAFwdReportFree</b>(<a href="#AKAFWDREPORT">AKAFWDREPORT</a> *rpt);
+
+<a href="#AKAVOLREPORT ">AKAVOLREPORT </a>* <a name="AKAVolReportAlloc"></a><b>AKAVolReportAlloc</b>(long n);
+<a href="#AKAVOLREPORT ">AKAVOLREPORT </a>* <a name="AKAVolReportFree"></a><b>AKAVolReportFree</b>(<a href="#AKAVOLREPORT">AKAVOLREPORT</a> *rpt);
+
+<a href="#AKAYLDWORST ">AKAYLDWORST </a>* <a name="AKAYldWorstReportAlloc"></a><b>AKAYldWorstReportAlloc</b>();
+<a href="#AKAYLDWORST ">AKAYLDWORST </a>* <a name="AKAYldWorstReportFree"></a><b>AKAYldWorstReportFree</b>(<a href="#AKAYLDWORST">AKAYLDWORST</a> *rpt);
+
+<a href="#AKAPRCWORST ">AKAPRCWORST </a>* <a name="AKAPrcWorstReportAlloc"></a><b>AKAPrcWorstReportAlloc</b>();
+<a href="#AKAPRCWORST ">AKAPRCWORST </a>* <a name="AKAPrcWorstReportFree"></a><b>AKAPrcWorstReportFree</b>(<a href="#AKAPRCWORST">AKAPRCWORST</a> *rpt);
+
+<a href="#struct TREESAMPLE">struct TREESAMPLE</a> *<a name="AKA_treesample_alloc"></a><b>AKA_treesample_alloc</b>(int nmats, int npaths, int ntimes);
+void <a name="AKA_treesample_free"></a><b>AKA_treesample_free</b>(<a href="#struct TREESAMPLE">struct TREESAMPLE</a> *sample);
+
+
+</div>
+<div class='blockcomment'>
+<a name='contents34'></a><h2>   Section 9. Data Structures and Constants</h2>
+<p>It is important to read the notes in Section 8., above, about using
+AKA allocation functions.
+</p>
+</div>
+
+<div class='code'>
+<span class='comment'>/* MULTI-THREAD note: all initialization settings are global and are across
+   all threads. */</span>
+
+<span class='comment'>/* ********************************************
+   INITIALIZATION structure with global configuration settings
+   ******************************************** */</span>
+struct <a name="struct AKAInitData"></a><b>AKAInitData</b>
+{
+	<span class='comment'>/* the following three settings are deprecated and ignored */</span>
+    char   treePath[512];
+    long   maxTrees;
+    long   maxTreesPurge;
+
+    long   msg_pop_order;  <span class='comment'>/* 0 - last on first off (default prior to v. 2.00)
+			      1 - first on first off (recommended)
+			      msg_pop_order is deprecated as of v. 2.10 */</span>
+    long   enable_tls;		<span class='comment'>/* controls use of thread local storage
+				   -1 -- do not use tls
+				    0  -- use default setting for architecture
+				    1 -- enable tls
+				   The default settings are:
+				   linux/linux64 : tls enabled
+				   win32/64 lib_md : tls enabled
+				   win32/64 lib_mt, dll : tls disabled on
+				   	versions prior to Vista
+				   sun-x86: tls enabled
+				   sun-sparc: cannot be enabled */</span>
+
+    long   treeCacheSize;	<span class='comment'>/* deprecated and ignored */</span>
+
+    long   _reserved3;		<span class='comment'>/* reserved for future use */</span>
+
+	<span class='comment'>/* duration calculation settings */</span>
+    long   durationShift;    <span class='comment'>/* Select from <a href="#AKAShiftMode">AKAShiftMode</a>:
+				default: AKA_SHIFT_PAR */</span>
+    double durBPNoOpts;      <span class='comment'>/* Duration shift when no options present
+				default: 10.0 */</span>
+    double durBPOpts;        <span class='comment'>/* Duration shift when options present
+				default: 40.0 */</span>
+
+	<span class='comment'>/* scenario analysis settings for old style scenario analysis calls */</span>
+    double efficiency;       <span class='comment'>/* Efficiency of option exercise
+				default: 100.0 */</span>
+};
+
+
+<span class='comment'>/* ********************************************
+   RATE TERM structure
+   ******************************************** */</span>
+struct <a name="struct AKACurve"></a><b>AKACurve</b>	      <span class='comment'>/* Curve specified at a list of maturities in years */</span>
+{
+    long    mode;     <span class='comment'>/* Volatility type.  Select from <a href="#AKAVolatilityMode">AKAVolatilityMode</a>: */</span>
+                      <span class='comment'>/* AKA_VOLMODE_MEANREV:  Supply mean reversion,
+			 compute lvol */</span>
+                      <span class='comment'>/* AKA_VOLMODE_LONGVOL:  Supply lvol,
+			 compute mean reversion */</span>
+
+    double  vol;      <span class='comment'>/* Short-rate volatility, 18% represented as 18.0 */</span>
+    double  lvol;     <span class='comment'>/* 30-year rate volatility, 12% represented as 12.0 */</span>
+    double  alpha;    <span class='comment'>/* Mean reversion speed, 2% represented as 2.0 */</span>
+
+
+    long    type;     <span class='comment'>/* Select from <a href="#AKACurveType">AKACurveType</a> */</span>
+
+    long    reseverd; <span class='comment'>/* reserved for future use */</span>
+
+    long    n;        <span class='comment'>/* Number of entries */</span>
+
+    double *time;     <span class='comment'>/* Years in appropriate daycount convention */</span>
+    double *yield;    <span class='comment'>/* Rates:  7% as 7.0;  Discount factors:  0.9 as 0.9 */</span>
+};
+
+
+<span class='comment'>/* ********************************************
+   ISSUER SPREAD structure
+   ******************************************** */</span>
+struct <a name="struct AKASpreads"></a><b>AKASpreads</b>    <span class='comment'>/* BEY corporate bond spreads */</span>
+{
+    long    n;       <span class='comment'>/* Number of points */</span>
+    double *time;    <span class='comment'>/* Time in 30/360 years */</span>
+    double *spread;  <span class='comment'>/* Spread in BEY bp; 25 bp represented as 25.0 */</span>
+};
+
+
+<span class='comment'>/* ********************************************
+   BOND structure, and supporting sub-structures
+
+   It is important to read the notes in Section 8., above, about using
+   AKA allocation functions.
+   ******************************************** */</span>
+struct <a name="struct AKABond"></a><b>AKABond</b>
+{
+    AKASECURITY *sec;
+
+    AKACOUPON   *cpn;   <span class='comment'>/* Set to NULL for fixed-coupon bond */</span>
+
+    AKAOPTION   *call;  <span class='comment'>/* Issuer's option */</span>
+    AKAOPTION   *put;   <span class='comment'>/* Holder's option */</span>
+
+    AKASINK     *sink;  <span class='comment'>/* Sinking fund options */</span>
+};
+
+
+struct <a name="struct AKASecurity"></a><b>AKASecurity</b>
+{
+    char    name[80];     <span class='comment'>/* Optional identifier */</span>
+
+    long    idate;        <span class='comment'>/* Issue date (yyyymmdd) (optional; defaults
+			   * to ddate) */</span>
+    long    ddate;        <span class='comment'>/* Dated date (yyyymmdd) */</span>
+    long    fcdate;       <span class='comment'>/* First coupon date (optional; defaults to
+			     the first flow date after the idate,
+			     determined by the frequency, counting
+			     back from the lcdate) */</span>
+    long    lcdate;       <span class='comment'>/* Last regular coupon date (optional;
+			   * defaults to maturity) */</span>
+    long    mdate;        <span class='comment'>/* Maturity date */</span>
+	<span class='comment'>/* NOTE:
+	   To specify an interest at maturity bond, set the fcdate to
+	   the mdate and either leave the lcdate unspecified (zero) or
+	   set it to the mdate as well.
+	*/</span>
+    long    daycount;     <span class='comment'>/* Select from <a href="#AKADaycount">AKADaycount</a> */</span>
+    long    frequency;    <span class='comment'>/* Select from <a href="#AKAFrequency">AKAFrequency</a> */</span>
+    long    ex_cpn_days;  <span class='comment'>/* Number of days bond trades ex-coupon
+			     (optional; defaults to zero), see option
+			     delay */</span>
+
+    long    payday;   <span class='comment'>/* The pay day is the day of the month on which
+	   the coupon is paid.  The default is to pay on the day of
+	   month of the last coupon, or the first coupon, or the
+	   maturity, in that precedence, if first or last coupons are
+	   specified.  For bonds where the resulting day is the end of
+	   the month of the applicable date, but not the end of the
+	   month of the cyclical coupon months, this can be used to
+	   force the end-of-month rule.  For example a semiannual bond
+	   that matures on 6/30 (or has a last coupon date of 6/30, if
+	   specified) will pay on 6/30 and 12/30 if the end-of-month
+	   rule is not in effect.  It will pay on 6/30 and 12/31 if
+	   the end of month rule is in effect.  If the payday is
+	   &lt; 0 or &gt; 30 the EOM rule is in effect, otherwise it is not.
+	   The default is 0. */</span>
+
+    double  redemption_value;  <span class='comment'>/* Usually 100, sometimes not at par.
+                                  Useful for valuing pre-refunded bonds that
+                                  are defeased to the first call date and the
+				  call is at a premium. */</span>
+
+    double  coupon;       <span class='comment'>/* Fixed coupon, ignored for step-ups */</span>
+
+    long    yld_method;	  <span class='comment'>/* select from <a href="#AKA_YIELD_METHOD">AKA_YIELD_METHOD</a> */</span>
+
+	<span class='comment'>/* Bond Specification Information used in After-Tax Valuations */</span>
+    double issue_price;    <span class='comment'>/* defaults to par */</span>
+    void *taxinfo;   <span class='comment'>/* configuration data for AKAAfterTax, do
+			not assign or access directly */</span>
+
+	<span class='comment'>/* private configuration data, never assign to this */</span>
+    void *_data;
+};
+
+
+struct <a name="struct AKACoupon"></a><b>AKACoupon</b>  <span class='comment'>/* Used for step-up coupons */</span>
+{
+    long    n;        <span class='comment'>/* Number of coupon/date pairs */</span>
+    long    type;     <span class='comment'>/* Select from <a href="#AKAPeriodType">AKAPeriodType</a> */</span>
+    long   *date;     <span class='comment'>/* Coupon period boundary dates (see type) */</span>
+    double *cpn;      <span class='comment'>/* Coupons, 7.0% represented as 7.0 */</span>
+};
+
+
+struct <a name="struct AKAOption"></a><b>AKAOption</b>  <span class='comment'>/* Used for call and put options */</span>
+{
+    long    n;        <span class='comment'>/* Number of strike dates (0 =&gt; No option) */</span>
+    long    type;     <span class='comment'>/* Select from <a href="#AKAOptionType">AKAOptionType</a> */</span>
+    long    delay;    <span class='comment'>/* Number of days notice required, this is in
+			 calendar days.  The first exercise date will
+			 be pushed to a Monday if it falls on a
+			 weekend.  For finer control, please use the
+			 C++ API. */</span>
+    long   *date;     <span class='comment'>/* Strike dates */</span>
+    double *px;       <span class='comment'>/* Strike prices */</span>
+};
+
+
+struct <a name="struct AKASink"></a><b>AKASink</b>  <span class='comment'>/* Sinking fund option */</span>
+{
+    long    n;             <span class='comment'>/* Number of sink dates (0 =&gt; No sinking fund) */</span>
+    long    delivery;      <span class='comment'>/* Issuer's option to buy bonds in open market */</span>
+                           <span class='comment'>/* and deliver to trustee to meet SF requirement */</span>
+                           <span class='comment'>/* 1 if present, 0 otherwise */</span>
+    long    allocation;    <span class='comment'>/* Select from <a href="#AKAAllocation">AKAAllocation</a> */</span>
+    double  face;          <span class='comment'>/* Original face in dollars, used to verify schedule.
+			      A value of zero means trust schedule */</span>
+    double  outstanding;   <span class='comment'>/* Current amount outstanding in dollars */</span>
+    double  acceleration;  <span class='comment'>/* 100 for a double-up, 200 for triple-up, etc. */</span>
+    double  accumulation;  <span class='comment'>/* Face amount in dollars held by accumulators */</span>
+    long   *date;          <span class='comment'>/* Sink dates */</span>
+    double *amt;           <span class='comment'>/* Sink amounts in dollars */</span>
+    double *px;            <span class='comment'>/* Sink prices (usually 100) */</span>
+};
+
+
+<span class='comment'>/* ********************************************
+   SCENARIO valuation definition structure
+   ******************************************** */</span>
+struct <a name="struct AKAScenSetup"></a><b>AKAScenSetup</b>
+{
+    long      type;   <span class='comment'>/* Select from <a href="#AKAScenType">AKAScenType</a> */</span>
+    long      n;      <span class='comment'>/* Number of points (n &gt;= 2) */</span>
+    long     *dates;  <span class='comment'>/* Vector of dates (yyyymmdd) */</span>
+    AKAHTREE *trees;  <span class='comment'>/* Vectors of prevailing trees */</span>
+    double eff_threshold;	<span class='comment'>/* efficiency threshold for option exercise,
+				   default is 100% */</span>
+
+    int reinvestment_method;	<span class='comment'>/* Select from <a href="#AKASCEN_REINVESTMENT">AKASCEN_REINVESTMENT</a> */</span>
+    double reinvestment_rate;	<span class='comment'>/* for fixed reinvestment behavior, 10.0 is
+				   10%. */</span>
+    int is_aftertax;		<span class='comment'>/* compute on after-tax basis, 0 no, 1 yes,
+				   default is no. */</span>
+};
+
+    <span class='comment'>/* Scenario analysis is normally based on input yield curves and
+   the OAS implied by the initial price.  In situations where the user
+   inputs a price that implies an unreasonable OAS, the scenario-based
+   option exercise and cashflow reinvestment calculations may be
+   distorted.  Assuming the input initial yield curve is appropriate
+   for the issuer of the security, the user can suppress the use of
+   implied OAS for purposes of option exercise and reinvestment by
+   providing an fixed reinvestment OAS and setting the
+   reinvest_at_fixed_oas flag, below.  In this case only the horizon
+   price will be calculated using the implied OAS.  All option
+   exercise decisions and reinvestment calculations will relative to
+   the entered curves.  Alternatively, the user can provide a fixed
+   reinvestment rate which will be used in lieu of the curve implied
+   rate. */</span>
+enum <a name='AKASCEN_REINVESTMENT'></a><span class="enumdef">AKASCEN_REINVESTMENT</span> {
+    AKASCEN_REINVEST_OAS,	<span class='comment'>/* default, reinvest at the applicable yield
+				   plus the implied oas of the security */</span>
+    AKASCEN_REINVEST_ZERO,	<span class='comment'>/* reinvest at the applicable yield without
+				   an oas. */</span>
+    AKASCEN_REINVEST_FIXED	<span class='comment'>/* reinvest at a fixed rate */</span>
+};
+
+<span class='comment'>/* ********************************************
+   REPORT BASED VALUATION routines structures
+   ******************************************** */</span>
+struct <a name="struct AKABondReport"></a><b>AKABondReport</b>
+{
+	<span class='comment'>/* price is always calculated (or supplied) */</span>
+    double  price;     <span class='comment'>/* Dollar price as a percentage of par */</span>
+	<span class='comment'>/* accrued is always calculated */</span>
+    double  accrued;   <span class='comment'>/* Accrued as a percentage of par */</span>
+	<span class='comment'>/* option value is calculated if value options is set */</span>
+    double  optval;    <span class='comment'>/* Option value as a percentage of par */</span>
+	<span class='comment'>/* oas is always calculated (or supplied) */</span>
+    double  oas;       <span class='comment'>/* Option-adjusted spread, 25 bp = 25.0 */</span>
+
+	<span class='comment'>/* duration values are calculated if value duration is set */</span>
+    double  effDur;    <span class='comment'>/* Option adjusted duration in years */</span>
+    double  effCon;    <span class='comment'>/* (vup - 2*v + vdn)/(v*(dr)^2) */</span>
+    double  effDV01;   <span class='comment'>/* (price + accrued)*effDur/100.0 */</span>
+
+	<span class='comment'>/* yields are calculated if value yields is set */</span>
+    double  ytm;       <span class='comment'>/* Yield to maturity, 7% = 7.0; ignores amortization */</span>
+    double  ytc;       <span class='comment'>/* Yield to next call */</span>
+    double  ytp;       <span class='comment'>/* Yield to next put */</span>
+    double  cfy;       <span class='comment'>/* Cashflow yield; includes amortization */</span>
+    double  wam;       <span class='comment'>/* Weighted average maturity in years */</span>
+
+	<span class='comment'>/* modified duration values are calculated if value yields is set */</span>
+    double  modDur;    <span class='comment'>/* Modified duration in years */</span>
+    double  modCon;    <span class='comment'>/* Modified convexity, same units as effCon */</span>
+    double  modDV01;   <span class='comment'>/* (price + accrued)*modDur/100.0 */</span>
+};
+
+
+struct <a name="struct AKABondYieldReport"></a><b>AKABondYieldReport</b>
+{
+    double  ytm;       <span class='comment'>/* Yield to maturity, 7% = 7.0 */</span>
+    double  ytc;       <span class='comment'>/* Yield to call */</span>
+    double  ytp;       <span class='comment'>/* Yield to put */</span>
+    double  cfy;       <span class='comment'>/* Cashflow yield */</span>
+    double  wam;       <span class='comment'>/* Weighted average maturity in years */</span>
+
+    double  modDur;    <span class='comment'>/* Modified duration in years */</span>
+    double  modCon;    <span class='comment'>/* Modified convexity, same units as effCon */</span>
+    double  modDV01;   <span class='comment'>/* (price + accrued)*modDur/100.0 */</span>
+    double  modDurCall; <span class='comment'>/* Modified duration to call */</span>
+
+	<span class='comment'>/* to worst values */</span>
+    long worstdate;		<span class='comment'>/* date of worst option exercise */</span>
+    double ytw;			<span class='comment'>/* yield to worst */</span>
+    double modDurWorst;		<span class='comment'>/* modified duration to worst */</span>
+    double modConWorst;		<span class='comment'>/* modified convexity to worst */</span>
+};
+
+struct <a name="struct AKAFlowReport"></a><b>AKAFlowReport</b>
+{
+    long    nFlows;    <span class='comment'>/* Number of cashflows remaining */</span>
+
+	<span class='comment'>/* These bond fundamental values are not calculated
+	   by the flow only cash flow function */</span>
+    double  oas;       <span class='comment'>/* Option-adjusted spread */</span>
+    double  value;     <span class='comment'>/* Fair value */</span>
+    double  accrued;   <span class='comment'>/* Accrued interest */</span>
+    double  optval;    <span class='comment'>/* Value of embedded options */</span>
+    double  npv;       <span class='comment'>/* Net present value of scheduled flows */</span>
+
+	<span class='comment'>/* The remaining elements are arrays of nFlows doubles. */</span>
+	<span class='comment'>/* The following are returned by each cash flow function. */</span>
+    long   *date;      <span class='comment'>/* Cashflow dates (yyyymmdd) */</span>
+
+    double *iflow;     <span class='comment'>/* Interest flows */</span>
+    double *pflow;     <span class='comment'>/* Principal flows */</span>
+    double *tflow;     <span class='comment'>/* Total cashflow */</span>
+
+	<span class='comment'>/* These discounted cash flow calculations are not calculated
+	   by the flow only cash flow function */</span>
+    double *zero;      <span class='comment'>/* Zero-coupon rate */</span>
+    double *factor;    <span class='comment'>/* Discount factor */</span>
+    double *pv;        <span class='comment'>/* Present values of individual flows */</span>
+};
+
+
+struct <a name="struct AKAFwdReport"></a><b>AKAFwdReport</b>
+{
+	<span class='comment'>/* INPUTS */</span>
+    long    nMats;      <span class='comment'>/* Number of maturities in computed yield curves */</span>
+    long    nTimes;     <span class='comment'>/* Number of forward times at which to solve */</span>
+    double  *mats;      <span class='comment'>/* Maturities for which to solve (e.g., 1yr, 5yr) */</span>
+    double  *times;     <span class='comment'>/* Times at which to solve (e.g., 6mo, 1yr ...)*/</span>
+	<span class='comment'>/* OUTPUT */</span>
+    double **fwds;      <span class='comment'>/* nTimes par curves, each with nMats maturities,
+			   i.e., fwds[iTime][iMat] */</span>
+};
+
+
+struct <a name="struct AKAKRDurReport"></a><b>AKAKRDurReport</b>
+{
+    long    n;         <span class='comment'>/* Number of maturities supplied (input/output) */</span>
+    double  oas;       <span class='comment'>/* Option-adjusted spread */</span>
+    double  value;     <span class='comment'>/* Fair value */</span>
+    double  accrued;   <span class='comment'>/* Accrued interest */</span>
+    double  npv;       <span class='comment'>/* Net present value of scheduled flows */</span>
+    double  effDur;    <span class='comment'>/* Option adjusted duration in years */</span>
+    double  effCon;    <span class='comment'>/* (vup - 2*v + vdn)/(v*(dr)^2) */</span>
+    double *mats;      <span class='comment'>/* Maturities, in 30/360 years (input/output) */</span>
+    double *durs;      <span class='comment'>/* Key-rate durations */</span>
+};
+
+
+struct <a name="struct AKAScenReport"></a><b>AKAScenReport</b>
+{
+    double cap0;        <span class='comment'>/* Initial capital (dirty px) per $100 face amount */</span>
+    double val0;        <span class='comment'>/* Initial clean price per $100 face amount */</span>
+    double acc0;        <span class='comment'>/* Initial accrued per $100 face amount */</span>
+                        <span class='comment'>/* NB:  cap0 = val0 + acc0 */</span>
+
+    double interest;    <span class='comment'>/* Interest received to horizon per $100 face */</span>
+    double principal;   <span class='comment'>/* Principal received to horizon per $100 face */</span>
+    double intOnInt;    <span class='comment'>/* Reinvestment income received to horizon per $100 */</span>
+
+    double cap1;        <span class='comment'>/* Final capital per $100 face amount, is:
+			   val1 + acc1 + interest + principal + intOnInt */</span>
+    double val1;        <span class='comment'>/* Final clean price per $100 face amount */</span>
+    double acc1;        <span class='comment'>/* Final accrued per $100 face amount */</span>
+
+    double totalRet;    <span class='comment'>/* totalRet = cap1 - cap0 */</span>
+
+    double dur0;        <span class='comment'>/* Initial effective duration of cap0 */</span>
+    double dur1;        <span class='comment'>/* Final effective duration of cap1, but note that */</span>
+                        <span class='comment'>/* dur of interest + principal + intOnInt is zero, */</span>
+                        <span class='comment'>/* i.e. all intervening flows are cash at horizon */</span>
+
+    double con0;        <span class='comment'>/* Initial effective convexity of cap0 */</span>
+    double con1;        <span class='comment'>/* Final effective convexity of cap1, but note that */</span>
+                        <span class='comment'>/* con of interest + principal + intOnInt is zero, */</span>
+                        <span class='comment'>/* i.e. all intervening flows are cash at horizon */</span>
+
+    double oas;         <span class='comment'>/* OAS, either given or computed */</span>
+
+    double balance;     <span class='comment'>/* Fraction of original balance remaining */</span>
+    long   redeemed;    <span class='comment'>/* Logical OR of flags from AKAScenRedemption */</span>
+    long   rDate;       <span class='comment'>/* Date of option exercise if put or called */</span>
+};
+
+
+struct <a name="struct AKAVolReport"></a><b>AKAVolReport</b>
+{
+    long    n;          <span class='comment'>/* Number of maturities supplied (input) */</span>
+    double  alpha;      <span class='comment'>/* Mean reversion (output) */</span>
+    double *mats;       <span class='comment'>/* Maturities, in 30/360 years (input) */</span>
+    double *vols;       <span class='comment'>/* Volatilities (output) */</span>
+};
+
+struct <a name="struct AKAYldWorst"></a><b>AKAYldWorst</b>
+{
+    long *dates;		<span class='comment'>/* all flows with option exercisable
+				   and maturity date */</span>
+    double *yields;		<span class='comment'>/* yield on each of the above dates */</span>
+    int n;			<span class='comment'>/* number of entries in above arrays */</span>
+    int worst;			<span class='comment'>/* index in above arrays with worst yield */</span>
+};
+
+struct <a name="struct AKAPrcWorst"></a><b>AKAPrcWorst</b>
+{
+    long *dates;		<span class='comment'>/* all flows with option exercisable
+				   and maturity date */</span>
+    double *prices;		<span class='comment'>/* price on each of the above dates */</span>
+    int n;			<span class='comment'>/* number of entries in above arrays */</span>
+    int worst;			<span class='comment'>/* index in above arrays with worst price */</span>
+};
+
+struct <a name="struct AKAAtaxYldResult"></a><b>AKAAtaxYldResult</b> {
+    double principal;		<span class='comment'>/* principal, e.g., redemption at maturity */</span>
+    double tax;			<span class='comment'>/* tax on principal */</span>
+    double yield;		<span class='comment'>/* yield implied by final cash flow being
+				   principal - tax */</span>
+};
+
+
+struct <a name="struct AKAAtaxYld"></a><b>AKAAtaxYld</b>
+{
+	<span class='comment'>/* INPUT fields - must be filled out by the caller
+	   - or -
+	   input fields can be left at zero and the settings
+	   in the bond will be used and copied into the report */</span>
+    double issue_price;		<span class='comment'>/* price at issue 100 is par; will over-ride
+				   issue_price in bond unless this is set to
+				   zero */</span>
+    double taxrate_short;	<span class='comment'>/* short term capital gains, 10.0 = 10% */</span>
+    double taxrate_long;	<span class='comment'>/* long ... */</span>
+    double taxrate_superlong;	<span class='comment'>/* super long ... &gt; 5yrs, issued since 1/1/01 */</span>
+    double taxrate_income;	<span class='comment'>/* income tax rate */</span>
+	<span class='comment'>/* OUTPUT fields */</span>
+    struct AKAAtaxYldResult ytm; <span class='comment'>/* after tax yield to maturity */</span>
+    struct AKAAtaxYldResult ytc; <span class='comment'>/* after tax yield to call */</span>
+    struct AKAAtaxYldResult ytp; <span class='comment'>/* after tax yield to put */</span>
+};
+
+
+struct <a name="struct AKAAtaxBasis"></a><b>AKAAtaxBasis</b>
+{
+	<span class='comment'>/* TAX INPUT fields - must be filled out by the caller
+	   - or -
+	   input fields can be left at zero and the settings
+	   in the bond will be used and copied into the report */</span>
+    double issue_price;		<span class='comment'>/* price at issue 100 is par; will over-ride
+				   issue_price in bond unless this is set to
+				   zero */</span>
+    double taxrate_short;	<span class='comment'>/* short term capital gains, 10.0 = 10% */</span>
+    double taxrate_long;	<span class='comment'>/* long ... */</span>
+    double taxrate_superlong;	<span class='comment'>/* super long ... &gt; 5yrs, issued since 1/1/01 */</span>
+    double taxrate_income;	<span class='comment'>/* income tax rate */</span>
+
+	<span class='comment'>/* INPUT Purchase date and price must be filled out by user */</span>
+    long purchase_date;		<span class='comment'>/* date of purchase as yyyymmdd */</span>
+    double purchase_price;	<span class='comment'>/* purchase price */</span>
+
+	<span class='comment'>/* OUTPUT fields */</span>
+    double purchase_basis;	<span class='comment'>/* bond basis on purchase date */</span>
+    double holder_basis;	<span class='comment'>/* holder's basis on sale date */</span>
+    double sale_basis;		<span class='comment'>/* bond basis on sale date */</span>
+    double atax_price;		<span class='comment'>/* sale price adjusting for taxes */</span>
+};
+
+
+struct <a name="struct TREESAMPLE"></a><b>TREESAMPLE</b> {
+    int nmats;			<span class='comment'>/* number of maturities - size of mats array*/</span>
+    int npaths;			<span class='comment'>/* number of paths to solve for */</span>
+    int ntimes;			<span class='comment'>/* number of times - size of times array */</span>
+    double *mats;		<span class='comment'>/* array of maturities to solve for */</span>
+    double *times;		<span class='comment'>/* array of times to solve for */</span>
+    struct PATH_ITEM ***paths;	<span class='comment'>/* samples: [&lt;mat-i&gt;][&lt;path-i&gt;][&lt;time-i&gt;] */</span>
+};
+struct <a name="struct PATH_ITEM"></a><b>PATH_ITEM</b> {
+    double rate;
+    double center;
+};
+
+
+<span class='comment'>/* ********************************************
+   USEFUL CONSTANTS
+   ******************************************** */</span>
+<span class='comment'>/* Define TRUE and FALSE constants, if they are not already defined. */</span>
+#ifndef TRUE
+#define TRUE (1==1)
+#ifndef FALSE
+#define FALSE (!TRUE)
+
+
+enum <a name='AKAQuoteType'></a><span class="enumdef">AKAQuoteType</span>  <span class='comment'>/* Type of value supplied as input to valuation routines */</span>
+{
+    AKA_QUOTE_OAS   = 0,
+    AKA_QUOTE_PRICE = 1,
+    AKA_QUOTE_YTM   = 2,
+    AKA_QUOTE_YTC   = 3,
+    AKA_QUOTE_YTP   = 4,
+    AKA_QUOTE_ATAX_PRICE = 5	<span class='comment'>/* reserved for future use */</span>
+};
+
+enum <a name='AKAShiftMode'></a><span class="enumdef">AKAShiftMode</span>  <span class='comment'>/* Shift for duration calculation */</span>
+{
+    AKA_SHIFT_SPOT = 0,	   <span class='comment'>/* shift the tree, i.e., shift the OAS */</span>
+    AKA_SHIFT_PAR  = 1,	   <span class='comment'>/* shift the par yield curve, compute a new tree 
+			      For factor curves, a par rate curve is extracted
+			      from the computed tree; this is then shifted */</span>
+    AKA_SHIFT_NONE = 2     <span class='comment'>/* do not calculate duration or convexity */</span>
+};
+
+enum <a name='AKAVolatilityMode'></a><span class="enumdef">AKAVolatilityMode</span>  <span class='comment'>/* How the volatility input is specified */</span>
+{
+    AKA_VOLMODE_MEANREV = 0,
+    AKA_VOLMODE_LONGVOL = 1
+};
+
+enum <a name='AKACurveType'></a><span class="enumdef">AKACurveType</span>  <span class='comment'>/* Yield curve type */</span>
+{
+    AKA_CURVE_FACTOR = 0,	<span class='comment'>/* discount factors */</span>
+    AKA_CURVE_PAR    = 1,	<span class='comment'>/* par yields */</span>
+    AKA_CURVE_ZERO   = 2,	<span class='comment'>/* zero coupon rates */</span>
+    AKA_CURVE_FORWARD = 3	<span class='comment'>/* forward rates - do not use for TreeFit() */</span>
+};
+
+enum <a name='AKADaycount'></a><span class="enumdef">AKADaycount</span>  <span class='comment'>/* Supported daycounts */</span>
+{
+    AKA_DAYS_30_360   = 33,
+    AKA_DAYS_30E_360  = 34,	<span class='comment'>/* 30/360 with European treatment of Feb. */</span>
+    AKA_DAYS_ACT_360  = 39, 
+    AKA_DAYS_ACT_365  = 47,
+    AKA_DAYS_ACT_ACT  = 63
+};
+
+enum <a name='AKAFrequency'></a><span class="enumdef">AKAFrequency</span>  <span class='comment'>/* Supported frequencies */</span>
+{
+    AKA_FREQ_INT_AT_MATURITY = 0, <span class='comment'>/* implies an interest at maturity bond
+				     with a semi-annual frequency for BEY yields.
+				     Set security yld_method to 2,
+				     (AKA_YLD_SIMPLE_LAST_PERIOD)
+				     for annualized simple interest yield. */</span>
+    AKA_FREQ_ANNUAL     = 1,
+    AKA_FREQ_SEMIANNUAL = 2,
+    AKA_FREQ_QUARTERLY  = 4,
+    AKA_FREQ_MONTHLY    = 12
+};
+
+enum <a name='AKA_YIELD_METHOD'></a><span class="enumdef">AKA_YIELD_METHOD</span> {
+    AKA_YLD_GLOBAL = 0,   <span class='comment'>/* use global setting, defaults to discount and can
+			     be overridden with deprecated function
+			     AKA_set_simple_interest_type() */</span>
+    AKA_YLD_BEY = 1, <span class='comment'>/* discount cash flows using bond equivalent yield */</span>
+    AKA_YLD_SIMPLE_LAST_PERIOD = 2, <span class='comment'>/* use simple interest if in final coupon*/</span>
+    AKA_YLD_SIMPLE_LAST_YEAR = 3, <span class='comment'>/* use simple interest if in final year */</span>
+    AKA_YLD_MUNI = 4		<span class='comment'>/* use municipal bond convention */</span>
+};
+
+
+enum <a name='AKAOptionType'></a><span class="enumdef">AKAOptionType</span>  <span class='comment'>/* Supported call and put option types */</span>
+{
+    AKA_OPTION_EUROPEAN = 0,
+    AKA_OPTION_AMERICAN = 1,
+    AKA_OPTION_BERMUDAN = 2	<span class='comment'>/* Deprecated; Use European and specify all call dates */</span>
+};
+
+enum <a name='AKAAllocation'></a><span class="enumdef">AKAAllocation</span>  <span class='comment'>/* Designation option in sinking funds */</span>
+{
+    AKA_ALLOC_PRORATA = 0,
+    AKA_ALLOC_FRONT   = 1,
+    AKA_ALLOC_BACK    = 2
+};
+
+enum <a name='AKAScenRedemption'></a><span class="enumdef">AKAScenRedemption</span>  <span class='comment'>/* Type of redemption returned by scenario analysis */</span>
+{
+    AKA_REDEEM_NONE     = 0,
+    AKA_REDEEM_CALL     = 1,
+    AKA_REDEEM_PUT      = 2,
+    AKA_REDEEM_SINK     = 4,
+    AKA_REDEEM_MATURITY = 8
+};
+
+enum <a name='AKAScenType'></a><span class="enumdef">AKAScenType</span>  <span class='comment'>/* When scenario shifts occur */</span>
+{
+    AKA_SCEN_NOW     = 0,  <span class='comment'>/* Suddenly at time 0 */</span>
+    AKA_SCEN_GRADUAL = 1,  <span class='comment'>/* Linearly in time */</span>
+	<span class='comment'>/* Note: Using AKA_SCEN_GRADUAL is slow.  Using AKA_SCEN_GRADUAL with
+	   factor curve based trees is particularly slow. */</span>
+    AKA_SCEN_THEN    = 2  <span class='comment'>/* Suddenly at horizon */</span>
+};
+
+enum <a name='AKAPeriodType'></a><span class="enumdef">AKAPeriodType</span>  <span class='comment'>/* Whether dates mark beginnings or ends of step-up
+		       coupon periods*/</span>
+{
+    AKA_PERIOD_BEGIN = 0,
+    AKA_PERIOD_END   = 1
+};
+
+
+</div>
+<div class='blockcomment'>
+<a name='contents35'></a><h2>   Section 10. Deprecated Functions</h2>
+<p>These routines are supported for backward compatibility
+</p>
+</div>
+
+<div class='code'>
+<span class='comment'>/* Sets whether to use simple interest calculations if the pvdate is
+   within the final pay period or final year.  By default, this is off.
+   MULTI-THREAD note: this routine is multi-thread safe.  It will
+   change the setting for the invoking thread only. */</span>
+enum <a name='AKA_SIMPLE_INTEREST_TYPE'></a><span class="enumdef">AKA_SIMPLE_INTEREST_TYPE</span> {
+    AKA_SI_OFF,
+    AKA_SI_LAST_PERIOD,
+    AKA_SI_LAST_YEAR
+};
+
+void <a name="AKA_set_simple_interest_type"></a><b>AKA_set_simple_interest_type</b>(enum <a href='#AKA_SIMPLE_INTEREST_TYPE'>AKA_SIMPLE_INTEREST_TYPE</a> it);
+
+#define AKA_set_simple_interest_yield(x) \<br>	AKA_set_simple_interest_type((x) ? AKA_SI_LAST_PERIOD : AKA_SI_OFF)
+
+#define AKA_set_global_simple_interest_yield(x) \<br>		AKA_set_simple_interest_yield(x)
+#define AKA_set_thread_simple_interest_yield(x) \<br>		AKA_set_simple_interest_yield(x)
+
+#define AKACouponSpread(pvdate, hTree, bond) AKAAssetSwapSpread(100.0, pvdate, hTree, bond)
+
+<span class='comment'>/* backward compatible declarations for earlier initialization calls */</span>
+#define AKAINIT_ERR_NONE AKA_ERROR_NONE
+#define AKAINIT_ERR_AUTHORIZE AKA_ERROR_AUTHORIZATION
+#define AKAINIT_ERR_ALLOC AKA_ERROR_MEMORY
+
+<span class='comment'>/*		  --- old style initialization ---
+   Two function interface, authorize_init() must be called before calling
+   AKAInit() */</span>
+
+#define AKATerm() AKA_shutdown_configure(0)	<span class='comment'>/* support old name */</span>
+
+<span class='comment'>/* Check user authorization to access library.  Returns TRUE if a valid
+   key for the user was provided, otherwise FALSE.
+   A valid key can be expired. This will show up when init is called */</span>
+int <a name="AKA_authorize_init"></a><b>AKA_authorize_init</b>(long key, const char *uname);
+<span class='comment'>/* Like the above but returns the error code or NONE (0) on success */</span>
+int <a name="AKA_authorize_init2"></a><b>AKA_authorize_init2</b>(long key, const char *uname);
+
+<span class='comment'>/* Initialize with settings.  If initdata == NULL default settings are used
+   returns one of AKAINIT_ERR_ defined above */</span>
+long <a name="AKAInit"></a><b>AKAInit</b>(<a href="#AKAINITDATA">AKAINITDATA</a> *config);
+
+</div>
+<div class='blockcomment'>
+<p>The following two functions handled calculating duration outside of
+the standard bond valuation functions, AKABondVal() and
+AKABondVal2().  This was due to inefficiencies in computing duration
+shifts due to the handling of the shifted trees needed in the
+valuations.  This is no longer the case and they should not be used.
+ABABondVal() or AKABondVal2() should be used instead.
+</p>
+</div>
+
+<div class='code'>
+<span class='comment'>/* Create two shifted trees suitable for computing duration.  The
+   input is the original tree and the basis points to shift.  The
+   bpShift is passed as a pointer, is always a positive number, and
+   may be updated in the function.  The down-shifted and up-shifted
+   trees are returned in the pointer reference parameters passed into
+   the routine.  The trees are fitted by shifting the par curve
+   by bpShift basis points.  If this fails, the bpShift value is
+   adjusted until the trees can be successfully fitted.
+   A tree will fail to fit when shifting causes
+   excessively low rates.
+   This routine returns 1 on success and 0 on failure.
+ */</span>
+int <a name="AKATreeFitShift2"></a><b>AKATreeFitShift2</b>(<a href="#AKAHTREE">AKAHTREE</a> tree, double *bpShift,
+		     <a href="#AKAHTREE">AKAHTREE</a> *treeup, <a href="#AKAHTREE">AKAHTREE</a> *treedown);
+
+
+<span class='comment'>/* Calculate the convexity and duration values assuming that the bond
+   report is already filled out with the other data (price, OAS,
+   accrued).  For use with AKA_SHIFT_NONE.  The hTree_up and
+   hTree_down trees are assumed to be trees which were created by
+   shifting the yield curve durbp basis points up and down.  These
+   trees can be created by shifting the original curve and calling
+   AKATreeFit() or by using AKATreeFitShift().  The price and OAS
+   values in the rpt are assumed to have come by valuing the bond with
+   the unshifted tree. */</span>
+long <a name="AKABondDuration"></a><b>AKABondDuration</b>(long pvdate, <a href="#AKAHTREE">AKAHTREE</a> hTree_up, <a href="#AKAHTREE">AKAHTREE</a> hTree_down,
+		     double durbp, const <a href="#AKABOND">AKABOND</a> *bond, <a href="#AKABONDREPORT">AKABONDREPORT</a> *rpt);
+
+
+<span class='comment'>/* Note: for scenario functions below, entering the initial price as a
+   negative price, i.e., 99.375 is entered as -99.375, causes the
+   scenario analysis to be done with an oas of zero.  See the
+   definitions of the AKASCENSETUP structure and <a href='#AKASCEN_REINVESTMENT'>AKASCEN_REINVESTMENT</a>,
+   above. */</span>
+
+<span class='comment'>/* Perform scenario analysis on a bond, uses efficiency set in init(). */</span>
+long <a name="AKABondScen"></a><b>AKABondScen</b>(long quoteType, double quote,
+		 const <a href="#AKASCEN">AKASCEN</a> *scen, const <a href="#AKABOND">AKABOND</a> *bond,
+		 <a href="#AKASCENREPORT">AKASCENREPORT</a> *rpt);
+
+<span class='comment'>/* Like AKABondScen() but allows setting of efficiency threshold and returns
+   the observed efficiency */</span>
+long <a name="AKABondScen2"></a><b>AKABondScen2</b>(long quoteType, double quote,
+		  const <a href="#AKASCEN">AKASCEN</a> *akascen, const <a href="#AKABOND">AKABOND</a> *bond,
+		  <a href="#AKASCENREPORT">AKASCENREPORT</a> *rpt,
+		  double eff_threshold, double *efficiency);
+
+<span class='comment'>/* Like AKABondScen2() but if reinvest is greater than zero, use the
+   supplied reinvestment rate rather than the scenario indicated forward
+   rate plus the instrument OAS.  Rate is as percent, i.e., for 10% use
+   10. Rate is BEY, 30/360 semi-annual */</span>
+long <a name="AKABondScen3"></a><b>AKABondScen3</b>(long quoteType, double quote,
+		  const <a href="#AKASCEN">AKASCEN</a> *akascen, const <a href="#AKABOND">AKABOND</a> *bond,
+		  <a href="#AKASCENREPORT">AKASCENREPORT</a> *rpt,
+		  double eff_threshold, double *efficiency, double reinvest);
+
+<span class='comment'>/* Like AKABondScen3() but if ataxinfo is non-null does an after tax
+   total return analysis.  The AKAATAXYLD input fields must be filled out
+   if ataxinfo is non-null.  The AKAATAXYLD report output fields are not
+   computed -- the report is only used in this routine to supply input data.
+   To compute aftertax yields see AKAAtaxYield() below. */</span>
+long <a name="AKABondScen4"></a><b>AKABondScen4</b>(long quoteType, double quote,
+		  const <a href="#AKASCEN">AKASCEN</a> *akascen, const <a href="#AKABOND">AKABOND</a> *bond,
+		  <a href="#AKASCENREPORT">AKASCENREPORT</a> *rpt,
+		  double eff_threshold, double *efficiency, double reinvest,
+		  <a href="#AKAATAXYLD">AKAATAXYLD</a> *ataxinfo);
+
+<span class='comment'>/* scenario analysis setup */</span>
+struct <a name="struct AKAScen"></a><b>AKAScen</b>
+{
+    long      type;   <span class='comment'>/* Select from <a href="#"></a><a href='#AKAScenType'>AKAScenType</a> */</span>
+    long      n;      <span class='comment'>/* Number of points (n &gt;= 2) */</span>
+    long     *dates;  <span class='comment'>/* Vector of dates (yyyymmdd) */</span>
+    AKAHTREE *trees;  <span class='comment'>/* Vectors of prevailing trees */</span>
+};
+
+
+<span class='comment'>/* Fit a tree from a set of curves */</span>
+<span class='comment'>/* ********************************************
+   INTEREST RATE structure alternative form composed from known prices
+   of bonds and zero coupon rates
+   ******************************************** */</span>
+struct <a name="struct AKARun"></a><b>AKARun</b>
+{
+    long    mode;    <span class='comment'>/* Select from <a href="#"></a><a href='#AKAVolatilityMode'>AKAVolatilityMode</a>: */</span>
+                     <span class='comment'>/* AKA_VOLMODE_MEANREV:  Supply mean reversion,
+			compute lvol */</span>
+                     <span class='comment'>/* AKA_VOLMODE_LONGVOL:  Supply lvol,
+			compute mean reversion */</span>
+
+    double  vol;     <span class='comment'>/* Short-rate volatility, 12% represented as 12.0 */</span>
+    double  lvol;    <span class='comment'>/* 30-year rate volatility, 10% represented as 10.0 */</span>
+    double  alpha;   <span class='comment'>/* Mean reversion speed, 2% represented as 2.0 */</span>
+
+    long      pvdate;        <span class='comment'>/* Required to price instruments, */</span>
+                             <span class='comment'>/* but tree is independent of time. */</span>
+
+    long      nBonds;        <span class='comment'>/* Number of bonds */</span>
+    AKABOND **bonds;         <span class='comment'>/* Optionless bond specifications */</span>
+    double   *bondPx;        <span class='comment'>/* Clean bond prices */</span>
+
+    long      nRates;        <span class='comment'>/* Number of zero coupon rates */</span>
+    long     *rateDaycount;  <span class='comment'>/* Appropriate daycount type */</span>
+    long     *rateMat;       <span class='comment'>/* Discount note maturities */</span>
+    double   *rate;          <span class='comment'>/* Discount rates */</span>
+};
+typedef struct <a href="#struct AKARun">AKARun</a> <a name=AKARUN></a><b>AKARUN</b>;
+</div>
+<div class='blockcomment'>
+<p>This function is no longer supported.  It will always return a zero
+(failed) tree and generate an error message
+</p>
+</div>
+<div class='code'>
+<a href="#AKAHTREE">AKAHTREE</a> <a name="AKATreeFitRun"></a><b>AKATreeFitRun</b>(const <a href="#AKARUN">AKARUN</a> *crv, const <a href="#AKASPREAD">AKASPREAD</a> *spr);
+<a href="#AKARUN ">AKARUN </a>* <a name="AKARunAlloc"></a><b>AKARunAlloc</b>(long nBonds, long nRates);
+<a href="#AKARUN ">AKARUN </a>* <a name="AKARunFree"></a><b>AKARunFree</b>(<a href="#AKARUN">AKARUN</a> *run);
+
+</div>
+<div class='blockcomment'>
+<p>ERROR handling has been entirely revised.  All these interfaces
+are deprecated.  They will continue to work but you are strongly
+urged to move to the newer error handling interface, described
+in the Error Handling section, above.
+</p>
+</div>
+
+<div class='code'>
+typedef enum {			<span class='comment'>/* Error Message type enumerations. */</span>
+    AKA_MSG_NONE,
+    AKA_MSG_INFORMATION,	<span class='comment'>/* Note: there are never msgs of this type */</span>
+    AKA_MSG_WARNING,
+    AKA_MSG_FATAL		<span class='comment'>/* Note: these are not fatal, merely failures
+				   of the last operation */</span>
+} AKA_MSGTYPE;
+
+#define AKA_MSG_MAXLEN 300	<span class='comment'>/* max length of an error message string */</span>
+
+<span class='comment'>/* Pop the messages off the message stack - returns AKA_MSG_NONE when empty
+   text must be at least char[AKA_MSG_MAXLEN].
+   The order messages are popped is determined by the AKAInitData configuration
+   setting, msg_pop_order. */</span>
+<a href="#AKA_MSGTYPE">AKA_MSGTYPE</a> <a name="AKA_msg_pop"></a><b>AKA_msg_pop</b>(char *text);
+
+<span class='comment'>/* Returns TRUE if there is an un-popped error message from the last operation */</span>
+int <a name="AKAFatalStatus"></a><b>AKAFatalStatus</b>();
+
+<span class='comment'>/* Marks all messages from the last operation as popped */</span>
+void <a name="AKAFatalReset"></a><b>AKAFatalReset</b>();
+
+<span class='comment'>/* Returns the highest level of the un-popped errors from the last operation */</span>
+<a href="#AKA_MSGTYPE">AKA_MSGTYPE</a> <a name="AKA_msg_status"></a><b>AKA_msg_status</b>();
+
+<span class='comment'>/* the following two function continue to exist for linkage purposes
+   but no longer do anything. */</span>
+void <a name="AKA_msg_push"></a><b>AKA_msg_push</b>(char *text, <a href="#AKA_MSGTYPE">AKA_MSGTYPE</a> mtype);
+<a href="#AKA_MSGTYPE">AKA_MSGTYPE</a> <a name="AKA_msg_suppress"></a><b>AKA_msg_suppress</b>(<a href="#AKA_MSGTYPE">AKA_MSGTYPE</a> mtype);
+
+
+</div><hr>
+<a name='contents36'></a><h2>Index of Functions</h2>
+<a href="#AKAAssetSwapSpread">AKAAssetSwapSpread</a><br>
+<a href="#AKAAtaxBasis">AKAAtaxBasis</a><br>
+<a href="#AKAAtaxYield">AKAAtaxYield</a><br>
+<a href="#AKABondAccrued">AKABondAccrued</a><br>
+<a href="#AKABondAccrued2">AKABondAccrued2</a><br>
+<a href="#AKABondAlloc">AKABondAlloc</a><br>
+<a href="#AKABondCopy">AKABondCopy</a><br>
+<a href="#AKABondDuration">AKABondDuration</a><br>
+<a href="#AKABondFlow">AKABondFlow</a><br>
+<a href="#AKABondFlowOnly">AKABondFlowOnly</a><br>
+<a href="#AKABondFree">AKABondFree</a><br>
+<a href="#AKABondKRDur">AKABondKRDur</a><br>
+<a href="#AKABondKeyDur">AKABondKeyDur</a><br>
+<a href="#AKABondKeyDur2">AKABondKeyDur2</a><br>
+<a href="#AKABondKeyDur3">AKABondKeyDur3</a><br>
+<a href="#AKABondMortgage">AKABondMortgage</a><br>
+<a href="#AKABondOAS">AKABondOAS</a><br>
+<a href="#AKABondPrice">AKABondPrice</a><br>
+<a href="#AKABondPriceCnv">AKABondPriceCnv</a><br>
+<a href="#AKABondPriceShifted">AKABondPriceShifted</a><br>
+<a href="#AKABondScen">AKABondScen</a><br>
+<a href="#AKABondScen2">AKABondScen2</a><br>
+<a href="#AKABondScen3">AKABondScen3</a><br>
+<a href="#AKABondScen4">AKABondScen4</a><br>
+<a href="#AKABondScenEx">AKABondScenEx</a><br>
+<a href="#AKABondTaxRate">AKABondTaxRate</a><br>
+<a href="#AKABondTaxRateGet">AKABondTaxRateGet</a><br>
+<a href="#AKABondVal">AKABondVal</a><br>
+<a href="#AKABondVal2">AKABondVal2</a><br>
+<a href="#AKABondVal3">AKABondVal3</a><br>
+<a href="#AKABondValueYields">AKABondValueYields</a><br>
+<a href="#AKABondValueYieldsEx">AKABondValueYieldsEx</a><br>
+<a href="#AKAConvertAssetSwapSpread">AKAConvertAssetSwapSpread</a><br>
+<a href="#AKACouponAlloc">AKACouponAlloc</a><br>
+<a href="#AKACouponFree">AKACouponFree</a><br>
+<a href="#AKACurveAlloc">AKACurveAlloc</a><br>
+<a href="#AKACurveCopy">AKACurveCopy</a><br>
+<a href="#AKACurveFree">AKACurveFree</a><br>
+<a href="#AKADateAdd">AKADateAdd</a><br>
+<a href="#AKADatePack">AKADatePack</a><br>
+<a href="#AKADefaultTaxRate">AKADefaultTaxRate</a><br>
+<a href="#AKADiscount">AKADiscount</a><br>
+<a href="#AKAErrorString">AKAErrorString</a><br>
+<a href="#AKAFatalReset">AKAFatalReset</a><br>
+<a href="#AKAFatalStatus">AKAFatalStatus</a><br>
+<a href="#AKAFlowReportAlloc">AKAFlowReportAlloc</a><br>
+<a href="#AKAFlowReportFree">AKAFlowReportFree</a><br>
+<a href="#AKAFwdRates">AKAFwdRates</a><br>
+<a href="#AKAFwdRatesFromCurve">AKAFwdRatesFromCurve</a><br>
+<a href="#AKAFwdReportAlloc">AKAFwdReportAlloc</a><br>
+<a href="#AKAFwdReportFree">AKAFwdReportFree</a><br>
+<a href="#AKAISpread">AKAISpread</a><br>
+<a href="#AKAInit">AKAInit</a><br>
+<a href="#AKAKRDurReportAlloc">AKAKRDurReportAlloc</a><br>
+<a href="#AKAKRDurReportFree">AKAKRDurReportFree</a><br>
+<a href="#AKAKeyDurSetup">AKAKeyDurSetup</a><br>
+<a href="#AKAKeyDurSetupFree">AKAKeyDurSetupFree</a><br>
+<a href="#AKALowestYieldToSink">AKALowestYieldToSink</a><br>
+<a href="#AKAOptionAlloc">AKAOptionAlloc</a><br>
+<a href="#AKAOptionFree">AKAOptionFree</a><br>
+<a href="#AKAPrcWorstReportAlloc">AKAPrcWorstReportAlloc</a><br>
+<a href="#AKAPrcWorstReportFree">AKAPrcWorstReportFree</a><br>
+<a href="#AKAPriceToWorst">AKAPriceToWorst</a><br>
+<a href="#AKARunAlloc">AKARunAlloc</a><br>
+<a href="#AKARunFree">AKARunFree</a><br>
+<a href="#AKAScenAlloc">AKAScenAlloc</a><br>
+<a href="#AKAScenFree">AKAScenFree</a><br>
+<a href="#AKAScenSetupAlloc">AKAScenSetupAlloc</a><br>
+<a href="#AKAScenSetupAlloc">AKAScenSetupAlloc</a><br>
+<a href="#AKAScenSetupFree">AKAScenSetupFree</a><br>
+<a href="#AKAScenSetupFree">AKAScenSetupFree</a><br>
+<a href="#AKASinkAlloc">AKASinkAlloc</a><br>
+<a href="#AKASinkFree">AKASinkFree</a><br>
+<a href="#AKASpreadAlloc">AKASpreadAlloc</a><br>
+<a href="#AKASpreadFree">AKASpreadFree</a><br>
+<a href="#AKATreeFit">AKATreeFit</a><br>
+<a href="#AKATreeFitRun">AKATreeFitRun</a><br>
+<a href="#AKATreeFitShift">AKATreeFitShift</a><br>
+<a href="#AKATreeFitShift2">AKATreeFitShift2</a><br>
+<a href="#AKATreeFitSpreads">AKATreeFitSpreads</a><br>
+<a href="#AKATreeFitZero">AKATreeFitZero</a><br>
+<a href="#AKATreeMinRate">AKATreeMinRate</a><br>
+<a href="#AKATreeRelease">AKATreeRelease</a><br>
+<a href="#AKAVolReportAlloc">AKAVolReportAlloc</a><br>
+<a href="#AKAVolReportFree">AKAVolReportFree</a><br>
+<a href="#AKAWarnings">AKAWarnings</a><br>
+<a href="#AKAYears">AKAYears</a><br>
+<a href="#AKAYieldToWorst">AKAYieldToWorst</a><br>
+<a href="#AKAYieldToWorstEx">AKAYieldToWorstEx</a><br>
+<a href="#AKAYieldToWorstEx2">AKAYieldToWorstEx2</a><br>
+<a href="#AKAYieldVol">AKAYieldVol</a><br>
+<a href="#AKAYldWorstReportAlloc">AKAYldWorstReportAlloc</a><br>
+<a href="#AKAYldWorstReportFree">AKAYldWorstReportFree</a><br>
+<a href="#AKA_authorize_expiration_date">AKA_authorize_expiration_date</a><br>
+<a href="#AKA_authorize_init">AKA_authorize_init</a><br>
+<a href="#AKA_authorize_init2">AKA_authorize_init2</a><br>
+<a href="#AKA_clear_notifyholidays">AKA_clear_notifyholidays</a><br>
+<a href="#AKA_initialize">AKA_initialize</a><br>
+<a href="#AKA_initialize_configure">AKA_initialize_configure</a><br>
+<a href="#AKA_initialize_get_defaults">AKA_initialize_get_defaults</a><br>
+<a href="#AKA_memory_diagnostics">AKA_memory_diagnostics</a><br>
+<a href="#AKA_msg_pop">AKA_msg_pop</a><br>
+<a href="#AKA_msg_push">AKA_msg_push</a><br>
+<a href="#AKA_msg_status">AKA_msg_status</a><br>
+<a href="#AKA_msg_suppress">AKA_msg_suppress</a><br>
+<a href="#AKA_set_duration_shift">AKA_set_duration_shift</a><br>
+<a href="#AKA_set_notifybehavior">AKA_set_notifybehavior</a><br>
+<a href="#AKA_set_notifyholiday">AKA_set_notifyholiday</a><br>
+<a href="#AKA_set_notifyweekends">AKA_set_notifyweekends</a><br>
+<a href="#AKA_set_simple_interest_type">AKA_set_simple_interest_type</a><br>
+<a href="#AKA_shutdown">AKA_shutdown</a><br>
+<a href="#AKA_shutdown_configure">AKA_shutdown_configure</a><br>
+<a href="#AKA_treesample">AKA_treesample</a><br>
+<a href="#AKA_treesample_alloc">AKA_treesample_alloc</a><br>
+<a href="#AKA_treesample_free">AKA_treesample_free</a><br>
+<a href="#AKA_version">AKA_version</a><br>
+<a href="#AKA_version_string">AKA_version_string</a><br>
+<a name='contents37'></a><a name='akaerrno.h'></a><h1>Error Numbers and Definitions &mdash; akaerrno.h</h1>
+<div class='code'>
+#ifndef _AKAERRNO_H_
+#define _AKAERRNO_H_
+
+<span class='comment'>/* ERROR NUMBERS */</span>
+enum <a name='AKA_ERROR_NUMBER'></a><span class="enumdef">AKA_ERROR_NUMBER</span> {
+	<span class='comment'>/* ** INITIALIZATION ERRORS ** */</span>
+    AKA_ERROR_NONE,		<span class='comment'>/* no error */</span>
+    AKA_ERROR_AUTHORIZATION,	<span class='comment'>/* authorization did not run successfully */</span>
+    AKA_ERROR_MEMORY,		<span class='comment'>/* memory allocation error -- should not occur */</span>
+    AKA_ERROR_EXPIREDKEY,	<span class='comment'>/* authorization key has expired */</span>
+    AKA_ERROR_UNINITIALIZED,	<span class='comment'>/* not initialized or shutdown */</span>
+
+	<span class='comment'>/* ** FEATURE PERMISSION ERRORS ** */</span>
+    AKA_ERROR_PERMISSION_LATTICE, <span class='comment'>/* not authorized to use lattice functions */</span>
+    AKA_ERROR_PERMISSION_ADVANCED_LATTICE, <span class='comment'>/* not authorized to use advanced lattice functions */</span>
+
+    AKA_ERROR_PERMISSION_SCENARIOS, <span class='comment'>/* not authorized to use scenario analysis functions */</span>
+    AKA_ERROR_PERMISSION_ATAX,	<span class='comment'>/* not authorized to use after-tax functions */</span>
+
+	<span class='comment'>/* ** VALUATION ERRORS ** */</span>
+    AKA_ERROR_COMPUTE_COUPON,	<span class='comment'>/* failed to compute coupon spread */</span>
+    AKA_ERROR_COMPUTE_KEYRATES,	<span class='comment'>/* failed to compute key rate durations */</span>
+    AKA_ERROR_COMPUTE_OAS,	<span class='comment'>/* failed to compute OAS from price */</span>
+    AKA_ERROR_COMPUTE_PRICE,	<span class='comment'>/* failed to compute price from OAS */</span>
+    AKA_ERROR_COMPUTE_YIELD_ATAX, <span class='comment'>/* failed to compute after-tax yield */</span>
+
+    AKA_ERROR_TREEFIT,		<span class='comment'>/* failed to construct interest rate model */</span>
+
+    AKA_ERROR_INTERNAL,		<span class='comment'>/* internal library failure -- this should never occur */</span>
+
+	<span class='comment'>/* ** INPUT ERRORS ** */</span>
+    AKA_ERROR_TREESAMPLE,	<span class='comment'>/* invalid treesample structure as input */</span>
+    AKA_ERROR_HTREE,		<span class='comment'>/* invalid interest rate model as input */</span>
+
+    AKA_ERROR_COUPON,		<span class='comment'>/* invalid coupon as input, must be &gt; 0 */</span>
+    AKA_ERROR_QUOTETYPE,	<span class='comment'>/* invalid quote type as input */</span>
+    AKA_ERROR_OAS,		<span class='comment'>/* invalid OAS as input */</span>
+    AKA_ERROR_PRICE,		<span class='comment'>/* invalid price as input */</span>
+    AKA_ERROR_YIELD,		<span class='comment'>/* invalid yield as input */</span>
+
+    AKA_ERROR_MATURED,		<span class='comment'>/* pvdate is after maturity */</span>
+    AKA_ERROR_RETIRED,		<span class='comment'>/* deprecated, will not occur*/</span>
+
+
+    AKA_ERROR_CURVE,		<span class='comment'>/* invalid curve as input */</span>
+    AKA_ERROR_DATE,		<span class='comment'>/* invalid date input */</span>
+    AKA_ERROR_DURSHIFT,		<span class='comment'>/* invalid duration shift basis points as input, must be &gt;= 1 and &lt; 300,
+				 must also not be so high that is causes very negative rates */</span>
+    AKA_ERROR_FACEAMOUNT,	<span class='comment'>/* invalid face amount as input*/</span>
+    AKA_ERROR_FCDATE,		<span class='comment'>/* invalid first coupon date as input */</span>
+    AKA_ERROR_IDATE,		<span class='comment'>/* invalid initial date as input */</span>
+    AKA_ERROR_LCDATE,		<span class='comment'>/* invalid last coupon date as input */</span>
+    AKA_ERROR_MATURITY,		<span class='comment'>/* invalid maturity as input */</span>
+    AKA_ERROR_OPTIONDATE,	<span class='comment'>/* invalid option date as input */</span>
+    AKA_ERROR_OPTIONPRICE,	<span class='comment'>/* invalid option price as input */</span>
+    AKA_ERROR_PURCHASEDATE,	<span class='comment'>/* invalid purchase date as input */</span>
+    AKA_ERROR_PVDATE,		<span class='comment'>/* invalid Pvdate as input */</span>
+    AKA_ERROR_SALEDATE,		<span class='comment'>/* invalid sale date as input */</span>
+    AKA_ERROR_SINKDATE,		<span class='comment'>/* invalid sink date as input */</span>
+    AKA_ERROR_SINKPRICE,	<span class='comment'>/* invalid sink price as input */</span>
+
+	<span class='comment'>/* ** RECOVERABLE INPUT ISSUES **  */</span>
+    AKA_WARN_SINK_ALLOCATION,	<span class='comment'>/* invalid sinking fund allocation, using prorata */</span>
+    AKA_WARN_SINK_UNDESIGNATED,	<span class='comment'>/* sink allocated amount could not be fully designated */</span>
+    AKA_WARN_FREQUENCY,		<span class='comment'>/* invalid coupon frequency as input, using semi-annual */</span>
+    AKA_WARN_DAYCOUNT,		<span class='comment'>/* invalid day count, using 30/360 */</span>
+    AKA_WARN_OPTIONDELAY,	<span class='comment'>/* option delay less than zero or greater than bond frequency,
+				 adjusting to 30 days or bond frequency */</span>
+    AKA_WARN_OUTSTANDING_HIGH,	<span class='comment'>/* input amount outstanding is greater than remaining flows,
+				 reducing amount outstanding accordingly */</span>
+    AKA_WARN_PAYDAY,		<span class='comment'>/* invalid payday, using none */</span>
+    AKA_WARN_SINKSUM_HIGH,	<span class='comment'>/* sum of sinking fund schedule exceeds input face amount,
+				 trusting schedule */</span>
+    AKA_WARN_SINKSUM_LOW,	<span class='comment'>/* sum of sinking fund schedule is less than input face amount,
+				 adding remainder to final flow */</span>
+    AKA_WARN_TRADEDATE,		<span class='comment'>/* invalid trade date in packed date, ignoring trade date */</span>
+    AKA_WARN_YIELDMETHOD,	<span class='comment'>/* invalid yield method, using BEY */</span>
+
+	<span class='comment'>/* ** RECOVERABLE VALUATION ISSUES ** */</span>
+    AKA_WARN_IMPERFECT_COUPON,	<span class='comment'>/* imperfect fit of coupon spread */</span>
+    AKA_WARN_IMPERFECT_OAS,	<span class='comment'>/* imperfect fit of OAS to price */</span>
+
+
+    AKA_WARN_TOOMANY,		<span class='comment'>/* too many warnings */</span>
+
+    AKA_WARN_AMORTIZATION,	<span class='comment'>/* amortization period before maturity */</span>
+    AKA_WARN_SINK_TOO_SOON,     <span class='comment'>/* sink schedule retires bond before maturity, either schedule, maturity,
+				 or face amount are wrong */</span>
+    AKA_WARN_OUTSTANDING_LOW,	<span class='comment'>/* input amount outstanding is less than 0.1% of face,
+				 disregarding input and trusting schedule */</span>
+    AKA_WARN_LCDATE_NONCYCLICAL <span class='comment'>/* last regular coupon date not cyclical with first coupon date,
+				 ignoring last coupon date */</span>
+};
+
+<span class='comment'>/* maximum number of warnings that will be generated by any operation */</span>
+#define AKA_WARNINGS_MAX 12
+
+</div><div id='contents'><span>Contents</span>
+<div style='display: none;' id='inner_contents'><ul>
+<li><a href='#contents0'>Description</a></li>
+<li style='margin-top: .25em;'><a href='#contents1'>C++ API &mdash; akaapi.hpp</a></li>
+<li><ul>
+<li><a href='#contents2'>Overview</a></li>
+<li><a href='#contents3'>Section 1. General Notes</a></li>
+<li><a href='#contents4'>Section 2. Error Handling</a></li>
+<li><a href='#contents5'>Section 3. Initialization.</a></li>
+<li><a href='#contents6'>Section 4. Interest Rate Model Definition</a></li>
+<li><a href='#contents7'>Section 5. Bond Definition</a></li>
+<li><a href='#contents8'>Section 6. Valuation</a></li>
+<li><a href='#contents9'>Section 6. Date Handling</a></li>
+<li><a href='#contents10'>Index of Classes</a></li>
+</ul></li>
+<li style='margin-top: .25em;'><a href='#contents11'>C++/C Compatibility &mdash; akaapi_compatibility.hpp</a></li>
+<li><ul>
+<li><a href='#contents12'>Overview</a></li>
+<li><a href='#contents13'>Section 1. Calling C Functions with C++ Objects</a></li>
+<li><a href='#contents14'>Section 2. Creating C++ Objects from C Structures</a></li>
+<li><a href='#contents15'>Section 3. Mixed Model Issues</a></li>
+<li><a href='#contents16'>Section 4. C++ API to C API Correspondence</a></li>
+<li><a href='#contents17'>Section 5. Key Rate Durations</a></li>
+<li><a href='#contents18'>Section 6. Flow Reports</a></li>
+<li><a href='#contents19'>Section 7. Scenario Analysis</a></li>
+<li><a href='#contents20'>Index of Classes</a></li>
+</ul></li>
+<li style='margin-top: .25em;'><a href='#contents21'>Java API</a></li>
+<li style='margin-top: .25em;'><a href='#contents22'>C# API</a></li>
+<li><ul>
+<li><a href='#contents23'>.Net</a></li>
+</ul></li>
+<li style='margin-top: .25em;'><a href='#contents24'>C API &mdash; akaapi.h</a></li>
+<li><ul>
+<li><a href='#contents25'>Overview</a></li>
+<li><a href='#contents26'>Section 1. General Notes</a></li>
+<li><a href='#contents27'>Section 2. Initialization and Shutdown</a></li>
+<li><a href='#contents28'>Section 3. Tree Creation</a></li>
+<li><a href='#contents29'>Section 4. Valuation</a></li>
+<li><a href='#contents30'>Section 5. Bond Structure Configuration Functions</a></li>
+<li><a href='#contents31'>Section 6. Miscellaneous Functions</a></li>
+<li><a href='#contents32'>Section 7. Error Handling</a></li>
+<li><a href='#contents33'>Section 8. Memory Allocation and Free</a></li>
+<li><a href='#contents34'>Section 9. Data Structures and Constants</a></li>
+<li><a href='#contents35'>Section 10. Deprecated Functions</a></li>
+<li><a href='#contents36'>Index of Functions</a></li>
+</ul></li>
+<li style='margin-top: .25em;'><a href='#contents37'>Error Numbers and Definitions &mdash; akaerrno.h</a></li>
+</ul></div></div>
+<script type='text/javascript'>
+addEvent(document.getElementById("contents").firstChild, "click", toggle_contents);
+addEvent(document.body, 'click', close_contents);
+</script>
+</body></html>

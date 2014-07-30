@@ -1,0 +1,4 @@
+Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 16.00.30319.01 for 80x86
+-Ox   -I../include -W3 -DWIN32 -DWINDOWS    -I../../src/win32unix -FIwin32unix.h  -FIcvstag.h  -D_CRT_SECURE_NO_DEPRECATE -nologo  -Za  -MD  -GS-   
+Microsoft Windows [Version 6.1.7601]
+12/02/2013 09:23

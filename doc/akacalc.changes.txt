@@ -1,0 +1,284 @@
+$Id: utilcalc_changes.txt,v 1.54 2013-11-15 23:52:16 oliver Exp $
+
+Changes
+-------
+1.75 (November, 2013)
+--------------------
+Integrate with library release 2.12
+Support for notification delay features
+Added mortvalue for mortgage valuation
+Fix bug on shutdown with bad input
+Added Yield to Worst to optional bondvalue output
+Fixed bug in keydur: when supplied an input curve it used wrong first rate
+
+1.74 (August, 2013)
+-------------------
+Integrate with library release 2.11
+Add bondvalue_aftertax
+Better output of error messages
+Always print a bond value line even if valuation fails, i.e., input records
+	match output records.
+
+1.73 (June, 2013)
+-----------------
+Integrate with library release 2.10
+Interface changes and enhancement to Bondvalue and Bondscen
+Fix handling of invalid sinking fund outstanding data
+
+1.72 (April, 2013
+-----------------
+Integrate with library release 2.09
+
+1.71 (February, 2013)
+--------------------
+Integrate with library release 2.08
+Support for trade/settlement dates
+
+1.70 - internal release only
+
+1.69 (August, 2012)
+-------------------
+Integrate with library release 2.06
+
+1.68 (July, 2012)
+-----------------
+Fix bug with command line processing; only manifested under 64 bit architecture
+Fix bug with after-tax yield calculation when input quote is OAS
+
+1.67 (June, 2012)
+-----------------
+Integrate with new library
+
+1.66 (June, 2012)
+-----------------
+Enhance After-Tax functionality in bondvalue
+Add fwdrates binary
+
+1.65 (March, 2012)
+---------------------
+Integrate with new library
+Add cash flow yield option to ytw and bondyields
+Extend error messages for bad data in input files
+Handle DOS format line endings under unix
+
+1.62 - 1.64 (internal releases only)
+
+1.61 (November, 2011)
+---------------------
+Integrate new duration approach.
+Update portoas.
+Update keydur to use new library function.
+
+1.60 (internal release only)
+
+1.59 (April, 2011)
+------------------
+Fix handling of empty input files in keydur.
+
+1.58 (May, 2010)
+----------------
+Integrate new library (1.79)
+Enhance ytw to optionally report price to worst yield
+Add I-Spread and WAM to bondvalue output
+Change order of error message output so is first in first out
+ (was last in first out)
+
+1.57 (July, 2009)
+-----------------
+Integrate new library (1.78)
+bondyields optional shows accrued
+
+1.53 (November, 2006)
+--------------------
+Integrate new library
+
+1.52 (September, 2006)
+----------------------
+Changes to integrate muni-yields
+
+1.51 (August, 2006)
+-------------------
+Integrate new library
+Enhance handling of empty files (see -h)
+Incorporate new couponspread functionality into bondvalue output
+
+1.50 (May, 2006)
+----------------
+Compile with new version of library on on win32 platform with new Microsoft
+	C++ compiler (see build.info)
+
+1.49 (April, 2006)
+----------------
+Bondvalue and cnvprice simple interest yield switch (-S) enhanced to
+	specify last period or last year.
+
+
+1.48 (December, 2005)
+---------------------
+Bondvalue now gives after tax values.
+Bondscen allow setting of reinvestment rate.
+Integrate with new library version.
+
+1.47 (August, 2005)
+-------------------
+Support Bermudan options as option input type
+Integrate with new library
+
+1.46 (July, 2005)
+-----------------
+Bondvalue was not using simple interest rate setting properly - fixed
+Add modified convexity to worst, yield to worst sink
+Integrate with new library
+
+1.45 (November, 2004)
+---------------------
+Added Zero Rate curves as input type
+
+1.44 (August, 2004)
+-------------------
+Integrated w/ new library release 1.52
+Added command line support for simple interest yield
+Modified command line processing to conform to getopts
+
+1.43 (March, 2004)
+------------------
+Added bondyields program
+Updated documentation
+Fixed output fields of ytw program to correspond to documentation
+
+1.41 (December, 2003)
+---------------------
+Added support for irregular first and last coupons in input files
+
+1.40 (September, 2003)
+----------------------
+Integrated w/ library release 1.49
+
+1.39 (August, 2003)
+-------------------
+Integrated w/ library release 1.48
+Added after tax support to bondscen
+
+1.38 (May, 2003)
+----------------
+Renamed bondoas application to bondvalue
+Improved help text
+
+1.37 (December, 2002)
+---------------------
+Integrate w/ new library release
+Add -m (maturities) switch to keydur
+Add -w (optionally select which items to value) to bondoas
+Add cashflow yield option to bondoas extra fields switch (-x)
+
+1.36 (November, 2002)
+---------------------
+Integrate w/ new library release
+
+1.34 (July, 2002)
+-----------------
+Integrate w/ new library release
+Improved reading of curve and spread files
+Optimized re-use of trees
+Make bondoas use new, faster duration calculation method
+
+1.33 (April, 2002)
+--------------------
+Integrate with new library release.
+
+1.32 (January, 2002)
+--------------------
+Integrate with new library release
+Add -v (valuation only) switch to bondoas
+
+1.31 (December, 2001)
+---------------------
+Support redemption value as optional eighth field in a bond record
+
+1.30 (December, 2001)
+---------------------
+*** internal release ***
+
+1.29 (October, 2001)
+---------------------
+Re-built for new version of library
+
+1.28 (August, 2001)
+-------------------
+Add more verbose help text
+
+1.27 (May, 2001)
+----------------
+Extended size of record key for input files
+
+1.26 (January, 2001)
+--------------------
+Fixed problem with using spreads causing prior tree file to be re-used
+
+1.25 (October 22, 2000)
+-----------------------
+Integrated new code from library v. 1.19.
+
+1.24 (August 28, 2000)
+----------------------
+Added spaces in bondoas output to allow for extra large duration values
+
+1.23 (August 4, 2000)
+---------------------
+Fixed reporting onesided duration error to next bond
+
+1.22 (June 27, 2000)
+--------------------
+Added one sided duration calculation to bondoas
+
+
+1.21 (June 23, 2000)
+--------------------
+Integrated new day count code from library
+
+
+1.20 (April 4, 2000)
+--------------------
+Fixed reading of optional step-up coupon files
+
+
+1.19 (November 12, 1999)
+------------------------
+Added fast spread sort for bondscen
+
+1.18 (November 4, 1999)
+----------------------
+Fixed to allow (ignore when) price and bond files have non-matching records
+Fixed bondscen to properly read spreads for multiple bonds
+	(this was a patch from Nov. 8, 
+	 strings bondscen | grep bondscen.cc
+	 reports v. 1.5 if patch is applied, else, 1.4)
+
+1.17 (October 19, 1999)
+-----------------------
+Updated version of cmdline.h
+Fixed bondscen to report effective yield in 30/360
+
+1.16 (October 1999)
+-------------------
+Move to c++
+
+1.15 (August 24, 1999)
+----------------------
+Changed maximum yield terms from 120 to 250
+Fixed txtin input buffer size for new large structures
+Changed txtin routines to use new TXTIN_ERROR_NOLAST
+
+1.14 (August 22, 1999)
+----------------------
+Changed maximum yield terms from 20 to 120
+
+1.12 (May 22, 1999)
+-------------------
+Recompiled with new library (v. 1.14)
+
+1.11 (March 17, 1999)
+---------------------
+Changed issue_size, sink amount to double from long - was overflowing
+Added step up/down coupons
+Added factor yield curves

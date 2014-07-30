@@ -4,21 +4,20 @@
 
    see usage() below
    ------------------------------------------------------------------------- */
-#ifdef _MSC_VER  /* include implementation of getopts -- see end of file */
-#define _CRT_SECURE_NO_DEPRECATE
-const char *optarg = NULL;
-int optind = 0;
-int getopt(int, char *const *, const char *);
-#else
-#include <unistd.h>
-#endif
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include <time.h>
 #include <ctype.h>
 #include <string.h>
+
+#ifdef _MSC_VER  /* include implementation of getopts -- see end of file */
+const char *optarg = NULL;
+int optind = 0;
+int getopt(int, char *const *, const char *);
+#else
+#include <unistd.h>
+#endif
 
 #include "akaapi.h"
 
@@ -30,16 +29,16 @@ enum CTYPE {
 };
 
 /* forward declarations */
-void init(int memcache);
-AKA_MSGTYPE msgs();
+void init(const char *);
+int msgs();
 AKACURVE *make_curve(double rate, double vol, enum CTYPE ctype);
 AKABOND *make_bond(long, double);
 AKAOPTION *make_call(long odate);
 long pvdateadd(long pvdate, int adddays);
 long akadatecnv(const char *date);
 void usage();
+static int set_taxrates(const char *taxrates);
 #define INSECS(x) ((double) (x) / CLOCKS_PER_SEC)
-
 
 /* -----------------------------------------------------------------
    Purpose: start here
@@ -52,8 +51,6 @@ main(int argc, char *argv[])
     AKABOND *bond = NULL;
     AKACURVE *curve = NULL;
     AKAHTREE htree = 0;
-    AKAHTREE tup = 0, tdn = 0;
-
 	/* user options */
     int c;
     int cnt;
@@ -70,29 +67,19 @@ main(int argc, char *argv[])
 	/* by default get the price for an OAS of zero; "fair value" */
     enum AKAQuoteType input_qtype = AKA_QUOTE_OAS;
     double quote = 0;
+    const char *keyfile = NULL;
     
 	/* timing variables */
     clock_t start = 0;
     int timing = FALSE;
 
-    while((c = getopt(argc, argv, "fzbq:c:v:m:p:d:t"))!= EOF) {
+    while((c = getopt(argc, argv, "a:bc:d:fm:p:qT:tv:z"))!= EOF) {
 	switch(c) {
-	    case 't' :
-		timing = TRUE;
-		quiet = TRUE;
-		break;
-	    case 'f' :
-		valueonly = FALSE;
-		break;
-	    case 'z':
-		quiet = TRUE;
+	    case 'a' :
+		keyfile = optarg;
 		break;
 	    case 'b' :
 		bullet = TRUE;
-		break;
-	    case 'q' :		/* get the OAS from a quoted price*/
-		input_qtype = AKA_QUOTE_PRICE;
-		quote = 100;	/* use price of par */
 		break;
 	    case 'c' :
 		switch(tolower(*optarg)) {
@@ -107,8 +94,11 @@ main(int argc, char *argv[])
 			break;
 		}
 		break;
-	    case 'v' :
-		vol = atof(optarg);
+	    case 'd' :
+		days = atoi(optarg);
+		break;
+	    case 'f' :
+		valueonly = FALSE;
 		break;
 	    case 'm' :
 		mdate = akadatecnv(optarg);
@@ -116,8 +106,23 @@ main(int argc, char *argv[])
 	    case 'p' :
 		pvdate = akadatecnv(optarg);
 		break;
-	    case 'd' :
-		days = atoi(optarg);
+	    case 'q' :		/* get the OAS from a quoted price*/
+		input_qtype = AKA_QUOTE_PRICE;
+		quote = 100;	/* use price of par */
+		break;
+	    case 'T' :
+		if (set_taxrates(optarg) != 1)
+		    return 1;
+		break;
+	    case 't' :
+		timing = TRUE;
+		quiet = TRUE;
+		break;
+	    case 'v' :
+		vol = atof(optarg);
+		break;
+	    case 'z':
+		quiet = TRUE;
 		break;
 	    default :
 		usage();
@@ -147,7 +152,7 @@ main(int argc, char *argv[])
     }
 
 	/* init the library */
-    init(0);
+    init(keyfile);
 
 	/* make the curve, then the tree, then free the curve */
     curve = make_curve(rate, vol, ctype);
@@ -169,14 +174,14 @@ main(int argc, char *argv[])
 	start = clock() - start;
 	printf("Seconds to fit the base curve = %0.2f\n", INSECS(start));
     }
-    if (msgs() != AKA_MSG_NONE)
+    if (!msgs())
 	return 1;
     AKACurveFree(curve);
     curve = NULL;
 
 	/* make the bond */
     if (quiet == FALSE)
-	printf("\nMaking a 30 year %.10g%% bond maturing on %ld",
+	printf("Making a 30 year %.10g%% bond maturing on %ld",
 	       coupon, mdate);
     bond = make_bond(mdate, coupon);
     if (!bullet) {
@@ -191,11 +196,14 @@ main(int argc, char *argv[])
 
     if (quiet == FALSE) {
 	const char underline[] = "--------------------";
-	const char *fmt = "%8.8s %8.8s %8.8s %8.8s %8.8s %8.8s\n";
-	printf(fmt, "pvdate", input_qtype == AKA_QUOTE_OAS ? "price" : "oas",
+	const char *fmt = "%10.10s %8.8s %8.8s %8.8s %8.8s %8.8s";
+	printf(fmt, "pvdate  ", input_qtype == AKA_QUOTE_OAS ? "price" : "oas",
 	       "accrued", "optval", "duration", "convex.");
+	printf("\n");
 	printf(fmt, underline, underline, underline,
 	       underline, underline, underline);
+	printf("\n");
+
     }
 
 	/* loop through pvdates */
@@ -203,16 +211,15 @@ main(int argc, char *argv[])
     for (cnt = 0; pvdate <= mdate && cnt < days;
 	 pvdate = pvdateadd(pvdate, 1), cnt++) {
 	AKABONDREPORT rpt;
-
 	AKABondVal2(pvdate, input_qtype, quote, htree, bond, &rpt,
 		    !valueonly, !valueonly, !valueonly);
-	
 	if (quiet == FALSE) {
-	    printf("%ld %8.3f %8.3f %8.3f %8.3f %8.3f\n",
-		   pvdate,
+	    printf("%02ld/%02ld/%04ld %8.3f %8.3f %8.3f %8.3f %8.3f",
+		   (pvdate / 100) % 100, pvdate % 100, pvdate / 10000,
 		   input_qtype == AKA_QUOTE_PRICE ? rpt.oas : rpt.price,
 		   rpt.accrued, rpt.optval, rpt.effDur, rpt.effCon);
-	    if (msgs() != AKA_MSG_NONE)
+	    printf("\n");
+	    if (!msgs())
 		return 1;
 	}
     }
@@ -234,24 +241,27 @@ void
 usage()
 {
     printf("Purpose: value a 30 year bond\n");
-    printf("Usage: [-fzbt] [-q o{as}|p{rice}]\n"
-	   "       [-c f{lat}|l{inear}|a{symptotic}] [-v <vol>]\n"
-	   "       [-m <mdate>] [-p <pvdate>] [-d <days-to-value]\n"
-	   "       <discount-rate> [<coupon> : defaults to rate]\n");
-    printf("\nFlags:\n"
-	"\t-f - full valuation - include duration, option value, and accrued\n"
-	"\t-z - silent mode, no output, for timing\n"
-	"\t-b - bond is bullet bond\n"
-	"\t-t - display timings\n"
-	"\t-q - input quote is oas of zero (default), or price of 100\n"
-	   "\t-c - make the curve be:\n");
-    printf("\t\tflat - same rate (default)\n"
-	"\t\tlinear - grow linearly (slowly)\n"
-	"\t\tasymptotic - grow (quickly) but level off\n"
-	"\t-v - set curve volatility, default is zero\n"
-	"\t-m - set bond maturity date default is 1/1/2030\n"
-	"\t-p - set initial pvdate to value - default is bond dated date\n"
-	"\t-d - set number of pvdates to value (default 1)\n");
+    printf("Usage: [FLAGS] <discount-rate> [<coupon> : defaults to rate]\n");
+    printf(
+	"\nFlags:\n"
+	"\t-a key-file -- load akalib key from file, default ./akalib.key\n"
+	"\t-b -- bond is bullet bond\n");
+    printf(
+	"\t-c <curve-type> -- make the curve be:\n"
+	"\t\tflat -- same rate (default)\n"
+	"\t\tlinear -- grow linearly (slowly)\n"
+	"\t\tasymptotic -- grow (quickly) but level off\n");
+    printf(
+	"\t-d <cnt> -- set number of pvdates to value (default 1)\n"
+	"\t-f -- full valuation, include duration, option value, and accrued\n"
+	"\t-m <mdate> -- set bond maturity date, default 1/1/2030\n"
+	"\t-p <pvdate> -- set initial pvdate to value, default bond dated date\n");
+    printf(
+	"\t-q -- use price of 100 as quote, default use oas of zero\n"
+	"\t-T <arg> -- set tax rates as: income[,short[,long[,superlong]]]\n"
+	"\t-t -- display timings\n"
+	"\t-v <vol> -- set curve volatility, default zero\n"
+	"\t-z -- silent mode, no output, for timing\n");
     printf("AKA library version: %.2f\n", AKA_version());
 }
 
@@ -269,6 +279,10 @@ make_curve(double rate, double vol, enum CTYPE ctype)
     curve = AKACurveAlloc(sizeof(terms) / sizeof(terms[0]));
     for (i = 0; i < sizeof(terms) / sizeof(terms[0]); i++) {
 	curve->time[i] = terms[i];
+	if (i == 0) {
+	    curve->yield[0] = rate;
+	    continue;
+	}
 	switch(ctype) {
 	    case LINEAR :
 		curve->yield[i] = rate + terms[i] *.01;
@@ -355,7 +369,8 @@ static
 int
 lastday(int mn, int yr)
 {
-    int _DAYSIN[] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    static int _DAYSIN[] =
+	{ 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
     int month_days;
     month_days = _DAYSIN[mn];
     
@@ -373,8 +388,6 @@ lastday(int mn, int yr)
 long
 pvdateadd(long pvdate, int adddays)
 {
-    static int DAYSIN[] =
-    { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
     int yr, mon, day;
 
     if (adddays <= 0)		/* only adds */
@@ -399,20 +412,20 @@ pvdateadd(long pvdate, int adddays)
 
 /* -----------------------------------------------------------------
    Purpose: pop all the messages of the stack and put them out
-   Returns: highest level msg seen
+   Returns: 1 if no errors else 0
    ----------------------------------------------------------------- */
-AKA_MSGTYPE
+int
 msgs()
 {
-    AKA_MSGTYPE ret = AKA_MSG_NONE;
-    char errtext[AKA_MSG_MAXLEN];
-    AKA_MSGTYPE mtype;
-
-    while ((mtype = AKA_msg_pop(errtext)) != AKA_MSG_NONE) {
-	fprintf(stdout, "%2d \"%s\"\n", mtype, errtext);
-	if (mtype > ret) ret = mtype;
-    }
-    return ret;
+    enum AKA_ERROR_NUMBER errornumber = AKAError();
+    enum AKA_ERROR_NUMBER warnings[AKA_WARNINGS_MAX];
+    int wcnt = AKAWarnings(warnings);
+    int i;
+    for (i = 0; i < wcnt; i++)
+	fprintf(stdout, "%2d \"%s\"\n", 2, AKAErrorString(warnings[i]));
+    if (errornumber > AKA_ERROR_NONE)
+    	fprintf(stdout, "%2d \"%s\"\n", 3, AKAErrorString(errornumber));
+    return errornumber == AKA_ERROR_NONE;
 }
 
 /* -----------------------------------------------------------------
@@ -430,18 +443,18 @@ readkey(const char *fname, long *key, char *uname, int namesize)
 
     fp = fopen(fname, "r");
     if (fp == NULL) {
-	fprintf(stderr, "ERROR: unable to open akakey file %s\n", fname);
+	fprintf(stderr, "Error: unable to open akakey file %s\n", fname);
 	exit(1);
     }
     else if (fgets(linestr, sizeof(linestr), fp) == NULL ||
 	     (*key = atol(linestr)) == 0) {
-	fprintf(stderr, "ERROR: missing key line from akakey file %s\n",
+	fprintf(stderr, "Error: missing key line from akakey file %s\n",
 		fname);
 	fclose(fp);
 	exit(1);
     }
     else if (fgets(linestr, sizeof(linestr), fp) == NULL) {
-	fprintf(stderr, "ERROR: missing user name line from akakey file %s\n",
+	fprintf(stderr, "Error: missing user name line from akakey file %s\n",
 		fname);
 	fclose(fp);
 	exit(1);
@@ -463,16 +476,20 @@ readkey(const char *fname, long *key, char *uname, int namesize)
   Purpose: init what need to run
   -----------------------------------------------------------------*/
 void
-init(int memcache)
+init(const char *keyfile)
 {
     long key;
     char uname[100];
     AKAINITDATA config;
     AKA_initialize_get_defaults(&config);
+    config.durBPNoOpts = config.durBPOpts = 30;
 
-    readkey("akalib.key", &key, uname, sizeof(uname));
+    if (keyfile == NULL)
+	keyfile = "akalib.key";
+
+    readkey(keyfile, &key, uname, sizeof(uname));
     if (AKA_initialize_configure(key, uname, &config) != 0) {
-	fprintf(stderr, "ERROR: library initialization failed\n");
+	fprintf(stderr, "Error: library initialization failed\n");
 	exit(1);
     }
 }
@@ -492,6 +509,62 @@ akadatecnv(const char *date)
 	    y += 1900;
 	return y * 10000 + m * 100 + d;
     }
+}
+
+/* -----------------------------------------------------------------
+   Purpose: set the default tax rates
+   Returns: TRUE/FALSE
+   ----------------------------------------------------------------- */
+int
+set_taxrates(const char *taxrates)
+{
+    const char *ptr = taxrates;
+    char *tptr;
+    double taxrate_income = strtod(ptr, &tptr);
+    double taxrate_short = taxrate_income;
+    double taxrate_long = taxrate_income;
+    double taxrate_superlong = taxrate_income;
+
+    if (tptr != NULL && *tptr != '\0') {
+	ptr = tptr;
+	if (*ptr != ',') {
+	    fprintf(stderr, "Error: %s is not a valid taxrate string\n",
+		    taxrates);
+	    return 0;
+	}
+	else {
+	    ptr++;
+	    taxrate_short = strtod(ptr, &tptr);
+	    if (tptr != NULL && *tptr != '\0') {
+		ptr = tptr;
+		if (*ptr != ',') {
+		    fprintf(stderr, "Error: %s is not a valid taxrate string\n",
+			    taxrates);
+		    return 0;
+		}
+		else {
+		    ptr++;
+		    taxrate_long = strtod(ptr, &tptr);
+		    if (tptr != NULL && *tptr != '\0') {
+			ptr = tptr;
+			if (*ptr != ',') {
+			    fprintf(stderr,
+				    "Error: %s is not a valid taxrate string\n",
+				    taxrates);
+			    return 0;
+			}
+			else {
+			    ptr++;
+			    taxrate_superlong = strtod(ptr, &tptr);
+			}
+		    }
+		}
+	    }
+	}
+    }
+    AKADefaultTaxRate(taxrate_income, taxrate_short,
+		      taxrate_long, taxrate_superlong);
+    return 1;
 }
 
 #ifdef _MSC_VER

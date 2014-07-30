@@ -1,0 +1,13 @@
+Java API Usage Overview
+
+The akalib/java/bondoas.jar file is created by compiling the .java
+files in the akalib/java directory and assembling the .jar file.  The
+package path used is com/kalotay/akalib.  Both the compiled jar file
+and the java sources are provided in akalib/java.
+
+The bondoas.jar file can be used in your java project.  Before objects in the
+jar file can be used, you must dynamically load the bondoas_java_wrap dynamic
+library.  If your path is set up approriately so that the Andrew Kalotay
+Associates library for the appropriate architecture can be found, the load
+instruction looks like:
+	    System.loadLibrary("bondoas_java_wrap");

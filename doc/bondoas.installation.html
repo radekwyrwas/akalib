@@ -1,0 +1,322 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-15">
+<style type='text/css'>
+body {
+    padding: 1em 2em;
+}
+
+span.title {
+    font-size: 150%;
+    text-align: center;
+    font-weight: bold;
+    font-variant: small-caps;
+}
+
+h1 {
+    font-size: 150%;
+    margin-top: 0em;
+    padding-top: 1em;
+    border-style: none;
+    padding-top: 1em;
+}
+
+h2 {
+    font-size: 130%;
+}
+
+h3 {
+    font-size: 105%;
+}
+
+code {
+    font-family: courier;
+    color: navy;
+    font-size: 115%;
+}
+
+pre { 
+    margin-left: 2em; 
+    font-family: courier;
+    color: navy;
+    font-size: 115%;
+}
+
+a {
+    color: blue;
+    text-decoration: none;
+}
+
+a:visited {
+    color: blue;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+div#contents {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    border: thin solid;
+    background: lightgray;
+    padding: .25em;
+    opacity: 0.85;
+}
+
+div#contents ul {
+    padding-left: 1.5em;
+}
+
+div#contents span {
+    text-align: center;
+    text-decoration: underline;
+    display: block;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+div.code {
+    font-family: courier;
+    font-size: 110%;
+    white-space: pre;
+}
+
+p.code {
+    font-family: courier; 
+    font-size: 110%; 
+    margin-left: 4em;
+    text-indent: -2em;
+}
+
+span.code {
+    font-family: courier; 
+    font-size: 105%; 
+}</style>
+<script type='text/javascript'>
+// -----------------------------------------------------------------
+// Purpose: stop an event from bubbling -- cross-browser code
+// Returns: 
+// -----------------------------------------------------------------
+function xBrowserStopPropagation(ev) {
+    if (!ev) { ev = window.event; } // for ie
+    if (ev.stopPropagation) {
+	ev.stopPropagation();
+    }
+    else {
+	ev.cancelBubble = true;	
+    }
+}
+
+// -----------------------------------------------------------------
+// Purpose: cross browser way to add an event
+//	note: is always to the bubble phase
+// Returns: 
+// -----------------------------------------------------------------
+function addEvent(obj, type, fn) {
+    if (obj.addEventListener) {
+	obj.addEventListener(type, fn, false);
+    }
+    else if (obj.attachEvent) {	// IE
+	obj.attachEvent("on" + type, fn);
+    }
+}
+
+function close_contents() {
+    var div = document.getElementById('inner_contents');
+    div.style.display = 'none';
+}
+
+function toggle_contents(ev) {
+    xBrowserStopPropagation(ev);
+    var div = document.getElementById('inner_contents');
+    div.style.display = (div.style.display == 'none') ? '' : 'none';
+}
+</script>
+<title>BondOAS&trade; Library Installation</title>
+</head>
+<body>
+<table class=title><tr>
+<td style='text-align: right; 
+border: solid thin;
+background-color: rgb(221, 232, 234);
+padding: .25em;
+font-family: Helvetica;
+font-size: 180%;
+color: lightslategray;
+cursor: pointer;'
+ onclick='window.open("http://kalotay.com");'>
+<span style='color: teal;'>Kalotay</span><br>
+<span>Analytics</span><br>
+<span style='font-size: 25%; text-transform: uppercase;'>A Division of Andrew Kalotay Associates, Inc.</span>
+</td>
+<td style='padding-left: 4em;'><span class='title'>BondOAS&trade; Library Installation</span></td></tr></table>
+<!-- $Id: bondoas.installation.html,v 1.2 2013-11-14 15:57:38 oliver Exp $ -->
+<a name='contents0'></a><h1>Distribution</h1>
+<p>
+The BondOAS&trade; package is distributed as an archive file.  Either a .zip
+file for Windows or a .tar.gz file for Unix.  The archive has a top level
+directory, <span class=code>akalib/</span> with sub-directories beneath that.
+This is strictly an archive file.
+</p>
+<div class='code'>
+    akalib/
+	doc/
+	csharp/
+	java/
+	include/
+	{<i>operating-system</i>}{<i>architecture</i>}/
+		lib/
+			static/
+</div>
+
+
+<p>
+<ul>
+<li>doc &mdash; documentation files</li>
+<li>java and csharp &mdash;  java and csharp language support</li>
+<li>include &mdash; <a href='bondoas.api.html'>BondOAS&trade; Api</a> include files required for compiliation</li>
+<li>{<i>operating-system</i>}{<i>architecture</i>} &mdash; package
+specific compiled files, examples are win32, linux, sun64</li>
+<li>lib &mdash; a sub-directory of
+{<i>operating-system</i>}{<i>architecture</i>}, contains the BondOAS&trade;
+dynamic library</li>
+<li>static &mdash; a sub-directory of lib/, contains the BondOAS&trade; static
+libraries</li>
+</ul>
+
+<a name='contents1'></a><h1>Installation Location</h1>
+<p>
+There is no specific requirement for the installation location.  The user can
+un-archive the distribution in any location.  We recommended installing the
+library in a system wide location.  For Unix we
+recommend:
+<p>
+<p class="code">
+	/usr/local/lib/
+</p>
+<p>
+For Windows we recommend:
+</p>
+<p class="code">
+Program Files\Andrew Kalotay Associates\
+</p>
+<p>
+In both cases the <span class="code">akalib</span> directory is a
+sub-directory of those locations.
+</p>
+<p>
+You will need to have root or (under Windows) administrative privileges in
+order to install files in these locations.
+</p>
+
+<a name='contents2'></a><h1>Compilation Requirements</h1>
+<p>
+For compiling C/C++ you will need to set the library and include paths per
+your installation.  The include path must include the
+<span class='code'>akalib/include</span> directory and the library path
+must include either the <span class='code'>akalib/lib</span> or
+<span class='code'>akalib/lib/static</span> directory.  Best practices for how
+to set these paths are specific to the developer and development environment.
+</p>
+
+<a name='contents3'></a><h1>Run-time Requirements</h1>
+<p>
+The following discussion covers approaches to using dynamic libraries.  None
+of this is specific to BondOAS&trade;.
+</p>
+
+<p>
+Applications linked with a dynamic library will need to be able to find the
+dynamic library when they are executed.  There are a variety of methods for
+doing this.
+</p>
+
+<a name='contents4'></a><h2>Environment Variable</h2>
+<p>
+The simplest approach to ensure an application finds a dynamic library is to
+set the LD_LIBRARY_PATH variable under Unix or the PATH variable under
+Windows.  These must include the directory where the dynamic library is
+installed.  The path can be amended in the user's environment through scripts,
+log in files, or other user configuration options.  For Windows specific
+instructions see the discussion of <a href='#windowspath'>Windows PATH configuration</a> below.
+</p>
+
+<a name='contents5'></a><h2>System Configuration</h2>
+<p>
+Each operating system provides a mechanism to set the search path for dynamic
+libraries at a system wide level.  You will obviously need to have root or
+(under Windows) administrative privileges in order to perform these steps.
+</p>
+
+<a name='contents6'></a><h3>Sun Solaris</h3>
+<p>
+Sun Solaris uses <code>crle</code> to configure how <code>ld.so</code>
+searches for dynamic libraries.  To add a path to the system wide
+configuration:
+</p>
+<p class='code'>
+$ crle -u -l /usr/local/lib/akalib/sun32/lib
+</p>
+
+<p>
+In the above example, substitute /usr/local/lib/akalib/sun32/lib with your
+installation location and appropriate architecture (32 or 64 bit)
+</p>
+
+<a name='contents7'></a><h3>Linux</h3>
+<p>
+Linux uses <code>ldconfig</code> to configure how <code>ld.so</code> searches
+for dynamic libraries.  To add a path to the system wide configuration create
+a file in <span class="code">/etc/ld.so.conf.d</span> directory which points
+to the installed library location.  For example:
+</p>
+<p class='code'>
+$ echo /usr/local/lib/akalib/linux/lib > /etc/ld.so.conf.d/bondoas.conf
+</p>
+
+<p>
+In the above example, substitute /usr/local/lib/akalib/linux/lib with your
+installation location and appropriate architecture (32 or 64 bit)
+</p>
+
+<p>
+Now update the ld cache.
+</p>
+<p class='code'>
+$ ldconfig
+</p>
+
+<a name='windowspath'>
+<a name='contents8'></a><h3>Windows</h3>
+<p>
+Windows uses the PATH variable for both executables and dlls.  Modifying the
+PATH variable permanently for either a user or on a system wide basis is done
+through the System Properties Dialog window.  The following discussion for
+Java installations is
+instructive:
+ <a style='display: block; text-align: center;' href='http://java.com/en/download/help/path.xml'>http://java.com/en/download/help/path.xml</a>
+</p>
+<div id='contents'><span>Contents</span>
+<div style='display: none;' id='inner_contents'><ul>
+<li><a href='#contents0'>Distribution</a></li>
+<li style='margin-top: .25em;'><a href='#contents1'>Installation Location</a></li>
+<li style='margin-top: .25em;'><a href='#contents2'>Compilation Requirements</a></li>
+<li style='margin-top: .25em;'><a href='#contents3'>Run-time Requirements</a></li>
+<li><ul>
+<li><a href='#contents4'>Environment Variable</a></li>
+<li><a href='#contents5'>System Configuration</a></li>
+<li><ul>
+<li><a href='#contents6'>Sun Solaris</a></li>
+<li><a href='#contents7'>Linux</a></li>
+<li><a href='#contents8'>Windows</a></li>
+</ul>
+</ul>
+</ul></div></div>
+<script type='text/javascript'>
+addEvent(document.getElementById("contents").firstChild, "click", toggle_contents);
+addEvent(document.body, 'click', close_contents);
+</script>
+</body></html>
