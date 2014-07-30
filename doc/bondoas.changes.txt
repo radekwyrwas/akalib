@@ -1,0 +1,605 @@
+$Id: changes.txt,v 1.100 2012-08-27 15:50:15 oliver Exp $
+
+Changes
+-------
+2.06 (August, 2012)
+-------------------
+Rewrite of forward par rates computation to handle odd maturities and
+	non-cyclical forward periods; also improve performance
+Fix flow report to exclude option dates
+Fix yield to maturity when final option is American and call option is less
+	than redemption price
+Fix handling of input zero rate curves
+
+2.05 (June, 2012)
+-----------------
+Enhancements to after-tax valuation interface
+Permit invoking AKA_init() and AKA_shutdown() more than once in a process
+Support zero days option delay (call/put on pvdate)
+
+2.04 (June, 2012)
+-----------------
+Added after-tax valuation; NOTE bond structure changes
+Added AKA_msg_suppress()
+Improved multi-threaded support by adding additional mutexes to reduce
+    inter-thread context waits
+Fixed daycount math for ACT/360 when period is less than a year but greater than
+    360 days; fixes potential crash in price conversion to/from yields
+Fixed handling of off-cycle sinking fund dates when next sink is before next
+    option or regular flow; fixes potential crash in interest at maturity
+    bonds with off-cycle sinks
+Fixed after-tax valuation handling of holder's basis to account for accrued of
+    off-cycle calls
+
+2.03 (April, 2012)
+-----------------
+fixed spot duration (default/usual behavior is par duration, so this rarely
+    applies) at zero OAS for bonds with options; also improved performance of
+    spot duration valuation
+fixed modified duration for sinking fund instruments
+AKATreeFitRun() is now deprecated
+
+2.02 (March, 2012)
+------------------
+major performance enhancements (y.m.m.v.):
+    4.8x faster fitting of curves to a tree
+    6.2x faster computation of an oas from a price
+    13x faster computation of an oas from a price for sinking fund bonds
+    3.5x faster computation of fair value from an oas
+    10x faster computation of fair value from an oas for sinking fund bonds
+    2x faster yield calculations
+added AKAYieldToWorstEx() and AKABondValueYieldsEx() for cash flow yields
+added support for off-cycle sinking fund dates
+improved valuation of sinking fund bonds:
+    the acceleration option had been slightly overvalued in high volatility
+      rate environments, particularly if the bond was callable;
+    the presence of a call option caused principal flows to be overvalued;
+    note that these two effects could cancel each other out and that there
+      will be very little observable change in valuations.
+fixed yield calculations bugs:
+    cash flow yields were wrong for sinking funds without call options
+    long last coupons could cause a crash during calculation of muni yields
+    irregular coupon flows could be missed on the pvdate before the flow
+fixed performance issue in scenario analysis when valuing multiple bonds
+    using the same trees
+fixed setting of accumulation for sinking fund bonds
+fixed fair value moving in jumps with rising, in-the-money call schedule
+set default message pop-order to fifo
+fixed last/first coupon agreement for very short bonds which in rare cases
+    caused bond yield calculation to fail
+
+2.00 and 2.01 internal releases only.
+
+1.87 (November, 2011)
+---------------------
+Support yield curves with negative rates.
+Fix bug in bond definition when bond has non-flow-date options, and a coupon
+ schedule, and the coupon schedule is specified with AKA_PERIOD_END.
+Change handling of curve shifts for duration calculations to do up-up
+ shifts when down shift results in negative rates.
+Deprecate AKABondDuration() function -- the duration calculation within
+ AKABondVal() is now a faster approach.
+Add new key rate valuation function, AKABondKeyDur3(), for improved performance.
+Enhance key rate duration accuracy when desired maturities are different than rates in supplied curve.
+
+1.86 (August, 2011)
+-------------------
+Drop tree cache configuration; caching is localized and optimized.
+Optimize tree creation for duration calculations within AKABondVal()
+ so that shifted trees are cached within the tree structure;
+ computing duration using AKABondVal() is now as efficient as
+ calling AKABondDuration().
+Improve tree shifting for duration so that it dynamically updates the
+ basis points to shift in order that a down shifted tree can always
+ be created in low interest rate environments.
+Provide new function AKATreeFitShift2() to facilitate generating shifted
+ trees.
+Improve mutexing when application is multi-threaded under win32 (other
+ architectures were already optimal).
+Improve error reporting to be more efficient when application is
+ multi-threaded by using thread local storage where supported.  Use of
+ tls is configurable.
+
+1.85 (internal release)
+
+1.84 (May, 2011)
+----------------
+In AKABondVal() change reporting of failure to generate down shifted tree for
+duration analysis from Error to Warning
+
+1.83 (April, 2011)
+------------------
+Fix bug in duration valuation where duration shift could be too small
+Add new function AKAAtaxBasis()
+Permit valuation of bonds with no day-count days remaining to maturity
+
+1.82 (December, 2010)
+---------------------
+Added AKA_memory_diagnostics()
+Fix bug in AKA_push_msg() that caused memory issues in multi-threaded use
+
+1.80/1.81 (internal releases only)
+
+1.79 (May, 2010)
+----------------
+Add new functions: AKATreeFitZero(), AKAISpread(), and AKAPriceToWorst()
+Enhance tree fitting to better fit low interest rate curves
+Modify duration shift to dynamically reduce basis point of shift in low
+  interest rate environments
+Fix long first coupon not recognized as such if it fell on a regular date with
+  one or more skipped dates between initial date and the first coupon
+Build release for 64 bit linux
+
+1.78 (July, 2009)
+-----------------
+Fix handling of bond in ex-coupon period.
+
+1.77 (March, 2009)
+------------------
+Fix oas convergence.  Condition to catch bad return values from valuation
+  caught extreme but legit values; condition is now more specific.
+
+1.76 (November, 2007)
+---------------------
+Fix par shift duration valuation when shifted par curve results in invalid
+  tree
+Fix yield to call when call is option only flow
+Handle non-cyclical sinking fund dates
+
+1.75 (June, 2007)
+------------------
+Change treatment of sinking fund schedule; sum of schedule can now be
+  less than face allowing schedule to omit already exercised sinks.
+Add warning for sinking funds where face value is already sunk.
+Change evaluation of yield to worst, ignore put schedule.
+Fix simple interest yield in last year of bond when daycount is ACT_anything.
+Fix simple interest last period for zero coupon bonds.
+Fix bug with bonds that have a user specified coupon schedule, non-flow
+  options, and irregular first coupon; the first flow was not adjusted for
+  the irregular period.
+Fix memory leak with options structure when instrument is nearly mature.
+Improve convergence on IRR in yield calculations.
+Fix Muni yield valuation with irregular coupons.
+Adjust ACT/360 bond valuation for daycount issues.
+Work around problem with Linux gcc optimized code with 30/360 monthly bonds with
+  pvdate one day before a flow; the flow could be missed.
+
+1.74 (March, 2007)
+------------------
+Fix crash in AKABondValueYields() when bond had no calls
+Change Key Duration calculation to skip computing unused yields
+Change modified Duration to use redemption value
+
+1.73 (February, 2007)
+---------------------
+Change scenario analysis so it no longer return a negative reinvestment value
+	if pvdate of is prior idate of bond.
+Enable interest at maturity bonds to work.
+Modify bond yields report so duration to worst ignores sinks, if any.
+Fix Yield to worst calculation to correctly handle all yield types.
+Fix simple interest yield where last flow could be treated as bey if there
+	were options between the last flow and the maturity.
+
+1.72 (January, 2007)
+--------------------
+Fix rounding error causing out of the money options could show a very (< .001)
+	small option value when there was none; this could confuse scenario
+	analysis.
+Fix bug where yield to worst calculations were alway BEY even if bond was set
+	to another yield method.
+Improve internal forward rate computations.
+Add binary version number to released dll.
+
+1.71 (December, 2006)
+---------------------
+Removed internal use of c++ in library to facilitate linking
+Changed api AKASecturity definition so that YLD_METHOD enum is a long;
+	this matches other uses of enums in api; no functional difference
+
+1.70 (November, 2006)
+---------------------
+Added AKABondAccrued2() function
+Fixed rare problem with accrued for ACT/ACT bonds when payday is not last day
+	of last coupon
+Changed warning message for outstanding remaining to ignore floating point
+	rounding differences (reduced number of warnings, no material affect
+	of valuation)
+changed gcc compilation options for Solaris compiles for shared object to
+	facilitate linking with other shared objects (no material affect)
+
+1.69 (October, 2006)
+----------------------
+Support for Muni-yields
+Added AKAAssetSwapSpread() and AKAConvertAssetSwapSpread() functions
+Improved tree generation from a discount curve, curves that used to fail now
+	generate arbitrage free trees
+Improved tree generation efficiency, increasing performance by up to 50%
+improved bond valuation efficiency, increasing performance by up to 15%
+
+
+1.68 (August, 2006)
+-------------------
+Add support for puts on non-flow dates
+Change internal tree caching to improve performance
+Change bullet bond (applicable for calculating option value) so that
+	it is independent of tree volatility -- there was a small affect prior
+Add AKACouponSpread() function
+Change valuation of sinking fund options to better handle allocation of
+	bought ahead amounts
+Allow sinking funds bonds to be valued off-lattice when there is no optionality
+Fix final principal payment in cashflow report to use redemption value
+
+
+1.67 (May, 2006)
+----------------
+Fix cfy which was not using redemption value
+Internal changes to compile with latest release of Microsoft C compiler on
+	win32 platform
+
+1.66 (April, 2006)
+----------------
+Change flow report so it shows next flow when no daycount days remaining
+	but calendar days remain (e.g., pvdate 1/31, flow date 2/1)
+Fix invalid results in worst calculations when there are no daycount days
+	remaining
+Enhance simple interest rate setting to allow for last period or last year
+
+1.65 (December, 2005)
+---------------------
+Fix problem in scenario terminal accrued value when bond had option only
+	flows.
+Fix problem in scenario analysis terminal price when reinvestment rate is set
+
+1.64 (October, 2005)
+--------------------
+Add AKABondFlowOnly() function
+
+1.63 (August, 2005)
+-------------------
+Fix infinite loop that occurred in valuation with particular sinks causing
+	floating point comparison that should be zero be slightly more;
+	this only happened on linux
+Fix potential memory leak in yield calcs if entered bond had bad data
+Optimize exponential calculations 
+	20% improvement under GCC Linux
+	5% under Microsoft win32
+
+
+1.62 (August, 2005)
+-------------------
+Change handling of american call options within notice period:
+	yield to calls are now to call after notice
+Fix bug in accrued test for first / last coupons when coupon has a
+	coupon schedule and coupon changes in first or last period
+
+1.61
+-------------------
+internal release.
+
+1.60 (July, 2005)
+-----------------
+simplify behavior of AKA_set_simple_interest_yield(), it is now always
+	thread specific
+fix bug where yield to worst was not handling off coupon options properly
+
+1.59 (June, 2005)
+-----------------
+fix total return call decisions; non-flow calls were never exercised
+fix irregular long coupons -- in some cases long coupon was treated as
+	a normal coupon
+add capacity to specify payday as -1 which let's the library decide on last
+	day of month basis
+modified total return analysis so that calls are not exercised on
+	initial pvdate
+
+1.58 (May, 2005)
+----------------
+change multi-threaded error handling so per-thread errors do not use excessive
+	memory under linux
+
+1.57 (April, 2005)
+------------------
+add convexity to worst to yield calculations;
+add AKALowestYieldToSink()
+
+
+1.56 (January, 2005)
+--------------------
+Fixed memory issue when option date set to idate.
+
+1.55 (November, 2004)
+---------------------
+Added Zero Rate curves as input type to AKA curves
+
+
+1.54 (October, 2004)
+--------------------
+Fix bug in calculating modified duration in AKABondValueYields() for bonds
+	with odd last or first coupons.
+Wrap akaapi.h in extern "C" when __cplusplus is defined.
+
+1.53
+----
+*** internal release ***
+
+1.52 (August, 2004)
+-------------------
+Added support for call options which are not on a coupon flow date.
+Added support for optional simple interest yield calculation in final period
+      of an instrument.
+Improved scenario analysis option exercise test.
+
+1.51 (March, 2004)
+------------------
+Add AKABondValueYields() function
+Fix ytw calculation when worst is maturity and call is other than redemption
+    price
+
+
+1.50 (December, 2003)
+---------------------
+Add special case to compute accrued for a bond with just two flows including
+     maturity where one is irregular
+
+
+1.49 (September, 2003)
+----------------------
+Added support for a negative price to scenario analysis functions which force
+     scenario analysis to use a zero OAS for option and reinvestment
+     calculations.
+Added warning when yield are negative.
+
+1.48 (August, 2003)
+-----------------
+Fixed a mutex contention when there was an error during tree disk cache i/o
+	in multi-threaded applications.  
+Added aftertax scenario analysis.
+Changed yield calculations to allow negative yields.
+Fixed initial date of super long term capital gains (was 1/1/2002, now
+      1/1/2001)
+Fixed aftertax holder's basis calculation when call price is less than current
+      price
+
+
+1.47 (June, 2003)
+-----------------
+Added aftertax yield support
+
+
+1.46 (May, 2003)
+----------------
+Fixed problem valuing odd last coupon when pvdate is within last flow period
+Improved comments in akaapi.h
+Added fuller html documentation
+First release for Linux architecture
+Changed released package name to bondoas
+
+
+1.45 (January, 2003)
+---------------------
+Added AKABondVal2() function
+Added AKABondKeyDur2() function
+Fixed cashflow yield valuation for sinking fund bonds
+Improved yield valuation convergence algorithm
+Enabled valuation of single period bonds, e.g., six-month, semi-annual bonds 
+
+1.44
+----
+*** internal release ***
+
+1.43
+----
+*** internal release ***
+
+1.42 (November, 2002)
+---------------------
+Improved performance of yield calculations
+Added more flexible permissioning
+
+1.41 (October, 2002)
+--------------------
+Fix bullet valuation when input curves have yields defined for short term
+    periods (change unlikely to be noticed by most users).
+Improve processing of user entered last coupon date.
+
+1.40 (September, 2002)
+----------------------
+Fix memory leak in yield to worst calculation.
+
+1.39 (September, 2002)
+----------------------
+Fix last coupon date feature so that odd last coupons are computed correctly.
+
+1.38 (July, 2002)
+-----------------
+Added fast, off the lattice valuation for bullet bonds (10x faster).
+significantly improved valuation startup overhead time.
+Added AKABondDuration() function for faster duration calculation.
+Added AKA_SHIFT_NONE to disable duration calculations.
+Fixed yield valuation for actual/actual bonds.
+
+1.37 (May, 2002)
+----------------
+Added AKABondPriceCnv() function.
+Added AKAYieldToWorst() function.
+
+1.36 (April, 2002)
+------------------
+Modify put option valuation.
+Change reporting of accrued for pvdates before dated date; now report zero,
+	formally reported negative accrued.
+
+1.35 (February, 2002)
+---------------------
+Restore tree shifted (as opposed to par curve shift) key rate duration
+	calculation.
+
+1.34 (February, 2002)
+---------------------
+Restore modified duration and convexity calculations which had been turned off.
+
+1.33 (January, 2002)
+--------------------
+Library is multi-thread safe.
+
+
+1.32 (December, 2001)
+---------------------
+*** internal release ***
+
+
+1.31 (December, 2001)
+---------------------
+Modify scenario analysis (total return) to use redemption value.
+Add AKABondScen3() function for user specified reinvestment rate.
+
+
+1.30 (October, 2001)
+--------------------
+Fix potential memory leaks when library valuation routines are
+	passed bad input data.
+Fix computation of accrued interest for ACT/360, ACT/365.
+Fix scenario analysis (total return) handling of curves with spreads.
+
+
+1.28, 1.29
+----------
+*** internal releases only ***
+
+1.27 (August 22, 2001)
+----------------------
+Fix valuation of instruments when pvdate is within first coupon
+	period and first coupon period is irregular.
+
+1.26 (August 19, 2001)
+----------------------
+Fix yield to price and price to yield calculations.
+Fix reinvestment interest rate calculation.
+Modify tree creation process for better handling of short term rates.
+Fix call delay accrued interest calculation.
+
+1.24(June 17, 2001)
+------------------
+Fix valuation of European style options so series of Europeans
+	values like American.
+
+1.23(June 13, 2001)
+------------------
+Fix accrued of long coupon for actual/actual bonds.
+
+1.22(June 7, 2001)
+------------------
+Fix interpolation of discount factor curves when interpolation point
+	is before first input point 
+
+1.21 (March 22, 2001)
+---------------------
+Modify input validity check to allow negative yield value as input.
+
+1.20 (November 22, 2000)
+------------------------
+Improve efficiency of date order comparisions.
+Improve testing for whether call option can be exercised.
+
+1.19 (October 22, 2000)
+-----------------------
+Fixed valuation of European calls.
+Improved option valuation for speed.
+
+1.18 (Sept. 5, 2000)
+--------------------
+Integrated treesample functionality into library.
+
+1.17 (June 23, 2000)
+--------------------
+Modified date calculations for day counts to improve ACT/ACT accrued
+	calculations and to handle days difference on Feb. 29 for 30/360
+
+
+1.16 (Oct. 19, 1999)
+--------------------
+Modified level messages to error level for scenario calculations
+Updated error list documentation
+Updated sample code
+
+1.15 (Sept. 20, 1999)
+---------------------
+Added AKABondKeyDur()
+Added AKABondOAS()
+
+
+1.14 (May 14, 1999)
+-------------------
+Modifided some error messages to match standard form (see errors.txt)
+Modified call/put delay so that it is always at least 1 day
+Changed total return analysis method of reporting return from compounded
+	percent to annualized percent
+Fixed AKATreeFitRun() to enable creation of trees from on the run bonds
+Fixed valuation of bonds with ex-coupon days > 0; corrected for accrued
+Fixed total return analysis high reported efficiency (had included accrued)
+Fixed mandatory sink schedule for sinking fund bonds when current outstanding
+	amount is full face value and delivery option is off
+
+
+1.13 (March 17, 1999)
+---------------------
+Replaced authorize_init() with AKA_authorize_init()
+Replaced authorize_expiration_date() with AKA_authorize_expiration_date()
+Fixed bug in Win32 DLL version which caused Access violation
+Modified note messages to error messages when bond data is invalid
+Modified tree caching to improve performance
+Added AKA_set_duration_shift()
+
+
+1.12 (Feb. 23, 1999)
+--------------------
+Fixed bug in duration/convexity calculations -- only occured with FACTOR
+	curves combined with PAR shifts.
+
+
+1.11 (Feb. 3, 1999)
+-------------------
+Modified TreeGetShift() used in duration calculations to improve performance
+Modified handling a memory after fatal errors. All objects and trees remain
+	valid after a fatal error.
+Removed Warning: Something is wrong in terminalPx().
+	Warning is no longer necessary and does not occur.
+Added Error: Something is wrong in terminalPx() - price is very negative.
+Added tree disk cache capability to not cache trees to disk
+
+1.10 (Jan. 11, 1999)
+--------------------
+Modified version numbering scheme to drop year
+Modified oas conversion method to reduce warning reporting
+Added AKA_initialize(), AKA_initialize_configure()
+Added AKA_shutdown(), AKA_shutdown_configure()
+Added AKATreeMinRate()
+Added AKABondPrice, AKABondPriceShifted(), AKABondAccrued()
+Added scenario analysis routine to pass threshold and return efficiency
+Fixed AKATreeFitShift()
+Fixed scenario analysis reporting of sunk vs. matured instruments
+Fixed scenario analysis so uses default init efficiency threshold
+Added (win32 version only) alias names for dll exported routines
+
+1998.105
+--------
+added authorization key
+faster oas conversion when n-r guess is out of bounds
+
+1998.104
+-------- 
+fixed scenarios flows (in totret.c) not getting european options
+
+1998.103
+-------- 
+fixed never setting up european calls
+improved oas conversion so avoid newton-raphson if implied price > 5 * price
+
+1998.102
+-------- 
+Fixed failure to converge on an oas based on a price. This occured if
+all the following conditions were true:
+	- current, low interest rate environment, but a  high (15%) volitility
+	- a high coupon bond (10%)
+	- price near the current par call (96.75)
+	- no (zero days) call delay

@@ -1,0 +1,38 @@
+
+The following timing report describes the performance of the principal
+AKA BondOAS Library operations.  The timings were conducted on our
+test machine which has a 2.6gHz CPU and is running Linux.
+
+The performance on your machine will differ.  You can run the
+benchmark program which is distributed in the lib sub-directory of
+this release.  The program provides a relative measure of the
+performance of the machine it runs on, versus our baseline machine.
+
+The AKA Library performance on your machine will approximately be the
+calculations per second reported in the timing documentation below
+multipled by the average of the cpu benchmarks.
+
+AKA BondOAS Library version 2.06
+
+trees fit per second from real world curves by source
+    ust 2005-2011   125
+  swaps 2005-2011   125
+
+trees fit per second by curve type and volatilty
+                      0    10    30
+             flat   176   133   122
+      gentle rise   140   128   122
+       sharp rise   130   125   120
+     negative/low   143   133   130
+
+fair-value computations per second by bond type and years to maturity
+                      1     2     5    10
+           bullet 71429 55556 50000 35714
+         callable 33333 27778 17857 12195
+    call and sink 22727 15625  7353  3425
+
+oas computations per second by bond type and years to maturity
+                      1     2     5    10
+           bullet 25000 19231 11628  8475
+         callable  4237  3145  2203  1969
+    call and sink  2358  1639  1199   627

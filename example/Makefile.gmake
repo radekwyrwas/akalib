@@ -1,0 +1,40 @@
+# make examples
+
+# this Makefile intended for use with gmake
+
+ifndef ARCH
+$(error ARCH must be defined as linux|linux64|solaris|win32|win64)
+endif
+
+iswin=$(findstring win,$(ARCH))
+ifeq "$(iswin)" "win"
+LIBDEPEND=$(LIBDIR)/$(AKALIB)_mt.lib
+BINEXT=.exe
+
+else
+LIBDEPEND=$(LIBDIR)/lib$(AKALIB).a
+BINEXT=
+endif
+
+TARGETS=aka_example$(BINEXT)
+LIBDIR=../$(ARCH)/lib
+AKALIB=aka$(ARCH)
+
+%$(BINEXT) : %.c
+ifeq "$(iswin)" "win"
+	cl -Ox -W3 -MT -I../include -I. -D_CONSOLE -nologo $< \
+		/link -defaultlib:$(LIBDEPEND)
+	@-cmd /C "del $(patsubst %.c,%.obj,$<)"
+else
+	gcc -o $@ -O3 -Wall -Wno-unused -I../include -I.  $< \
+		-L$(LIBDIR) -l$(AKALIB) -lm
+endif
+
+.PHONY : all clean
+
+all : $(TARGETS)
+
+$(TARGETS) : $(LIBDEPEND)
+
+clean ::
+	rm -f $(TARGETS)

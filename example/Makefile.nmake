@@ -1,0 +1,29 @@
+# make examples
+
+# this Makefile intended for use with Microsoft nmake
+# Assumes Microsoft compiler is in the PATH.
+
+TARGETS=aka_example.exe
+!ifndef ARCH
+ARCH=win32
+!endif
+
+AKALIB=../$(ARCH)/lib/aka$(ARCH)_mt.lib
+LFLAGS=-defaultlib:$(AKALIB)
+CFLAGS=-Ox -W3 -MT -I../include -I. -D_CONSOLE -nologo
+CC=cl
+
+.SUFFIXES: .exe
+
+.c.exe:
+	$(CC) $(CFLAGS) $< /link $(LFLAGS)
+	-@cmd /C "del $*.obj"
+
+all : $(TARGETS)
+
+$(TARGETS) : $(AKALIB)
+
+clean :
+	cmd /C "del /f $(TARGETS)"
+
+aka_example.exe : aka_example.c
